@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 @Data
 @RequiredArgsConstructor
 @Entity
+@Table(name="users")
 public class User {
 
     @Id
