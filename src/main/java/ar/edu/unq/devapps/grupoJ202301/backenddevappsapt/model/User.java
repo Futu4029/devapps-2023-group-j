@@ -12,6 +12,11 @@ import lombok.RequiredArgsConstructor;
 @Table(name="users")
 public class User {
 
+    @Id
+    //@SequenceGenerator(name = "walletSeq", sequenceName = "walletSeq", initialValue = 00000001, allocationSize = 1)
+    //@GeneratedValue(generator = "walletSeq")
+    private String walletAddress;
+
     @Column(nullable = false)
     @Size(min=3, max=30)
     private String name;
@@ -43,13 +48,7 @@ public class User {
     private String cvu;
 
 
-    @Id
-    @SequenceGenerator(name = "walletSeq", sequenceName = "walletSeq", initialValue = 00000001, allocationSize = 1)
-    @GeneratedValue(generator = "walletSeq")
-    private String walletAddress;
 
 
-    public void Register() {
-        //TODO: Pegarle a la base
-    }
+
 }
