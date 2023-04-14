@@ -13,25 +13,21 @@ import lombok.RequiredArgsConstructor;
 public class User {
 
     @Id
-    //@SequenceGenerator(name = "walletSeq", sequenceName = "walletSeq", initialValue = 00000001, allocationSize = 1)
-    //@GeneratedValue(generator = "walletSeq")
+    @Column(nullable = false)
+    @Email
+    private String email;
+
+    @Column(nullable = false)
+    @Size(min=8, max=8)
     private String walletAddress;
 
     @Column(nullable = false)
     @Size(min=3, max=30)
     private String name;
 
-
     @Column(nullable = false)
     @Size(min=3, max=30)
     private String surname;
-
-
-
-    @Column(nullable = false)
-    @Email
-    private String email;
-
 
     @Column(nullable = false)
     @Size(min=10, max=30)
@@ -42,13 +38,7 @@ public class User {
     @Size(min=6, max=32)
     private String password;
 
-
     @Column(nullable = false)
     @Size(min=22, max=22)
     private String cvu;
-
-
-
-
-
 }

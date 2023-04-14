@@ -1,13 +1,11 @@
 CREATE TABLE IF NOT EXISTS users (
-
-    wallet_address text PRIMARY KEY NOT NULL,
+    email text PRIMARY KEY NOT NULL,
+    wallet_address text NOT NULL,
     name text NOT NULL,
     surname text NOT NULL,
-    email text NOT NULL,
     address text NOT NULL,
     password text NOT NULL,
     cvu text NOT NULL
-
 );
 
 INSERT INTO users (wallet_address, name, surname, email, address, password, cvu) VALUES
