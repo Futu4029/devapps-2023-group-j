@@ -36,4 +36,6 @@ public class UserTest {
     public void get_WalletAddress_Test() {
         Assertions.assertEquals("00000000", user.getWalletAddress());
     }
+    @Test
+    public void build_test() { Assertions.assertInstanceOf( User.class, User.builder().build());}
 }

@@ -1,5 +1,5 @@
 package ar.edu.unq.devapps.grupoJ202301.backenddevappsapt.service.impl;
-import ar.edu.unq.devapps.grupoJ202301.backenddevappsapt.validation.UserException;
+import ar.edu.unq.devapps.grupoJ202301.backenddevappsapt.validation.exception.UserException;
 import ar.edu.unq.devapps.grupoJ202301.backenddevappsapt.model.User;
 import ar.edu.unq.devapps.grupoJ202301.backenddevappsapt.persistence.UserPersistence;
 import ar.edu.unq.devapps.grupoJ202301.backenddevappsapt.service.UserService;
@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionSystemException;
-
 import java.util.Objects;
 
 @Service

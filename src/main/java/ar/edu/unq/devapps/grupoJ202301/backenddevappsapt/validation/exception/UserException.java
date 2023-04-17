@@ -1,4 +1,4 @@
-package ar.edu.unq.devapps.grupoJ202301.backenddevappsapt.validation;
+package ar.edu.unq.devapps.grupoJ202301.backenddevappsapt.validation.exception;
 
 public class UserException extends RuntimeException {
 
