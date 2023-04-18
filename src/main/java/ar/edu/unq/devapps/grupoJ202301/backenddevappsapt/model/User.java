@@ -11,6 +11,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import java.math.BigDecimal;
+
 
 @Data
 @Entity
@@ -25,10 +27,9 @@ public class User {
     @Email
     private String email;
 
-    @Column(nullable = false)
-    @Size(min=8, max=8)
-    @LettersAndNumbersOnlyAdmits
-    private String walletAddress;
+    @PrimaryKeyJoinColumn
+    @OneToOne(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private DigitalWallet wallet;
 
     @Column(nullable = false)
     @Size(min=3, max=30)
@@ -54,4 +55,15 @@ public class User {
     @Size(min=22, max=22)
     @NumbersOnlyAdmits
     private String cvu;
+
+    public User(String email, String walletAddress, String name, String surname, String address, String password, String cvu) {
+        this.email = email;
+        this.name = name;
+        this.surname = surname;
+        this.address = address;
+        this.password = password;
+        this.cvu = cvu;
+        this.wallet = new DigitalWallet(walletAddress, this);
+    }
+
 }

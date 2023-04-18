@@ -1,4 +1,5 @@
 package ar.edu.unq.devapps.grupoJ202301.backenddevappsapt.serviceTest;
+import ar.edu.unq.devapps.grupoJ202301.backenddevappsapt.model.DigitalWallet;
 import ar.edu.unq.devapps.grupoJ202301.backenddevappsapt.validation.exception.UserException;
 import ar.edu.unq.devapps.grupoJ202301.backenddevappsapt.service.UserService;
 import ar.edu.unq.devapps.grupoJ202301.backenddevappsapt.factories.UserFactory;
@@ -9,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ar.edu.unq.devapps.grupoJ202301.backenddevappsapt.model.User;
 import org.springframework.test.annotation.DirtiesContext;
+
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -98,24 +102,6 @@ public class UserServiceTest {
     void register_User_With_Incorrect_Address_Test() {
         user.setAddress("exampleC1-/!@");
         genericStructureToRegisterTest(user, "Field address has an error: Only letters and numbers are allowed");
-    }
-
-    @Test
-    void register_User_With_Less_Than_Eight_Characters_In_The_WalletAddress_Test() {
-        user.setWalletAddress("1A");
-        genericStructureToRegisterTest(user, "Field walletAddress has an error: size must be between 8 and 8");
-    }
-
-    @Test
-    void register_User_With_More_Than_Eight_Characters_In_The_WalletAddress_Test() {
-        user.setWalletAddress("1A1A1A1A1A");
-        genericStructureToRegisterTest(user, "Field walletAddress has an error: size must be between 8 and 8");
-    }
-
-    @Test
-    void register_User_With_Incorrect_WalletAddress_Test() {
-        user.setWalletAddress("1A!A1A@1");
-        genericStructureToRegisterTest(user, "Field walletAddress has an error: Only letters and numbers are allowed");
     }
 
     @Test
