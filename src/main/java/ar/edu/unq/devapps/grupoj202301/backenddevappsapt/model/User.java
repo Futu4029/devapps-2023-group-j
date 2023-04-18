@@ -11,6 +11,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 
 @Data
 @Entity
@@ -54,6 +56,9 @@ public class User {
     @NumbersOnlyAdmits
     private String cvu;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "id")
+    private List<Transaction> transactions;
+
     public User(String email, String walletAddress, String name, String surname, String address, String password, String cvu) {
         this.email = email;
         this.name = name;
@@ -62,6 +67,7 @@ public class User {
         this.password = password;
         this.cvu = cvu;
         this.wallet = new DigitalWallet(walletAddress, this);
+        this.transactions = List.of();
     }
 
 }
