@@ -1,4 +1,5 @@
 package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.webservice;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.validation.exception.BusinessException;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.validation.exception.UserException;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.User;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.UserService;
@@ -23,6 +24,8 @@ public class UserWebService {
             return ResponseEntity.ok(userService.register(user));
         } catch (UserException e){
             return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (BusinessException e){
+            return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
 }

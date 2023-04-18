@@ -2,19 +2,18 @@ package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.serviceTest;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.validation.exception.UserException;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.UserService;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.factories.UserFactory;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.User;
 import org.springframework.test.annotation.DirtiesContext;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class UserServiceTest {
+class UserServiceTest {
     @Autowired
     private UserService userService;
 
@@ -32,7 +31,7 @@ public class UserServiceTest {
 
     @Test
     void register_User_Test() {
-        Assertions.assertEquals(userService.register(user), "example@example.com");
+        Assertions.assertEquals("example@example.com", userService.register(user));
     }
 
     @Test
