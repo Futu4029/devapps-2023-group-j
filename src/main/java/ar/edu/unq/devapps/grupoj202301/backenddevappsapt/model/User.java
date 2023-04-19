@@ -62,7 +62,7 @@ public class User {
     private String cvu;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "id")
-    private List<TransactionRequest> transactionRequests = new ArrayList<TransactionRequest>();
+    private List<TransactionRequest> transactionRequests = new ArrayList<>();
 
     @ConstructorProperties({"email", "walletAddress", "name", "address", "password", "cvu"})
     public User(String email, String walletAddress, String name, String surname, String address, String password, String cvu) {
