@@ -20,13 +20,13 @@ public class CryptoActive {
 
     @ManyToOne()
     @JoinColumn(name = "coin_name", referencedColumnName = "name")
-    public CryptoCoin coin;
+    private CryptoCoin coin;
 
     @ManyToOne()
     @JoinColumn(name = "wallet_address", referencedColumnName = "address")
-    public DigitalWallet digitalWallet;
+    private DigitalWallet digitalWallet;
 
-    public BigDecimal value;
+    private BigDecimal value;
 
     public CryptoActive(String name, DigitalWallet digitalWallet, String value) {
         this.coin = new CryptoCoin(name,"0");

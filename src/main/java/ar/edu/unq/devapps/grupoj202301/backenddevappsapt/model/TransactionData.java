@@ -1,6 +1,6 @@
 package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model;
 
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.enumModel.TransactionType;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.enum_model.TransactionType;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;

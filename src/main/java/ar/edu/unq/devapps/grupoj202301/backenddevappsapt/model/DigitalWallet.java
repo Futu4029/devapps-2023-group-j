@@ -26,7 +26,7 @@ public class DigitalWallet {
     private User owner;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "id")
-    private List<CryptoActive> cryptoCoinsAcquired = new ArrayList<CryptoActive>();
+    private List<CryptoActive> cryptoCoinsAcquired = new ArrayList<>();
 
     public DigitalWallet(String address, User owner) {
         this.address = address;
