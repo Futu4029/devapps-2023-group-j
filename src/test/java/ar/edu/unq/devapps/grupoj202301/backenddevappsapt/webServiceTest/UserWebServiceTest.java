@@ -104,24 +104,6 @@ class UserWebServiceTest {
     }
 
     @Test
-    void register_User_With_Less_Than_Eight_Characters_In_The_WalletAddress_Test() {
-        user.setWalletAddress("1A");
-        genericStructureToRegisterTest(user,HttpStatus.BAD_REQUEST,"Field walletAddress has an error: size must be between 8 and 8");
-    }
-
-    @Test
-    void register_User_With_More_Than_Eight_Characters_In_The_WalletAddress_Test() {
-        user.setWalletAddress("1A1A1A1A1A");
-        genericStructureToRegisterTest(user,HttpStatus.BAD_REQUEST,"Field walletAddress has an error: size must be between 8 and 8");
-    }
-
-    @Test
-    void register_User_With_Incorrect_WalletAddress_Test() {
-        user.setWalletAddress("1A!A1A@1");
-        genericStructureToRegisterTest(user,HttpStatus.BAD_REQUEST,"Field walletAddress has an error: Only letters and numbers are allowed");
-    }
-
-    @Test
     void register_User_With_Less_Than_TwentyTwo_Characters_In_The_WalletAddress_Test() {
         user.setCvu("1234567890");
         genericStructureToRegisterTest(user,HttpStatus.BAD_REQUEST,"Field cvu has an error: size must be between 22 and 22");
