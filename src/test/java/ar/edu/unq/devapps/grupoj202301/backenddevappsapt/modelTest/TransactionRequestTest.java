@@ -16,7 +16,9 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class TransactionRequestTest {
-    public final TransactionRequest transactionRequest = TransactionRequestFactory.anyTransactionRequest();
+    final TransactionRequest transactionRequest = TransactionRequestFactory.anyTransactionRequest();
+    final CryptoActive cryptoActive = CryptoActiveFactory.anyCryptoActive();
+    final TransactionData transactionData = TransactionDataFactory.anyTransactionDataPurchase();
     @Test
     void get_Id_Test() {
         Assertions.assertEquals(1L, transactionRequest.getId());
@@ -24,7 +26,6 @@ class TransactionRequestTest {
 
     @Test
     void get_CryptoActive_Test() {
-        final CryptoActive cryptoActive = CryptoActiveFactory.anyCryptoActive();
         transactionRequest.setCryptoActive(cryptoActive);
         Assertions.assertEquals(cryptoActive, transactionRequest.getCryptoActive());
     }
@@ -43,8 +44,17 @@ class TransactionRequestTest {
 
     @Test
     void get_TransactionData_Test() {
-        final TransactionData transactionData = TransactionDataFactory.anyTransactionDataPurchase();
         transactionRequest.setTransactionData(transactionData);
         Assertions.assertEquals(transactionData, transactionRequest.getTransactionData());
+    }
+
+    @Test
+    void get_TransactionReq_Constructor_Test() {
+        LocalDateTime dateTime = LocalDateTime.now();
+        TransactionRequest transactionRequestForTest = new TransactionRequest(cryptoActive, "100", dateTime, transactionData);
+        Assertions.assertEquals(cryptoActive, transactionRequestForTest.getCryptoActive());
+        Assertions.assertEquals(new BigDecimal("100"), transactionRequestForTest.getAmount());
+        Assertions.assertEquals(dateTime, transactionRequestForTest.getDate());
+        Assertions.assertEquals(transactionData, transactionRequestForTest.getTransactionData());
     }
 }
