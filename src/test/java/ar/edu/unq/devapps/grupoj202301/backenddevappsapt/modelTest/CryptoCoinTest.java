@@ -8,8 +8,6 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class CryptoCoinTest {
     final CryptoCoin cryptoCoin = CryptoCoinFactory.anyCryptoCoin();
     @Test
@@ -19,7 +17,7 @@ class CryptoCoinTest {
 
     @Test
     void get_Value_Test() {
-        Assertions.assertEquals(new BigDecimal("100"), cryptoCoin.getValue());
+        Assertions.assertEquals(new BigDecimal("100"), cryptoCoin.getPrice());
     }
 
     @Test

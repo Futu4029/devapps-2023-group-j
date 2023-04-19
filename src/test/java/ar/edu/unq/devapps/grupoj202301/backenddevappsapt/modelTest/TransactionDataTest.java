@@ -4,7 +4,7 @@ import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.factories.TransactionDa
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.factories.UserFactory;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.TransactionData;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.User;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.enumModel.TransactionType;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.enum_model.TransactionType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionSystemException;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -37,7 +36,7 @@ public class UserServiceImpl implements UserService {
                         message = optionalResult.get().getMessage();
                     }
                 }
-            } catch (Exception exception) {
+            } catch (RuntimeException exception) {
                 throw new BusinessException("Error trying to register a user");
             }
         }

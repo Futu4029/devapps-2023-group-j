@@ -28,8 +28,8 @@ class UserWebServiceTest {
 
     private void genericStructureToRegisterTest(User user, HttpStatusCode statusCode, String body) {
         ResponseEntity<String> responseEntity = userWebService.register(user);
-        Assertions.assertEquals(responseEntity.getStatusCode(), statusCode);
-        Assertions.assertEquals(responseEntity.getBody(), body);
+        Assertions.assertEquals(statusCode, responseEntity.getStatusCode());
+        Assertions.assertEquals(body, responseEntity.getBody());
     }
 
     @Test
@@ -40,13 +40,20 @@ class UserWebServiceTest {
     @Test
     void register_User_With_Incorrect_Email_Test() {
         user.setEmail("example.com");
-        genericStructureToRegisterTest(user,HttpStatus.BAD_REQUEST, "Field email has an error: must be a well-formed email address");
+        genericStructureToRegisterTest(user,HttpStatus.BAD_REQUEST, "Field email has an error: Please provide a valid email address");
     }
 
     @Test
     void register_User_With_Email_Already_Registerd_Test() {
         userWebService.register(user);
         genericStructureToRegisterTest(user,HttpStatus.BAD_REQUEST,"Field email has an error: Already in used");
+    }
+
+    @Test
+    void register_User_With_Empty_Email_Test() {
+        user.setEmail("");
+        userWebService.register(user);
+        genericStructureToRegisterTest(user,HttpStatus.BAD_REQUEST,"Field email has an error: must not be blank");
     }
 
     @Test
@@ -137,5 +144,23 @@ class UserWebServiceTest {
     void register_User_With_Incorrect_Password_Test() {
         user.setPassword("EXAMPLE1aavb");
         genericStructureToRegisterTest(user,HttpStatus.BAD_REQUEST,"Field password has an error: Only letters, numbers and special characters are allowed");
+    }
+
+    @Test
+    void register_User_With_Less_Than_Eight_Characters_In_The_WalletAddress_Test() {
+        user = UserFactory.userWithLargeWalletAddress();
+        genericStructureToRegisterTest(user, HttpStatus.BAD_REQUEST, "Field address has an error: size must be between 8 and 8");
+    }
+
+    @Test
+    void register_User_With_More_Than_Eight_Characters_In_The_WalletAddress_Test() {
+        user = UserFactory.userWithShortWalletAddress();
+        genericStructureToRegisterTest(user, HttpStatus.BAD_REQUEST,"Field address has an error: size must be between 8 and 8");
+    }
+
+    @Test
+    void register_User_With_Null_Wallet_Test() {
+        user.setWallet(null);
+        genericStructureToRegisterTest(user,HttpStatus.BAD_REQUEST,"Field wallet has an error: must not be null");
     }
 }

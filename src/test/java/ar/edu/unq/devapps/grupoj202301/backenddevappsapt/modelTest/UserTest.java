@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
+
 @SpringBootTest
 class UserTest {
     private final User user = UserFactory.anyUser();
@@ -35,6 +37,10 @@ class UserTest {
     @Test
     void get_WalletAddress_Test() {
         Assertions.assertEquals("00000000", user.getWallet().getAddress());
+    }
+    @Test
+    void get_TransactionRequests_Test() {
+        Assertions.assertEquals(new ArrayList<>(), user.getTransactionRequests());
     }
     @Test
     void build_test() { Assertions.assertInstanceOf( User.class, User.builder().build());}

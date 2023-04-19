@@ -6,6 +6,8 @@ import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.validation.anotation.Nu
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.validation.anotation.SpecialCharactersOnlyAdmits;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,12 +27,14 @@ import java.util.List;
 public class User {
 
     @Id
-    @Column(nullable = false, unique=true)
-    @Email
+    @Column(nullable = false, unique = true)
+    @NotBlank
+    @Email(message = "Please provide a valid email address")
     private String email;
 
     @PrimaryKeyJoinColumn
     @OneToOne(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @NotNull
     private DigitalWallet wallet;
 
     @Column(nullable = false)
@@ -59,7 +63,7 @@ public class User {
     private String cvu;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "id")
-    private List<TransactionRequest> transactionRequests = new ArrayList<TransactionRequest>();
+    private List<TransactionRequest> transactionRequests = new ArrayList<>();
 
     public User(String email, String walletAddress, String name, String surname, String address, String password, String cvu) {
         this.email = email;

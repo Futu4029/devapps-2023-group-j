@@ -1,10 +1,9 @@
 package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model;
-
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-
 import java.math.BigDecimal;
 
 @Data
@@ -20,17 +19,19 @@ public class CryptoActive {
 
     @ManyToOne()
     @JoinColumn(name = "coin_name", referencedColumnName = "name")
-    public CryptoCoin coin;
+    @NotEmpty
+    private CryptoCoin coin;
 
     @ManyToOne()
     @JoinColumn(name = "wallet_address", referencedColumnName = "address")
-    public DigitalWallet digitalWallet;
+    private DigitalWallet digitalWallet;
 
-    public BigDecimal value;
+    @Column(nullable = false, precision = 38, scale = 2)
+    private BigDecimal price;
 
-    public CryptoActive(String name, DigitalWallet digitalWallet, String value) {
+    public CryptoActive(String name, DigitalWallet digitalWallet, String price) {
         this.coin = new CryptoCoin(name,"0");
         this.digitalWallet = digitalWallet;
-        this.value = new BigDecimal(value);
+        this.price = new BigDecimal(price);
     }
 }
