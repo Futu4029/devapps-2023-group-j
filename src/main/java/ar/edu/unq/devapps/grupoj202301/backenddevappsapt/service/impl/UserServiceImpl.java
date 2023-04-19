@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
                         message = optionalResult.get().getMessage();
                     }
                 }
-            } catch (Exception exception) {
+            } catch (RuntimeException exception) {
                 throw new BusinessException("Error trying to register a user");
             }
         }

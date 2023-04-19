@@ -3,6 +3,7 @@ import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.validation.exception.Bu
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.validation.exception.UserException;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.User;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

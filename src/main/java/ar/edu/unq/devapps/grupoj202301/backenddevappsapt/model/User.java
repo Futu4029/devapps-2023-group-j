@@ -25,8 +25,8 @@ import java.util.List;
 public class User {
 
     @Id
-    @Column(nullable = false, unique=true)
-    @Email
+    @Column(nullable = false, unique = true)
+    @Email(message = "Please provide a valid email address")
     private String email;
 
     @PrimaryKeyJoinColumn

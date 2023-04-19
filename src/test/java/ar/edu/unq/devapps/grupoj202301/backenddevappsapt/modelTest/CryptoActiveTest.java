@@ -36,7 +36,7 @@ class CryptoActiveTest {
 
     @Test
     void get_Value_Test() {
-        Assertions.assertEquals(new BigDecimal("10"), cryptoActive.getValue());
+        Assertions.assertEquals(new BigDecimal("10"), cryptoActive.getActive_value());
     }
 
     @Test
@@ -44,6 +44,6 @@ class CryptoActiveTest {
         CryptoActive cryptoActive = new CryptoActive("ExampleCoin", digitalWallet, "10");
         Assertions.assertEquals("ExampleCoin", cryptoActive.getCoin().getName());
         Assertions.assertEquals(digitalWallet, cryptoActive.getDigitalWallet());
-        Assertions.assertEquals(new BigDecimal("10"), cryptoActive.getValue());
+        Assertions.assertEquals(new BigDecimal("10"), cryptoActive.getActive_value());
     }
 }

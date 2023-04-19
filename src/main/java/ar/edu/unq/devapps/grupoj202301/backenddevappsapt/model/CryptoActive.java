@@ -26,11 +26,12 @@ public class CryptoActive {
     @JoinColumn(name = "wallet_address", referencedColumnName = "address")
     private DigitalWallet digitalWallet;
 
-    private BigDecimal value;
+    @Column(nullable = false, precision = 38, scale = 2)
+    private BigDecimal active_value;
 
     public CryptoActive(String name, DigitalWallet digitalWallet, String value) {
         this.coin = new CryptoCoin(name,"0");
         this.digitalWallet = digitalWallet;
-        this.value = new BigDecimal(value);
+        this.active_value = new BigDecimal(value);
     }
 }

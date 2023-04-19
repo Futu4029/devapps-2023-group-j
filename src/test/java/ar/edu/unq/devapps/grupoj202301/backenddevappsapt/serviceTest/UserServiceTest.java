@@ -37,7 +37,7 @@ class UserServiceTest {
     @Test
     void register_User_With_Incorrect_Email_Test() {
         user.setEmail("example.com");
-        genericStructureToRegisterTest(user, "Field email has an error: must be a well-formed email address");
+        genericStructureToRegisterTest(user, "Field email has an error: Please provide a valid email address");
     }
 
     @Test

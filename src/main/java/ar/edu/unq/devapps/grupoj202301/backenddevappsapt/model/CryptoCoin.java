@@ -20,13 +20,13 @@ public class CryptoCoin {
 
     @Id
     private String name;
-    @Column(nullable = false)
-    private BigDecimal value;
+    @Column(nullable = false, precision = 38, scale = 2)
+    private BigDecimal coin_value;
     @Column(nullable = false)
     private LocalDateTime quotationDate = LocalDateTime.now();
 
     public CryptoCoin(String name, String value) {
         this.name = name;
-        this.value = new BigDecimal(value);
+        this.coin_value = new BigDecimal(value);
     }
 }

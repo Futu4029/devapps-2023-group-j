@@ -28,8 +28,8 @@ class UserWebServiceTest {
 
     private void genericStructureToRegisterTest(User user, HttpStatusCode statusCode, String body) {
         ResponseEntity<String> responseEntity = userWebService.register(user);
-        Assertions.assertEquals(responseEntity.getStatusCode(), statusCode);
-        Assertions.assertEquals(responseEntity.getBody(), body);
+        Assertions.assertEquals(statusCode, responseEntity.getStatusCode());
+        Assertions.assertEquals(body, responseEntity.getBody());
     }
 
     @Test
@@ -40,7 +40,7 @@ class UserWebServiceTest {
     @Test
     void register_User_With_Incorrect_Email_Test() {
         user.setEmail("example.com");
-        genericStructureToRegisterTest(user,HttpStatus.BAD_REQUEST, "Field email has an error: must be a well-formed email address");
+        genericStructureToRegisterTest(user,HttpStatus.BAD_REQUEST, "Field email has an error: Please provide a valid email address");
     }
 
     @Test

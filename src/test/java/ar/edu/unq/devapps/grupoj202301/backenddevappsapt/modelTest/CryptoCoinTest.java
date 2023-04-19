@@ -19,7 +19,7 @@ class CryptoCoinTest {
 
     @Test
     void get_Value_Test() {
-        Assertions.assertEquals(new BigDecimal("100"), cryptoCoin.getValue());
+        Assertions.assertEquals(new BigDecimal("100"), cryptoCoin.getCoin_value());
     }
 
     @Test
