@@ -11,8 +11,6 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class CryptoActiveTest {
     final CryptoActive cryptoActive = CryptoActiveFactory.anyCryptoActive();
     final DigitalWallet digitalWallet = DigitalWalletFactory.anyDigitalWallet();
@@ -36,7 +34,7 @@ class CryptoActiveTest {
 
     @Test
     void get_Value_Test() {
-        Assertions.assertEquals(new BigDecimal("10"), cryptoActive.getActive_value());
+        Assertions.assertEquals(new BigDecimal("10"), cryptoActive.getPrice());
     }
 
     @Test
@@ -44,6 +42,6 @@ class CryptoActiveTest {
         CryptoActive cryptoActive = new CryptoActive("ExampleCoin", digitalWallet, "10");
         Assertions.assertEquals("ExampleCoin", cryptoActive.getCoin().getName());
         Assertions.assertEquals(digitalWallet, cryptoActive.getDigitalWallet());
-        Assertions.assertEquals(new BigDecimal("10"), cryptoActive.getActive_value());
+        Assertions.assertEquals(new BigDecimal("10"), cryptoActive.getPrice());
     }
 }

@@ -47,6 +47,12 @@ class UserServiceTest {
     }
 
     @Test
+    void register_User_With_Empty_Email_Test() {
+        user.setEmail("");
+        genericStructureToRegisterTest(user,"Field email has an error: must not be blank");
+    }
+
+    @Test
     void register_User_With_Less_Than_Three_Characters_In_The_Name_Test() {
         user.setName("ex");
         genericStructureToRegisterTest(user, "Field name has an error: size must be between 3 and 30");
@@ -134,5 +140,23 @@ class UserServiceTest {
     void register_User_With_Incorrect_Password_Test() {
         user.setPassword("EXAMPLE1aavb");
         genericStructureToRegisterTest(user, "Field password has an error: Only letters, numbers and special characters are allowed");
+    }
+
+    @Test
+    void register_User_With_Less_Than_Eight_Characters_In_The_WalletAddress_Test() {
+        user = UserFactory.userWithLargeWalletAddress();
+        genericStructureToRegisterTest(user, "Field address has an error: size must be between 8 and 8");
+    }
+
+    @Test
+    void register_User_With_More_Than_Eight_Characters_In_The_WalletAddress_Test() {
+        user = UserFactory.userWithShortWalletAddress();
+        genericStructureToRegisterTest(user,"Field address has an error: size must be between 8 and 8");
+    }
+
+    @Test
+    void register_User_With_Null_Wallet_Test() {
+        user.setWallet(null);
+        genericStructureToRegisterTest(user,"Field wallet has an error: must not be null");
     }
 }

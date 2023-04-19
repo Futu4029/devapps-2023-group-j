@@ -2,6 +2,7 @@ package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model;
 
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.validation.anotation.LettersAndNumbersOnlyAdmits;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,11 +22,13 @@ public class DigitalWallet {
     @LettersAndNumbersOnlyAdmits
     private String address;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "user_email", referencedColumnName = "email")
+    @NotNull
     private User owner;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "id")
+    @NotNull
     private List<CryptoActive> cryptoCoinsAcquired = new ArrayList<>();
 
     public DigitalWallet(String address, User owner) {

@@ -4,6 +4,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -19,14 +21,17 @@ import java.time.LocalDateTime;
 public class CryptoCoin {
 
     @Id
+    @Column(nullable = false, unique = true)
+    @NotBlank
     private String name;
     @Column(nullable = false, precision = 38, scale = 2)
-    private BigDecimal coin_value;
+    @NotNull
+    private BigDecimal price;
     @Column(nullable = false)
     private LocalDateTime quotationDate = LocalDateTime.now();
 
-    public CryptoCoin(String name, String value) {
+    public CryptoCoin(String name, String price) {
         this.name = name;
-        this.coin_value = new BigDecimal(value);
+        this.price = new BigDecimal(price);
     }
 }

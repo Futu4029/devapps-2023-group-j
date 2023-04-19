@@ -50,6 +50,13 @@ class UserWebServiceTest {
     }
 
     @Test
+    void register_User_With_Empty_Email_Test() {
+        user.setEmail("");
+        userWebService.register(user);
+        genericStructureToRegisterTest(user,HttpStatus.BAD_REQUEST,"Field email has an error: must not be blank");
+    }
+
+    @Test
     void register_User_With_Less_Than_Three_Characters_In_The_Name_Test() {
         user.setName("ex");
         genericStructureToRegisterTest(user,HttpStatus.BAD_REQUEST,"Field name has an error: size must be between 3 and 30");
@@ -137,5 +144,23 @@ class UserWebServiceTest {
     void register_User_With_Incorrect_Password_Test() {
         user.setPassword("EXAMPLE1aavb");
         genericStructureToRegisterTest(user,HttpStatus.BAD_REQUEST,"Field password has an error: Only letters, numbers and special characters are allowed");
+    }
+
+    @Test
+    void register_User_With_Less_Than_Eight_Characters_In_The_WalletAddress_Test() {
+        user = UserFactory.userWithLargeWalletAddress();
+        genericStructureToRegisterTest(user, HttpStatus.BAD_REQUEST, "Field address has an error: size must be between 8 and 8");
+    }
+
+    @Test
+    void register_User_With_More_Than_Eight_Characters_In_The_WalletAddress_Test() {
+        user = UserFactory.userWithShortWalletAddress();
+        genericStructureToRegisterTest(user, HttpStatus.BAD_REQUEST,"Field address has an error: size must be between 8 and 8");
+    }
+
+    @Test
+    void register_User_With_Null_Wallet_Test() {
+        user.setWallet(null);
+        genericStructureToRegisterTest(user,HttpStatus.BAD_REQUEST,"Field wallet has an error: must not be null");
     }
 }
