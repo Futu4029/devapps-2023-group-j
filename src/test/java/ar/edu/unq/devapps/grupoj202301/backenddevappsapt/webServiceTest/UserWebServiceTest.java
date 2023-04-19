@@ -52,7 +52,6 @@ class UserWebServiceTest {
     @Test
     void register_User_With_Empty_Email_Test() {
         user.setEmail("");
-        userWebService.register(user);
         genericStructureToRegisterTest(user,HttpStatus.BAD_REQUEST,"Field email has an error: must not be blank");
     }
 

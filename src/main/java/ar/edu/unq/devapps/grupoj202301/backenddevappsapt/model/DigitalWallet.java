@@ -2,6 +2,7 @@ package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model;
 
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.validation.anotation.LettersAndNumbersOnlyAdmits;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -20,6 +21,7 @@ public class DigitalWallet {
     @Column(nullable = false, unique = true)
     @Size(min=8, max=8)
     @LettersAndNumbersOnlyAdmits
+    @NotBlank
     private String address;
 
     @OneToOne

@@ -7,13 +7,13 @@ import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.validation.anotation.Sp
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import java.beans.ConstructorProperties;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,9 +27,9 @@ import java.util.List;
 public class User {
 
     @Id
-    @Column(nullable = false, unique = true)
-    @NotBlank
+    @Column(nullable = false, unique=true)
     @Email(message = "Please provide a valid email address")
+    @NotBlank
     private String email;
 
     @PrimaryKeyJoinColumn
@@ -62,8 +62,9 @@ public class User {
     private String cvu;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "id")
-    private List<TransactionRequest> transactionRequests = new ArrayList<>();
+    private List<TransactionRequest> transactionRequests = new ArrayList<TransactionRequest>();
 
+    @ConstructorProperties({"email", "walletAddress", "name", "address", "password", "cvu"})
     public User(String email, String walletAddress, String name, String surname, String address, String password, String cvu) {
         this.email = email;
         this.name = name;
