@@ -11,5 +11,4 @@ public class BackendDevappsAptApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(BackendDevappsAptApplication.class, args);
 	}
-
 }
