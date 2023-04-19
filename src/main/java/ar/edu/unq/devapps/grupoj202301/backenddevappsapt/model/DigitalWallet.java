@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -24,8 +25,8 @@ public class DigitalWallet {
     @JoinColumn(name = "user_email", referencedColumnName = "email")
     private User owner;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "name")
-    private List<CryptoActive> cryptoCoinsAcquired = List.of();
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "id")
+    private List<CryptoActive> cryptoCoinsAcquired = new ArrayList<CryptoActive>();
 
     public DigitalWallet(String address, User owner) {
         this.address = address;

@@ -1,17 +1,19 @@
 package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
 @Table(name="crypto_coin")
-@Builder
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class CryptoCoin {
@@ -21,5 +23,10 @@ public class CryptoCoin {
     @Column(nullable = false)
     private BigDecimal value;
     @Column(nullable = false)
-    private Date quotationDate;
+    private LocalDateTime quotationDate = LocalDateTime.now();
+
+    public CryptoCoin(String name, String value) {
+        this.name = name;
+        this.value = new BigDecimal(value);
+    }
 }

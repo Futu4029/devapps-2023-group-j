@@ -1,4 +1,5 @@
 package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model;
+
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.validation.anotation.LettersAndNumbersOnlyAdmits;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.validation.anotation.LettersOnlyAdmits;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.validation.anotation.NumbersOnlyAdmits;
@@ -11,6 +12,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -57,7 +59,7 @@ public class User {
     private String cvu;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "id")
-    private List<Transaction> transactions;
+    private List<TransactionRequest> transactionRequests = new ArrayList<TransactionRequest>();
 
     public User(String email, String walletAddress, String name, String surname, String address, String password, String cvu) {
         this.email = email;
@@ -67,7 +69,6 @@ public class User {
         this.password = password;
         this.cvu = cvu;
         this.wallet = new DigitalWallet(walletAddress, this);
-        this.transactions = List.of();
     }
 
 }
