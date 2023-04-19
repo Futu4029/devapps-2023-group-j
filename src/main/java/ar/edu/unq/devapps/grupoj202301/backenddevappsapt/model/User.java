@@ -34,7 +34,6 @@ public class User {
 
     @PrimaryKeyJoinColumn
     @OneToOne(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @NotNull
     private DigitalWallet wallet;
 
     @Column(nullable = false)
