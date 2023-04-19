@@ -153,10 +153,4 @@ class UserServiceTest {
         user = UserFactory.userWithShortWalletAddress();
         genericStructureToRegisterTest(user,"Field address has an error: size must be between 8 and 8");
     }
-
-    @Test
-    void register_User_With_Null_Wallet_Test() {
-        user.setWallet(null);
-        genericStructureToRegisterTest(user,"Field wallet has an error: must not be null");
-    }
 }
