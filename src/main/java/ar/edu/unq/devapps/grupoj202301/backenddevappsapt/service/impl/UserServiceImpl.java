@@ -7,6 +7,8 @@ import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.UserService;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionSystemException;
@@ -15,6 +17,8 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+
+    protected final Log logger = LogFactory.getLog(getClass());
 
     @Autowired
     private UserPersistence userPersistence;
@@ -26,6 +30,7 @@ public class UserServiceImpl implements UserService {
         if(userPersistence.findById(user.getEmail()).isEmpty()) {
             try {
                 User userResult = userPersistence.save(user);
+                logger.info("User created OK "+user.getEmail());
                 return userResult.getEmail();
             } catch (TransactionSystemException exception) {
                 Throwable rootCause = exception.getRootCause();
