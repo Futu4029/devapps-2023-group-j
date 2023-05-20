@@ -16,7 +16,7 @@ public class TransactionRequestFactory {
 
     public static TransactionRequest anyTransactionRequestOneWeekLater(){
         CryptoActive cryptoActive = CryptoActiveFactory.anyCryptoActive();
-        User user = UserFactory.anyUser();
+        User user = UserFactory.anyUserWithAnotherEmail();
         return new TransactionRequest(cryptoActive, new BigDecimal("100"),LocalDateTime.now().plusWeeks(1), user, new BigDecimal("1"), new BigDecimal("0.001"), TransactionType.SELL);
     }
 }

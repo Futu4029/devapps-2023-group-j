@@ -23,30 +23,25 @@ public class TransactionRequest {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
     @PrimaryKeyJoinColumn
-    @OneToOne
+    @OneToOne(cascade = CascadeType.MERGE)
+    @NotNull
     private CryptoActive cryptoActive;
     @Column(nullable = false)
-    @NotEmpty
+    @NotNull
     private BigDecimal amount;
     @Column(nullable = false)
-    @NotEmpty
-    private LocalDateTime date;
-
-    @Column(nullable = false)
     @NotNull
+    private LocalDateTime date;
+    @Column(nullable = false)
     private TransactionState transactionState = TransactionState.ACTIVE;
-
     @Column(nullable = false)
     @NotNull
     private BigDecimal pesosAmount;
-
     @Column(nullable = false)
     @NotNull
     private BigDecimal dollarAmount;
-
     @Column(nullable = false)
     private LocalDateTime creationDate = LocalDateTime.now();
-    @PrimaryKeyJoinColumn
     @OneToOne
     @NotNull
     private User userOwner;

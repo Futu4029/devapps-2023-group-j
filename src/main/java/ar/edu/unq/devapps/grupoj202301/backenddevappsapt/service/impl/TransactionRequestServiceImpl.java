@@ -2,9 +2,11 @@ package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.impl;
 
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.dto.CryptoActiveVolumeInfo;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.dto.TransactionRequestVolumeInfo;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.CryptoActive;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.CryptoCoin;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.TransactionRequest;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.enum_model.TransactionState;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.persistence.CryptoActivePersistence;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.persistence.TransactionRequestPersistence;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.CryptoCoinService;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.TransactionRequestService;
@@ -38,7 +40,7 @@ public class TransactionRequestServiceImpl implements TransactionRequestService 
     public TransactionRequestVolumeInfo volumeOperatedBetweenDates(String email, LocalDateTime startDate, LocalDateTime endDate) {
         List<TransactionRequest> transactionRequestList = transactionRequestPersistence.findOperationBetweenDates(email, startDate, endDate, TransactionState.ACCEPTED);
         List<CryptoActiveVolumeInfo> cryptoActivesList = new ArrayList<>();
-        CryptoCoin pesos = new CryptoCoin();
+        CryptoCoin pesos = cryptoCoinService.findByName("PESOS");
         BigDecimal totalDollarAmount = BigDecimal.ZERO;
         BigDecimal totalPesosAmount = BigDecimal.ZERO;
         transactionRequestList.forEach(t -> {
@@ -48,7 +50,7 @@ public class TransactionRequestServiceImpl implements TransactionRequestService 
                             t.getCryptoActive().getCoin().getName(),
                             t.getCryptoActive().getPrice(),
                             t.getCryptoActive().getCoin().getPrice(),
-                            pesos.getPrice()
+                            t.getCryptoActive().getPrice().multiply(pesos.getPrice())
                     );
                 cryptoActivesList.add(cryptoDTO);
                 }
@@ -59,8 +61,8 @@ public class TransactionRequestServiceImpl implements TransactionRequestService 
 
     @Override
     public void save(TransactionRequest transactionRequest) {
-
-        transactionRequestPersistence.save(new TransactionRequest(
+        transactionRequestPersistence.save(transactionRequest);
+        /*transactionRequestPersistence.save(new TransactionRequest(
                 transactionRequest.getCryptoActive(),
                 transactionRequest.getAmount(),
                 LocalDateTime.now(),
@@ -68,6 +70,6 @@ public class TransactionRequestServiceImpl implements TransactionRequestService 
                 transactionRequest.getCryptoActive().getCoin().getPrice().multiply(transactionRequest.getAmount()),
                 cryptoCoinService.toPesos(transactionRequest.getCryptoActive().getCoin().getName(), transactionRequest.getAmount()),
                 transactionRequest.getTransactionType())
-        );
+        );*/
     }
 }

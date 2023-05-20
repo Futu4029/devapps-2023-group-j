@@ -13,9 +13,9 @@ import java.util.List;
 @Repository
 public interface TransactionRequestPersistence extends JpaRepository<TransactionRequest, Long> {
 
-    @Query("SELECT t FROM transaction WHERE t.date BETWEEN :startDate AND :endDate " +
+    @Query("SELECT t FROM TransactionRequest t WHERE t.date BETWEEN :startDate AND :endDate " +
             "AND t.transactionState= :state " +
-            "AND t.userOwner= :email")
+            "AND t.userOwner.email = :email")
     List<TransactionRequest>findOperationBetweenDates(@Param("email")String email,
                                                       @Param("startDate")LocalDateTime startDate,
                                                       @Param("endDate")LocalDateTime endDate,

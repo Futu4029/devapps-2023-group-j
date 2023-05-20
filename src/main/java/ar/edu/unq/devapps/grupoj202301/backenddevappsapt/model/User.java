@@ -32,9 +32,11 @@ public class User {
     @NotBlank
     private String email;
 
-    @PrimaryKeyJoinColumn
-    @OneToOne(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private DigitalWallet wallet;
+    @Column(nullable = false, unique = true)
+    @Size(min=8, max=8)
+    @LettersAndNumbersOnlyAdmits
+    @NotBlank
+    private String walletAddress;
 
     @Column(nullable = false)
     @Size(min=3, max=30)
@@ -61,7 +63,7 @@ public class User {
     @NumbersOnlyAdmits
     private String cvu;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "id")
+    @OneToMany(mappedBy = "id")
     private List<TransactionRequest> transactionRequests = new ArrayList<>();
 
     @ConstructorProperties({"email", "walletAddress", "name", "address", "password", "cvu"})
@@ -72,7 +74,7 @@ public class User {
         this.address = address;
         this.password = password;
         this.cvu = cvu;
-        this.wallet = new DigitalWallet(walletAddress, this);
+        this.walletAddress = walletAddress;
     }
 
 }

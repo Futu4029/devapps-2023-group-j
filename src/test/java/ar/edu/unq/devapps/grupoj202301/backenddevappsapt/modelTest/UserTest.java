@@ -36,7 +36,7 @@ class UserTest {
     }
     @Test
     void get_WalletAddress_Test() {
-        Assertions.assertEquals("00000000", user.getWallet().getAddress());
+        Assertions.assertEquals("00000000", user.getWalletAddress());
     }
     @Test
     void get_TransactionRequests_Test() {
