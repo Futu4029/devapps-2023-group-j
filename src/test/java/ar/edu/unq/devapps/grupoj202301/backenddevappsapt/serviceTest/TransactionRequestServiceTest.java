@@ -22,7 +22,7 @@ import java.time.LocalTime;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class TransactionRequestTest {
+public class TransactionRequestServiceTest {
 
     @Autowired
     TransactionRequestService transactionRequestService;
@@ -39,7 +39,6 @@ public class TransactionRequestTest {
     @Autowired
     UserService userService;
 
-    private TransactionRequest transactionRequestAccepted;
     private TransactionRequest transactionRequest;
     private User user = UserFactory.anyUser();
     private User userWithAnotherEmail = UserFactory.anyUserWithAnotherEmail();
@@ -54,24 +53,46 @@ public class TransactionRequestTest {
         digitalWalletPersistence.save(digitalWallet);
         cryptoActivePersistence.save(cryptoActive);
         transactionRequestService.save(transactionRequest = TransactionRequestFactory.anyTransactionRequest());
-        transactionRequestAccepted = TransactionRequestFactory.anyTransactionRequest();
-        transactionRequestAccepted.setTransactionState(TransactionState.ACCEPTED);
-        transactionRequestService.save(transactionRequestAccepted);
         user = UserFactory.anyUser();
         userWithAnotherEmail = UserFactory.anyUserWithAnotherEmail();
     }
 
     @Test
     void volumeOperatedBetweenDates (){
-        transactionRequestAccepted = TransactionRequestFactory.anyTransactionRequest();
-        transactionRequestAccepted.setTransactionState(TransactionState.ACCEPTED);
-        transactionRequestService.save(transactionRequest);
         LocalDateTime yesterday = LocalDateTime.of(LocalDateTime.now().minusDays(1).toLocalDate(), LocalTime.NOON);
         LocalDateTime tomorrow = LocalDateTime.of(LocalDateTime.now().plusDays(1).toLocalDate(), LocalTime.NOON);
-        BigDecimal amount = new BigDecimal("100");
-        BigDecimal dollarAmount = new BigDecimal("1");
-        BigDecimal pesosAmount = new BigDecimal("0.001");
-        TransactionRequestVolumeInfo transactionRequestVolumeInfo = transactionRequestService.volumeOperatedBetweenDates(user.getEmail(), yesterday, tomorrow);
-        Assertions.assertTrue(transactionRequestVolumeInfo.getCryptoActiveVolumeInfoList().size() == 1);
+        TransactionRequest transactionRequestAccepted = TransactionRequestFactory.anyTransactionRequest();
+        transactionRequestAccepted.setTransactionState(TransactionState.ACCEPTED);
+        transactionRequestService.save(transactionRequestAccepted);
+        TransactionRequestVolumeInfo result = transactionRequestService.volumeOperatedBetweenDates(user.getEmail(), yesterday, tomorrow);
+        LocalDateTime date = LocalDateTime.now();
+        BigDecimal totalDollarAmount = new BigDecimal("1.00");
+        BigDecimal totalPesosAmount = new BigDecimal("0.01");
+
+        Assertions.assertEquals(1, result.getCryptoActiveVolumeInfoList().size());
+        Assertions.assertEquals(totalDollarAmount, result.getDollarAmount());
+        Assertions.assertEquals(totalPesosAmount, result.getPesosAmount());
+        Assertions.assertEquals(date, result.getDate());
+    }
+    @Test
+    void volumeOperatedBetweenDatesWithMoreRequest (){
+        LocalDateTime yesterday = LocalDateTime.of(LocalDateTime.now().minusDays(1).toLocalDate(), LocalTime.NOON);
+        LocalDateTime tomorrow = LocalDateTime.of(LocalDateTime.now().plusDays(1).toLocalDate(), LocalTime.NOON);
+        TransactionRequest transactionRequestAccepted = TransactionRequestFactory.anyTransactionRequest();
+        transactionRequestAccepted.setTransactionState(TransactionState.ACCEPTED);
+        TransactionRequest transactionRequestAccepted2 = TransactionRequestFactory.anyTransactionRequest();
+        transactionRequestAccepted2.setTransactionState(TransactionState.ACCEPTED);
+        transactionRequestService.save(transactionRequestAccepted);
+        transactionRequestService.save(transactionRequestAccepted2);
+        TransactionRequestVolumeInfo result = transactionRequestService.volumeOperatedBetweenDates(user.getEmail(), yesterday, tomorrow);
+        LocalDateTime date = LocalDateTime.now();
+        BigDecimal totalDollarAmount = new BigDecimal("2.00");
+        BigDecimal totalPesosAmount = new BigDecimal("0.02");
+
+        Assertions.assertEquals(2, result.getCryptoActiveVolumeInfoList().size());
+        Assertions.assertEquals(totalDollarAmount, result.getDollarAmount());
+        Assertions.assertEquals(totalPesosAmount, result.getPesosAmount());
+        Assertions.assertEquals(date, result.getDate());
     }
 }
+

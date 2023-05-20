@@ -54,7 +54,7 @@ public class CryptoCoinInitializer {
                 new CryptoCoin("TRXUSDT", "100"),
                 new CryptoCoin("AUDIOUSDT", "100"),
                 new CryptoCoin("USD", "1"),
-                new CryptoCoin("PESOS", "0.0001")
+                new CryptoCoin("PESOS", "0.01")
         );
         cryptoCoinService.saveAll(cryptoCoinList);
     }

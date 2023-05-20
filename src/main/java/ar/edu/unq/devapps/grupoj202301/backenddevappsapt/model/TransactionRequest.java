@@ -22,7 +22,7 @@ public class TransactionRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
-    @PrimaryKeyJoinColumn
+    @JoinColumn(name = "crypto_active_id")
     @OneToOne(cascade = CascadeType.MERGE)
     @NotNull
     private CryptoActive cryptoActive;

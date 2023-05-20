@@ -40,21 +40,23 @@ public class TransactionRequestServiceImpl implements TransactionRequestService 
     public TransactionRequestVolumeInfo volumeOperatedBetweenDates(String email, LocalDateTime startDate, LocalDateTime endDate) {
         List<TransactionRequest> transactionRequestList = transactionRequestPersistence.findOperationBetweenDates(email, startDate, endDate, TransactionState.ACCEPTED);
         List<CryptoActiveVolumeInfo> cryptoActivesList = new ArrayList<>();
+        //Esto habría que hacer que vaya y busque en la api externa y busque su valor.
         CryptoCoin pesos = cryptoCoinService.findByName("PESOS");
+        CryptoCoin dolares = cryptoCoinService.findByName("USD");
+        //----------------
         BigDecimal totalDollarAmount = BigDecimal.ZERO;
         BigDecimal totalPesosAmount = BigDecimal.ZERO;
-        transactionRequestList.forEach(t -> {
-                    totalDollarAmount.add(t.getDollarAmount());
-                    totalPesosAmount.add(t.getPesosAmount());
+        for(TransactionRequest t : transactionRequestList) {
+                    totalDollarAmount = totalDollarAmount.add(t.getDollarAmount());
+                    totalPesosAmount = totalPesosAmount.add(t.getPesosAmount());
                     CryptoActiveVolumeInfo cryptoDTO = new CryptoActiveVolumeInfo(
                             t.getCryptoActive().getCoin().getName(),
                             t.getCryptoActive().getPrice(),
                             t.getCryptoActive().getCoin().getPrice(),
-                            t.getCryptoActive().getPrice().multiply(pesos.getPrice())
+                            t.getCryptoActive().getCoin().getPrice().multiply(pesos.getPrice())
                     );
                 cryptoActivesList.add(cryptoDTO);
                 }
-        );
 
         return new TransactionRequestVolumeInfo(LocalDateTime.now(), totalDollarAmount, totalPesosAmount, cryptoActivesList);
     }
