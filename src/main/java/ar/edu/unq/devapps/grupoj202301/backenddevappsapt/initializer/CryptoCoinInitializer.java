@@ -7,6 +7,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,7 +52,9 @@ public class CryptoCoinInitializer {
                 new CryptoCoin("BNBUSDT", "100"),
                 new CryptoCoin("ADAUSDT", "100"),
                 new CryptoCoin("TRXUSDT", "100"),
-                new CryptoCoin("AUDIOUSDT", "100")
+                new CryptoCoin("AUDIOUSDT", "100"),
+                new CryptoCoin("USD", "1"),
+                new CryptoCoin("PESOS", "0.0001")
         );
         cryptoCoinService.saveAll(cryptoCoinList);
     }

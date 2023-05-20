@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -27,4 +28,18 @@ public class CryptoCoinServiceImpl implements CryptoCoinService {
     public void saveAll(List<CryptoCoin> list) {
         cryptoCoinPersistence.saveAll(list);
     }
+
+    @Override
+    public CryptoCoin findByName(String name) {
+        return cryptoCoinPersistence.findByName(name);
+    }
+
+    @Override
+    public BigDecimal toPesos(String name, BigDecimal amount) {
+        CryptoCoin cryptoCoin = findByName(name);
+        CryptoCoin pesosCoin = findByName("PESOS");
+        BigDecimal dollars = cryptoCoin.getPrice().multiply(amount);
+        return dollars.multiply(pesosCoin.getPrice());
+    }
+
 }

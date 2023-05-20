@@ -1,10 +1,14 @@
 package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model;
 
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.enum_model.TransactionState;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.enum_model.TransactionType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -27,15 +31,37 @@ public class TransactionRequest {
     @Column(nullable = false)
     @NotEmpty
     private LocalDateTime date;
+
+    @Column(nullable = false)
+    @NotNull
+    private TransactionState transactionState = TransactionState.ACTIVE;
+
+    @Column(nullable = false)
+    @NotNull
+    private BigDecimal pesosAmount;
+
+    @Column(nullable = false)
+    @NotNull
+    private BigDecimal dollarAmount;
+
+    @Column(nullable = false)
+    private LocalDateTime creationDate = LocalDateTime.now();
     @PrimaryKeyJoinColumn
     @OneToOne
-    @NotEmpty
-    private TransactionData transactionData;
+    @NotNull
+    private User userOwner;
+    @Column(nullable = false)
+    @NotNull
+    private TransactionType transactionType;
 
-    public TransactionRequest(CryptoActive cryptoActive, String amount, LocalDateTime date, TransactionData transactionData) {
+    public TransactionRequest(CryptoActive cryptoActive,BigDecimal amount, LocalDateTime date, User user, BigDecimal dollarAmount, BigDecimal pesosAmount, TransactionType transactionType) {
         this.cryptoActive = cryptoActive;
-        this.amount = new BigDecimal(amount);
+        this.amount = amount;
         this.date = date;
-        this.transactionData = transactionData;
+        this.userOwner = user;
+        this.dollarAmount = dollarAmount;
+        this.pesosAmount = pesosAmount;
+        this.transactionType = transactionType;
     }
+
 }
