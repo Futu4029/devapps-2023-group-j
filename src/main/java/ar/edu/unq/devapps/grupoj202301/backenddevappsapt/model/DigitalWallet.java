@@ -1,6 +1,7 @@
 package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model;
 
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.validation.anotation.LettersAndNumbersOnlyAdmits;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -27,6 +28,7 @@ public class DigitalWallet {
     @OneToOne
     @JoinColumn(name = "user_email", referencedColumnName = "email")
     @NotNull
+    @JsonBackReference
     private User owner;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "id")

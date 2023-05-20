@@ -1,10 +1,11 @@
 package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model;
-
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.validation.anotation.LettersAndNumbersOnlyAdmits;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.validation.anotation.LettersOnlyAdmits;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.validation.anotation.NumbersOnlyAdmits;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.validation.anotation.SpecialCharactersOnlyAdmits;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -12,7 +13,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-
 import java.beans.ConstructorProperties;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +34,8 @@ public class User {
 
     @PrimaryKeyJoinColumn
     @OneToOne(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference
+    @Valid
     private DigitalWallet wallet;
 
     @Column(nullable = false)
@@ -74,5 +76,4 @@ public class User {
         this.cvu = cvu;
         this.wallet = new DigitalWallet(walletAddress, this);
     }
-
 }

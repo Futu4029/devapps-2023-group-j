@@ -1,5 +1,4 @@
-package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.modelTest;
-
+package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.unitTest.modelTest;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.factories.TransactionDataFactory;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.factories.UserFactory;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.TransactionData;
