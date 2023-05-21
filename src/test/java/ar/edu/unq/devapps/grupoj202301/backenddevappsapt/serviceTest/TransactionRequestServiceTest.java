@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -58,7 +59,7 @@ public class TransactionRequestServiceTest {
     }
 
     @Test
-    void volumeOperatedBetweenDates (){
+    void volumeOperatedBetweenDates () throws IOException {
         LocalDateTime yesterday = LocalDateTime.of(LocalDateTime.now().minusDays(1).toLocalDate(), LocalTime.NOON);
         LocalDateTime tomorrow = LocalDateTime.of(LocalDateTime.now().plusDays(1).toLocalDate(), LocalTime.NOON);
         TransactionRequest transactionRequestAccepted = TransactionRequestFactory.anyTransactionRequest();
@@ -75,7 +76,7 @@ public class TransactionRequestServiceTest {
         Assertions.assertEquals(date, result.getDate());
     }
     @Test
-    void volumeOperatedBetweenDatesWithMoreRequest (){
+    void volumeOperatedBetweenDatesWithMoreRequest () throws IOException {
         LocalDateTime yesterday = LocalDateTime.of(LocalDateTime.now().minusDays(1).toLocalDate(), LocalTime.NOON);
         LocalDateTime tomorrow = LocalDateTime.of(LocalDateTime.now().plusDays(1).toLocalDate(), LocalTime.NOON);
         TransactionRequest transactionRequestAccepted = TransactionRequestFactory.anyTransactionRequest();

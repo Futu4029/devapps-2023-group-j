@@ -18,7 +18,7 @@ public class UserWebService {
 
     @PostMapping("/register")
     @ResponseBody
-    public ResponseEntity<String> register(@Valid @RequestBody User user){
+    public ResponseEntity<String> register(@Valid @RequestBody User user) {
         return ResponseEntity.ok(userService.register(user));
     }
 }

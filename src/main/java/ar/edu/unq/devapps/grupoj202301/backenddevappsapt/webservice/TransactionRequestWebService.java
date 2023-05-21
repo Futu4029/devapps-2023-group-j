@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -26,9 +27,7 @@ public class TransactionRequestWebService {
     }
 
     @GetMapping("/betweenDates/{email}/{startDate}/{endDate}")
-    private ResponseEntity<TransactionRequestVolumeInfo> volumeOperatedBetweenDates(@PathVariable("email") String email,
-                                                                                    @PathVariable("startDate") LocalDateTime startDate,
-                                                                                    @PathVariable("endDate") LocalDateTime endDate){
+    private ResponseEntity<TransactionRequestVolumeInfo> volumeOperatedBetweenDates(@PathVariable("email") String email, @PathVariable("startDate") LocalDateTime startDate,@PathVariable("endDate") LocalDateTime endDate) throws IOException {
         return ResponseEntity.ok(transactionRequestService.volumeOperatedBetweenDates(email, startDate, endDate));
     }
 }

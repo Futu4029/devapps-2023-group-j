@@ -10,6 +10,6 @@ public class CryptoActiveFactory {
     public static CryptoActive anyCryptoActive(){
         CryptoCoin cryptoCoin = CryptoCoinFactory.anyCryptoCoin();
         DigitalWallet digitalWallet = DigitalWalletFactory.anyDigitalWallet();
-        return new CryptoActive(1L, cryptoCoin, digitalWallet, new BigDecimal("10"));
+        return new CryptoActive(1L, cryptoCoin.getName(), new BigDecimal("10"), digitalWallet);
     }
 }
