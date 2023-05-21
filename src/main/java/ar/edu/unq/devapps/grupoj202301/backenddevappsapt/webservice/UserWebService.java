@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @ControllerAdvice
 @RequiredArgsConstructor
 @RequestMapping("/user")
+@SuppressWarnings("unused")
 public class UserWebService {
 
     @Autowired

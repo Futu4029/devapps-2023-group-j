@@ -1,8 +1,10 @@
 package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.impl;
-
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.dto.IntentionPSDTO;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.CryptoCoin;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.User;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.enum_model.TransactionType;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.persistence.CryptoCoinPersistence;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.CryptoCoinService;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.OperationService;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.validation.exception.ExternalAPIException;
 import lombok.RequiredArgsConstructor;
 import okhttp3.OkHttpClient;
@@ -14,7 +16,6 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
@@ -22,7 +23,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class CryptoCoinServiceImpl implements CryptoCoinService {
+public class OperationServiceImpl implements OperationService {
 
     @Autowired
     private CryptoCoinPersistence cryptoCoinPersistence;
@@ -68,6 +69,17 @@ public class CryptoCoinServiceImpl implements CryptoCoinService {
             }
         }
         throw new ExternalAPIException("Could not obtain dolarSi resource");
+    }
+
+    @Override
+    public String createIntentionPurchaseSale(User user, IntentionPSDTO intentionPSDTO) {
+        if(TransactionType.SELL == intentionPSDTO.getTransactionType()) {
+
+        } else {
+
+        }
+
+        return null;
     }
 
     private Response genericQueryToAnExternalApi(String url) throws IOException {

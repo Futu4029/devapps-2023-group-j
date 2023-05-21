@@ -26,7 +26,7 @@ class TransactionRequestTest {
 
     @Test
     void get_Amount_Test() {
-        Assertions.assertEquals(new BigDecimal("50"), transactionRequest.getAmount());
+        Assertions.assertEquals(new BigDecimal("50"), transactionRequest.getQuotation());
     }
 
     @Test

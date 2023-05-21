@@ -1,6 +1,6 @@
 package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.initializer;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.CryptoCoin;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.CryptoCoinService;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.OperationService;
 import jakarta.annotation.PostConstruct;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -22,7 +22,7 @@ public class CryptoCoinInitializer {
     private String className;
 
     @Autowired
-    private CryptoCoinService cryptoCoinService;
+    private OperationService operationService;
 
     @PostConstruct
     public void initialize() throws IOException {
@@ -43,8 +43,8 @@ public class CryptoCoinInitializer {
         );
 
         for (String cryptoCoinName : cryptoCoinNamesList) {
-            cryptoCoinList.add(new CryptoCoin(cryptoCoinName, cryptoCoinService.getCryptoCoinCotizationByName(cryptoCoinName)));
+            cryptoCoinList.add(new CryptoCoin(cryptoCoinName, operationService.getCryptoCoinCotizationByName(cryptoCoinName)));
         }
-        cryptoCoinService.saveAll(cryptoCoinList);
+        operationService.saveAll(cryptoCoinList);
     }
 }

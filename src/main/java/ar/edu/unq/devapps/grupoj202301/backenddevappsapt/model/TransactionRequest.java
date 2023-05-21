@@ -1,14 +1,11 @@
 package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model;
-
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.enum_model.TransactionState;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.enum_model.TransactionType;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -28,7 +25,7 @@ public class TransactionRequest {
     private CryptoActive cryptoActive;
     @Column(nullable = false)
     @NotNull
-    private BigDecimal amount;
+    private BigDecimal quotation;
     @Column(nullable = false)
     @NotNull
     private LocalDateTime date;
@@ -49,9 +46,9 @@ public class TransactionRequest {
     @NotNull
     private TransactionType transactionType;
 
-    public TransactionRequest(CryptoActive cryptoActive,BigDecimal amount, LocalDateTime date, User user, BigDecimal dollarAmount, BigDecimal pesosAmount, TransactionType transactionType) {
+    public TransactionRequest(CryptoActive cryptoActive, BigDecimal quotation, LocalDateTime date, User user, BigDecimal dollarAmount, BigDecimal pesosAmount, TransactionType transactionType) {
         this.cryptoActive = cryptoActive;
-        this.amount = amount;
+        this.quotation = quotation;
         this.date = date;
         this.userOwner = user;
         this.dollarAmount = dollarAmount;

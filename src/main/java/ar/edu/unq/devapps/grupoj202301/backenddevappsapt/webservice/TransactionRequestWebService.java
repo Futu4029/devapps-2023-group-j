@@ -16,6 +16,7 @@ import java.util.List;
 @ControllerAdvice
 @RequiredArgsConstructor
 @RequestMapping("/transactionrequest")
+@SuppressWarnings("unused")
 public class TransactionRequestWebService {
 
     @Autowired

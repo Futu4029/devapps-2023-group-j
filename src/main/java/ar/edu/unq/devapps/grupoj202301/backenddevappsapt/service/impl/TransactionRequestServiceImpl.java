@@ -5,7 +5,7 @@ import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.CryptoActive;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.TransactionRequest;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.enum_model.TransactionState;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.persistence.TransactionRequestPersistence;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.CryptoCoinService;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.OperationService;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.TransactionRequestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class TransactionRequestServiceImpl implements TransactionRequestService 
     private TransactionRequestPersistence transactionRequestPersistence;
 
     @Autowired
-    private CryptoCoinService cryptoCoinService;
+    private OperationService operationService;
 
     @Override
     public List<TransactionRequest> findAll() {
@@ -41,7 +41,7 @@ public class TransactionRequestServiceImpl implements TransactionRequestService 
         List<TransactionRequest> transactionRequestList = transactionRequestPersistence.findOperationBetweenDates(email, startDate, endDate, TransactionState.ACCEPTED);
         Map<String, BigDecimal> cryptoQuotationCache = new HashMap<>();
         List<CryptoActiveVolumeInfo> cryptoActivesList = new ArrayList<>();
-        BigDecimal pesos = cryptoCoinService.getPesosValueByDollar();
+        BigDecimal pesos = operationService.getPesosValueByDollar();
         BigDecimal totalDollarAmount = BigDecimal.ZERO;
         BigDecimal totalPesosAmount = BigDecimal.ZERO;
 
@@ -53,12 +53,12 @@ public class TransactionRequestServiceImpl implements TransactionRequestService 
             BigDecimal amountOfCryptoCoin = actuallyCryptoActive.getAmountOfCryptoCoin();
 
             if(!cryptoQuotationCache.containsKey(cryptoCoinName)) {
-                cryptoQuotationCache.put(cryptoCoinName, cryptoCoinService.getCryptoCoinCotizationByName(cryptoCoinName));
+                cryptoQuotationCache.put(cryptoCoinName, operationService.getCryptoCoinCotizationByName(cryptoCoinName));
             }
 
             CryptoActiveVolumeInfo cryptoDTO = new CryptoActiveVolumeInfo(
              cryptoCoinName,amountOfCryptoCoin, cryptoQuotationCache.get(cryptoCoinName),
-             cryptoCoinService.getTheValueOfAnAmountOfCryptoCoinInPesos(cryptoCoinName, amountOfCryptoCoin)
+             operationService.getTheValueOfAnAmountOfCryptoCoinInPesos(cryptoCoinName, amountOfCryptoCoin)
             );
 
             cryptoActivesList.add(cryptoDTO);

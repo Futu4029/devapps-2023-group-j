@@ -26,4 +26,9 @@ public class UserServiceImpl implements UserService {
             throw new DataIntegrityViolationException("Field email has an error: Already in used");
         }
     }
+
+    @Override
+    public User getUserByEmail(String email) {
+        return userPersistence.findById(email).orElseThrow();
+    }
 }
