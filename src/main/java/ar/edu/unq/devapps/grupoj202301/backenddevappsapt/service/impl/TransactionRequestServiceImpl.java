@@ -37,6 +37,11 @@ public class TransactionRequestServiceImpl implements TransactionRequestService 
     }
 
     @Override
+    public List<TransactionRequest> getTransactionsByState(TransactionState transactionState) {
+        return transactionRequestPersistence.getTransactionsByState(transactionState);
+    }
+
+    @Override
     public List<TransactionRequest> findAll() {
         return transactionRequestPersistence.findAll();
     }

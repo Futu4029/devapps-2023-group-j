@@ -2,6 +2,7 @@ package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.persistence;
 
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.TransactionRequest;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.enum_model.TransactionState;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,4 +21,7 @@ public interface TransactionRequestPersistence extends JpaRepository<Transaction
                                                       @Param("startDate")LocalDateTime startDate,
                                                       @Param("endDate")LocalDateTime endDate,
                                                       @Param("state")TransactionState state);
+
+    @Query("SELECT t FROM TransactionRequest t WHERE t.transactionState= :state")
+    List<TransactionRequest>getTransactionsByState(@Param("state")TransactionState state);
 }

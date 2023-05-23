@@ -65,9 +65,6 @@ public class User {
     @NumbersOnlyAdmits
     private String cvu;
 
-    @OneToMany(mappedBy = "id")
-    private List<TransactionRequest> transactionRequests = new ArrayList<>();
-
     @ConstructorProperties({"email", "walletAddress", "name", "address", "password", "cvu"})
     public User(String email, String walletAddress, String name, String surname, String address, String password, String cvu) {
         this.email = email;

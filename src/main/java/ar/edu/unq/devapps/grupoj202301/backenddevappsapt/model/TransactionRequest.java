@@ -19,7 +19,7 @@ public class TransactionRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
-    @JoinColumn(name = "crypto_active_id")
+    @JoinColumn(name = "crypto_active_id", referencedColumnName = "id")
     @OneToOne
     @NotNull
     private CryptoActive cryptoActive;
@@ -37,6 +37,7 @@ public class TransactionRequest {
     @Column(nullable = false)
     private LocalDateTime creationDate = LocalDateTime.now();
     @OneToOne
+    @JoinColumn(name = "user_owner_email", referencedColumnName = "email")
     @NotNull
     private User userOwner;
     @Column(nullable = false)

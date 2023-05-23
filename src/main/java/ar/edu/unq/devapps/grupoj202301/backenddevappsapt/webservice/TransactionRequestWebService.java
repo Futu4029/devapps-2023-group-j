@@ -2,6 +2,7 @@ package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.webservice;
 
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.dto.TransactionRequestVolumeInfo;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.TransactionRequest;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.enum_model.TransactionState;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.TransactionRequestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,5 +31,10 @@ public class TransactionRequestWebService {
     @GetMapping("/betweenDates/{email}/{startDate}/{endDate}")
     private ResponseEntity<TransactionRequestVolumeInfo> volumeOperatedBetweenDates(@PathVariable("email") String email, @PathVariable("startDate") LocalDateTime startDate,@PathVariable("endDate") LocalDateTime endDate) throws IOException {
         return ResponseEntity.ok(transactionRequestService.volumeOperatedBetweenDates(email, startDate, endDate));
+    }
+
+    @GetMapping("/getActivesTransactions")
+    private ResponseEntity<List<TransactionRequest>> getActivesTransactions() throws IOException {
+        return ResponseEntity.ok(transactionRequestService.getTransactionsByState(TransactionState.ACTIVE));
     }
 }

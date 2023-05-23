@@ -79,7 +79,7 @@ public class OperationServiceImpl implements OperationService {
 
         BigDecimal dollarAmount = getCryptoCoinCotizationByName(cryptoActive.getCryptoCoinName());
         return new TransactionRequest(cryptoActive, LocalDateTime.now(), user, dollarAmount,
-                getPesosValueByDollar().multiply(dollarAmount), transactionType);
+                          getPesosValueByDollar().multiply(dollarAmount), transactionType);
     }
 
     private Response genericQueryToAnExternalApi(String url) throws IOException {

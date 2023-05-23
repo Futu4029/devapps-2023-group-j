@@ -36,6 +36,7 @@ public class OperationWebService {
         return ResponseEntity.ok(operationService.findAll());
     }
 
+
     @PostMapping("/createIntentionPS")
     @ResponseBody
     public ResponseEntity<String> createIntentionPurchaseSale(@Valid @RequestBody IntentionPSDTO intention) throws IOException {
