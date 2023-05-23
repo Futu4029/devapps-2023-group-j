@@ -1,6 +1,5 @@
 package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.impl;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.DigitalWallet;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.persistence.CryptoCoinPersistence;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.persistence.DigitalWalletPersistence;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.DigitalWalletService;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,6 @@ public class DigitalWalletServiceImpl implements DigitalWalletService {
     @Autowired
     private DigitalWalletPersistence digitalWalletPersistence;
 
-    @Override
     public DigitalWallet getDigitalWallet(String address) {
         return digitalWalletPersistence.findById(address).orElseThrow();
     }

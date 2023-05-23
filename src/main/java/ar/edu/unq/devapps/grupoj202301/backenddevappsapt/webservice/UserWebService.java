@@ -11,11 +11,10 @@ import org.springframework.web.bind.annotation.*;
 @ControllerAdvice
 @RequiredArgsConstructor
 @RequestMapping("/user")
-@SuppressWarnings("unused")
 public class UserWebService {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @PostMapping("/register")
     @ResponseBody

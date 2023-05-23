@@ -1,9 +1,7 @@
 package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.impl;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.*;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.enum_model.TransactionType;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.CryptoCoin;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.persistence.CryptoCoinPersistence;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.OperationService;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.validation.exception.CryptoActiveUnavailableException;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.CryptoCoinService;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.validation.exception.ExternalAPIException;
 import lombok.RequiredArgsConstructor;
 import okhttp3.OkHttpClient;
@@ -17,31 +15,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class OperationServiceImpl implements OperationService {
+public class CryptoCoinServiceImpl implements CryptoCoinService {
 
     @Autowired
     private CryptoCoinPersistence cryptoCoinPersistence;
 
-    public List<CryptoCoin> findAll() {
+    public List<CryptoCoin> getAllQuotations() {
         return cryptoCoinPersistence.findAll();
     }
 
-    public void saveAll(List<CryptoCoin> list) {
-        cryptoCoinPersistence.saveAll(list);
-    }
-
-    public CryptoCoin findByName(String name) {
-        return cryptoCoinPersistence.findByName(name);
-    }
+    public void saveAllCryptoCoins(List<CryptoCoin> cryptoCoinList) { cryptoCoinPersistence.saveAll(cryptoCoinList); }
 
     public BigDecimal getTheValueOfAnAmountOfCryptoCoinInPesos(String name, BigDecimal amount) throws IOException {
-        CryptoCoin cryptoCoin = findByName(name);
+        CryptoCoin cryptoCoin = cryptoCoinPersistence.findByName(name);
         return cryptoCoin.getQuotation().multiply(amount).multiply(getPesosValueByDollar());
     }
 
@@ -71,15 +62,9 @@ public class OperationServiceImpl implements OperationService {
         throw new ExternalAPIException("Could not obtain dolarSi resource");
     }
 
-    public TransactionRequest createIntentionPurchaseSale(User user, CryptoActive cryptoActive, TransactionType transactionType) throws IOException {
-        if(TransactionType.SELL == transactionType && !user.getDigitalWallet().getCryptoActiveIfPossibleToSell(cryptoActive.getCryptoCoinName(), cryptoActive.getAmountOfCryptoCoin())) {
-           throw new CryptoActiveUnavailableException("The crypto asset you are trying to sell is not in your wallet " +
-                                                      "or the amount entered to sell is greater than that available.");
-        }
-
-        BigDecimal dollarAmount = getCryptoCoinCotizationByName(cryptoActive.getCryptoCoinName());
-        return new TransactionRequest(cryptoActive, LocalDateTime.now(), user, dollarAmount,
-                          getPesosValueByDollar().multiply(dollarAmount), transactionType);
+    @Override
+    public BigDecimal getQuotationByName(String name) {
+        return cryptoCoinPersistence.getQuotationByName(name);
     }
 
     private Response genericQueryToAnExternalApi(String url) throws IOException {

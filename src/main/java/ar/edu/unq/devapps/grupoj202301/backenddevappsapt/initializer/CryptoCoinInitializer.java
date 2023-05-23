@@ -1,6 +1,6 @@
 package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.initializer;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.CryptoCoin;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.OperationService;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.CryptoCoinService;
 import jakarta.annotation.PostConstruct;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -22,13 +22,13 @@ public class CryptoCoinInitializer {
     private String className;
 
     @Autowired
-    private OperationService operationService;
+    private CryptoCoinService cryptoCoinService;
 
     @PostConstruct
     public void initialize() throws IOException {
-        String h2_CLASS_NAME = "org.h2.Driver";
+        String HSQLDB_CLASS_NAME = "org.hsqldb.jdbc.JDBCDriver";
 
-        if (className.equals(h2_CLASS_NAME)){
+        if (className.equals(HSQLDB_CLASS_NAME)){
             logger.warn("Init Data Using H2 DataBase - Initializing CryptoCoins");
             startInitialization();
         }else{
@@ -43,8 +43,8 @@ public class CryptoCoinInitializer {
         );
 
         for (String cryptoCoinName : cryptoCoinNamesList) {
-            cryptoCoinList.add(new CryptoCoin(cryptoCoinName, operationService.getCryptoCoinCotizationByName(cryptoCoinName)));
+            cryptoCoinList.add(new CryptoCoin(cryptoCoinName, cryptoCoinService.getCryptoCoinCotizationByName(cryptoCoinName)));
         }
-        operationService.saveAll(cryptoCoinList);
+        cryptoCoinService.saveAllCryptoCoins(cryptoCoinList);
     }
 }
