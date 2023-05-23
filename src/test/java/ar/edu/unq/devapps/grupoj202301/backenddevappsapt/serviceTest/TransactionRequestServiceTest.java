@@ -53,7 +53,7 @@ public class TransactionRequestServiceTest {
         cryptoCoinPersistence.save(cryptoCoin);
         digitalWalletPersistence.save(digitalWallet);
         cryptoActivePersistence.save(cryptoActive);
-        transactionRequestService.save(transactionRequest = TransactionRequestFactory.anyTransactionRequest());
+        transactionRequestService.register(transactionRequest = TransactionRequestFactory.anyTransactionRequest());
         user = UserFactory.anyUser();
         userWithAnotherEmail = UserFactory.anyUserWithAnotherEmail();
     }
@@ -64,7 +64,7 @@ public class TransactionRequestServiceTest {
         LocalDateTime tomorrow = LocalDateTime.of(LocalDateTime.now().plusDays(1).toLocalDate(), LocalTime.NOON);
         TransactionRequest transactionRequestAccepted = TransactionRequestFactory.anyTransactionRequest();
         transactionRequestAccepted.setTransactionState(TransactionState.ACCEPTED);
-        transactionRequestService.save(transactionRequestAccepted);
+        transactionRequestService.register(transactionRequestAccepted);
         TransactionRequestVolumeInfo result = transactionRequestService.volumeOperatedBetweenDates(user.getEmail(), yesterday, tomorrow);
         LocalDateTime date = LocalDateTime.now();
         BigDecimal totalDollarAmount = new BigDecimal("1.00");
@@ -83,8 +83,8 @@ public class TransactionRequestServiceTest {
         transactionRequestAccepted.setTransactionState(TransactionState.ACCEPTED);
         TransactionRequest transactionRequestAccepted2 = TransactionRequestFactory.anyTransactionRequest();
         transactionRequestAccepted2.setTransactionState(TransactionState.ACCEPTED);
-        transactionRequestService.save(transactionRequestAccepted);
-        transactionRequestService.save(transactionRequestAccepted2);
+        transactionRequestService.register(transactionRequestAccepted);
+        transactionRequestService.register(transactionRequestAccepted2);
         TransactionRequestVolumeInfo result = transactionRequestService.volumeOperatedBetweenDates(user.getEmail(), yesterday, tomorrow);
         LocalDateTime date = LocalDateTime.now();
         BigDecimal totalDollarAmount = new BigDecimal("2.00");

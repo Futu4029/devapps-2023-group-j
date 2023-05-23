@@ -1,16 +1,15 @@
 package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model;
-
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.validation.anotation.LettersAndNumbersOnlyAdmits;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Data
 @Entity
@@ -25,18 +24,22 @@ public class DigitalWallet {
     @NotBlank
     private String address;
 
-    @OneToOne
-    @JoinColumn(name = "user_email", referencedColumnName = "email")
-    @NotNull
-    @JsonBackReference
-    private User owner;
+    @NotBlank
+    private String email;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "id")
     @NotNull
     private List<CryptoActive> cryptoCoinsAcquired = new ArrayList<>();
 
-    public DigitalWallet(String address, User owner) {
+    public DigitalWallet(String address, String email) {
         this.address = address;
-        this.owner = owner;
+        this.email = email;
+    }
+
+    public boolean getCryptoActiveIfPossibleToSell(String cryptoCoinName, BigDecimal amountOfCryptoCoin) {
+        return  cryptoCoinsAcquired.stream().anyMatch((cryptoActive) ->
+                    Objects.equals(cryptoActive.getCryptoCoinName(), cryptoCoinName) &&
+                    cryptoActive.getAmountOfCryptoCoin().compareTo(amountOfCryptoCoin) >= 0
+        );
     }
 }

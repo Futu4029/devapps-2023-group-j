@@ -149,12 +149,12 @@ class UserWebServiceTest {
     @Test
     void register_User_With_Less_Than_Eight_Characters_In_The_WalletAddress_Test() throws Exception {
         user = UserFactory.userWithLargeWalletAddress();
-        genericStructureToRegisterTest(user, 400, "Field walletAddress has an error: size must be between 8 and 8");
+        genericStructureToRegisterTest(user, 400, "Field digitalWalletAddress has an error: size must be between 8 and 8");
     }
 
     @Test
     void register_User_With_More_Than_Eight_Characters_In_The_WalletAddress_Test() throws Exception {
         user = UserFactory.userWithShortWalletAddress();
-        genericStructureToRegisterTest(user, 400, "Field walletAddress has an error: size must be between 8 and 8");
+        genericStructureToRegisterTest(user, 400, "Field digitalWalletAddress has an error: size must be between 8 and 8");
     }
 }

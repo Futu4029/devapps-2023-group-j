@@ -25,14 +25,8 @@ public class CryptoActive {
     @NotNull
     private BigDecimal amountOfCryptoCoin;
 
-    @ManyToOne
-    @NotNull
-    @JoinColumn(name = "wallet_address", referencedColumnName = "address")
-    private DigitalWallet digitalWallet;
-
-    public CryptoActive(String cryptoCoinName, DigitalWallet digitalWallet, BigDecimal amountOfCryptoCoin) {
+    public CryptoActive(String cryptoCoinName, BigDecimal amountOfCryptoCoin) {
         this.cryptoCoinName = cryptoCoinName;
-        this.digitalWallet = digitalWallet;
         this.amountOfCryptoCoin = amountOfCryptoCoin;
     }
 }

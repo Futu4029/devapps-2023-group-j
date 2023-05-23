@@ -25,11 +25,6 @@ class TransactionRequestTest {
     }
 
     @Test
-    void get_Amount_Test() {
-        Assertions.assertEquals(new BigDecimal("50"), transactionRequest.getQuotation());
-    }
-
-    @Test
     void get_Date_Test() {
         LocalDateTime dateTime = LocalDateTime.now();
         transactionRequest.setDate(dateTime);

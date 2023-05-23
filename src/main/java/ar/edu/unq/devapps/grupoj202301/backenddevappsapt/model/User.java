@@ -5,8 +5,10 @@ import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.validation.anotation.Le
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.validation.anotation.NumbersOnlyAdmits;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.validation.anotation.SpecialCharactersOnlyAdmits;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,11 +34,11 @@ public class User {
     @NotBlank
     private String email;
 
-    @Column(nullable = false, unique = true)
-    @Size(min=8, max=8)
-    @LettersAndNumbersOnlyAdmits
-    @NotBlank
-    private String walletAddress;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "digital_wallet_address", referencedColumnName = "address")
+    @NotNull
+    @Valid
+    private DigitalWallet digitalWallet;
 
     @Column(nullable = false)
     @Size(min=3, max=30)
@@ -74,7 +76,7 @@ public class User {
         this.address = address;
         this.password = password;
         this.cvu = cvu;
-        this.walletAddress = walletAddress;
+        this.digitalWallet = new DigitalWallet(walletAddress, email);
     }
 
 }

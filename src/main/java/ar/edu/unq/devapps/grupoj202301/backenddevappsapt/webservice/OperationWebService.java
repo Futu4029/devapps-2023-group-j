@@ -1,14 +1,14 @@
 package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.webservice;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.dto.IntentionPSDTO;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.CryptoCoin;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.User;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.OperationService;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.UserService;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.*;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -24,6 +24,12 @@ public class OperationWebService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private CryptoActiveService cryptoActiveService;
+
+    @Autowired
+    private TransactionRequestService transactionRequestService;
+
     @GetMapping("/getCryptoCoinsQuotes")
     @ResponseBody
     public ResponseEntity<List<CryptoCoin>> findAll(){
@@ -32,8 +38,10 @@ public class OperationWebService {
 
     @PostMapping("/createIntentionPS")
     @ResponseBody
-    public ResponseEntity<String> createIntentionPurchaseSale(@Valid @RequestBody IntentionPSDTO intentionPSDTO) {
-        User user = userService.getUserByEmail(intentionPSDTO.getUserEmail());
-        return ResponseEntity.ok(operationService.createIntentionPurchaseSale(user, intentionPSDTO));
+    public ResponseEntity<String> createIntentionPurchaseSale(@Valid @RequestBody IntentionPSDTO intention) throws IOException {
+        User user = userService.getUserByEmail(intention.getUserEmail());
+        CryptoActive cryptoActive = cryptoActiveService.save(new CryptoActive(intention.getCryptoCoinName(), intention.getAmountOfCryptoCoin()));
+        TransactionRequest transactionRequest = operationService.createIntentionPurchaseSale(user, cryptoActive, intention.getTransactionType());
+        return ResponseEntity.ok(transactionRequestService.register(transactionRequest));
     }
 }

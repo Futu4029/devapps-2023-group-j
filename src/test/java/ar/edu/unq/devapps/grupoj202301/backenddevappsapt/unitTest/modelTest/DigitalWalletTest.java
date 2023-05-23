@@ -16,8 +16,8 @@ class DigitalWalletTest {
     @Test
     void get_Owner_Test() {
         final User anyUser = UserFactory.anyUser();
-        digitalWallet.setOwner(anyUser);
-        Assertions.assertEquals(anyUser,digitalWallet.getOwner());
+        digitalWallet.setEmail(anyUser.getEmail());
+        Assertions.assertEquals(anyUser.getEmail(),digitalWallet.getEmail());
     }
 
     @Test

@@ -1,5 +1,6 @@
 package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.impl;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.User;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.persistence.DigitalWalletPersistence;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.persistence.UserPersistence;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.UserService;
 import jakarta.validation.Valid;

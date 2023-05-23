@@ -20,12 +20,9 @@ public class TransactionRequest {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
     @JoinColumn(name = "crypto_active_id")
-    @OneToOne(cascade = CascadeType.MERGE)
+    @OneToOne
     @NotNull
     private CryptoActive cryptoActive;
-    @Column(nullable = false)
-    @NotNull
-    private BigDecimal quotation;
     @Column(nullable = false)
     @NotNull
     private LocalDateTime date;
@@ -46,14 +43,12 @@ public class TransactionRequest {
     @NotNull
     private TransactionType transactionType;
 
-    public TransactionRequest(CryptoActive cryptoActive, BigDecimal quotation, LocalDateTime date, User user, BigDecimal dollarAmount, BigDecimal pesosAmount, TransactionType transactionType) {
+    public TransactionRequest(CryptoActive cryptoActive, LocalDateTime date, User user, BigDecimal dollarAmount, BigDecimal pesosAmount, TransactionType transactionType) {
         this.cryptoActive = cryptoActive;
-        this.quotation = quotation;
         this.date = date;
         this.userOwner = user;
         this.dollarAmount = dollarAmount;
         this.pesosAmount = pesosAmount;
         this.transactionType = transactionType;
     }
-
 }

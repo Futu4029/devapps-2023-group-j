@@ -16,7 +16,6 @@ class CryptoActiveTest {
     void get_Constructor_Test() {
         Assertions.assertEquals(1L, cryptoActive.getId());
         Assertions.assertEquals("ExampleCoin", cryptoActive.getCryptoCoinName());
-        Assertions.assertEquals(digitalWallet, cryptoActive.getDigitalWallet());
         Assertions.assertEquals(new BigDecimal("10"), cryptoActive.getAmountOfCryptoCoin());
     }
 }

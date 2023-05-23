@@ -10,5 +10,5 @@ import java.util.List;
 public interface TransactionRequestService {
     List<TransactionRequest> findAll();
     TransactionRequestVolumeInfo volumeOperatedBetweenDates(String email, LocalDateTime startDate, LocalDateTime endDate) throws IOException;
-    void save(TransactionRequest transactionRequest);
+    String register(TransactionRequest transactionRequest);
 }

@@ -7,6 +7,7 @@ import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.enum_model.Transa
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.persistence.TransactionRequestPersistence;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.OperationService;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.TransactionRequestService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,10 @@ public class TransactionRequestServiceImpl implements TransactionRequestService 
 
     @Autowired
     private OperationService operationService;
+
+    public String register(@Valid TransactionRequest transactionRequest) {
+        return String.valueOf(transactionRequestPersistence.save(transactionRequest).getId());
+    }
 
     @Override
     public List<TransactionRequest> findAll() {
@@ -65,19 +70,5 @@ public class TransactionRequestServiceImpl implements TransactionRequestService 
         }
 
         return new TransactionRequestVolumeInfo(LocalDateTime.now(), totalDollarAmount, totalPesosAmount, cryptoActivesList);
-    }
-
-    @Override
-    public void save(TransactionRequest transactionRequest) {
-        transactionRequestPersistence.save(transactionRequest);
-        /*transactionRequestPersistence.save(new TransactionRequest(
-                transactionRequest.getCryptoActive(),
-                transactionRequest.getAmount(),
-                LocalDateTime.now(),
-                transactionRequest.getUserOwner(),
-                transactionRequest.getCryptoActive().getCoin().getPrice().multiply(transactionRequest.getAmount()),
-                cryptoCoinService.toPesos(transactionRequest.getCryptoActive().getCoin().getName(), transactionRequest.getAmount()),
-                transactionRequest.getTransactionType())
-        );*/
     }
 }
