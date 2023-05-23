@@ -1,10 +1,9 @@
-package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.modelTest;
+package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.unitTest.modelTest;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.factories.UserFactory;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-
 import java.util.ArrayList;
 
 @SpringBootTest
@@ -36,7 +35,7 @@ class UserTest {
     }
     @Test
     void get_WalletAddress_Test() {
-        Assertions.assertEquals("00000000", user.getWallet().getAddress());
+        Assertions.assertEquals("00000000", user.getDigitalWallet().getAddress());
     }
     @Test
     void get_TransactionRequests_Test() {

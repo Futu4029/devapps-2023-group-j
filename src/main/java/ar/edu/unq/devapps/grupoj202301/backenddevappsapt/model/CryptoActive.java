@@ -1,6 +1,7 @@
 package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -17,21 +18,15 @@ public class CryptoActive {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
 
-    @ManyToOne()
-    @JoinColumn(name = "coin_name", referencedColumnName = "name")
-    @NotEmpty
-    private CryptoCoin coin;
+    @NotBlank
+    private String cryptoCoinName;
 
-    @ManyToOne()
-    @JoinColumn(name = "wallet_address", referencedColumnName = "address")
-    private DigitalWallet digitalWallet;
+    @Column(nullable = false, precision = 38)
+    @NotNull
+    private BigDecimal amountOfCryptoCoin;
 
-    @Column(nullable = false, precision = 38, scale = 2)
-    private BigDecimal price;
-
-    public CryptoActive(String name, DigitalWallet digitalWallet, String price) {
-        this.coin = new CryptoCoin(name,"0");
-        this.digitalWallet = digitalWallet;
-        this.price = new BigDecimal(price);
+    public CryptoActive(String cryptoCoinName, BigDecimal amountOfCryptoCoin) {
+        this.cryptoCoinName = cryptoCoinName;
+        this.amountOfCryptoCoin = amountOfCryptoCoin;
     }
 }

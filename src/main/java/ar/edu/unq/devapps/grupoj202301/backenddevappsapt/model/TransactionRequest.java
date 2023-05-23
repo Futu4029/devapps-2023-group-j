@@ -1,7 +1,8 @@
 package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model;
-
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.enum_model.TransactionState;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.enum_model.TransactionType;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,24 +19,37 @@ public class TransactionRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
-    @PrimaryKeyJoinColumn
+    @JoinColumn(name = "crypto_active_id", referencedColumnName = "id")
     @OneToOne
+    @NotNull
     private CryptoActive cryptoActive;
     @Column(nullable = false)
-    @NotEmpty
-    private BigDecimal amount;
-    @Column(nullable = false)
-    @NotEmpty
+    @NotNull
     private LocalDateTime date;
-    @PrimaryKeyJoinColumn
+    @Column(nullable = false)
+    private TransactionState transactionState = TransactionState.ACTIVE;
+    @Column(nullable = false)
+    @NotNull
+    private BigDecimal pesosAmount;
+    @Column(nullable = false)
+    @NotNull
+    private BigDecimal dollarAmount;
+    @Column(nullable = false)
+    private LocalDateTime creationDate = LocalDateTime.now();
     @OneToOne
-    @NotEmpty
-    private TransactionData transactionData;
+    @JoinColumn(name = "user_owner_email", referencedColumnName = "email")
+    @NotNull
+    private User userOwner;
+    @Column(nullable = false)
+    @NotNull
+    private TransactionType transactionType;
 
-    public TransactionRequest(CryptoActive cryptoActive, String amount, LocalDateTime date, TransactionData transactionData) {
+    public TransactionRequest(CryptoActive cryptoActive, LocalDateTime date, User user, BigDecimal dollarAmount, BigDecimal pesosAmount, TransactionType transactionType) {
         this.cryptoActive = cryptoActive;
-        this.amount = new BigDecimal(amount);
         this.date = date;
-        this.transactionData = transactionData;
+        this.userOwner = user;
+        this.dollarAmount = dollarAmount;
+        this.pesosAmount = pesosAmount;
+        this.transactionType = transactionType;
     }
 }

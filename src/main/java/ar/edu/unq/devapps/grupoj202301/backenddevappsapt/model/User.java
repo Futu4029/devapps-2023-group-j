@@ -5,8 +5,10 @@ import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.validation.anotation.Le
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.validation.anotation.NumbersOnlyAdmits;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.validation.anotation.SpecialCharactersOnlyAdmits;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,9 +34,11 @@ public class User {
     @NotBlank
     private String email;
 
-    @PrimaryKeyJoinColumn
-    @OneToOne(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private DigitalWallet wallet;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "digital_wallet_address", referencedColumnName = "address")
+    @NotNull
+    @Valid
+    private DigitalWallet digitalWallet;
 
     @Column(nullable = false)
     @Size(min=3, max=30)
@@ -61,9 +65,6 @@ public class User {
     @NumbersOnlyAdmits
     private String cvu;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "id")
-    private List<TransactionRequest> transactionRequests = new ArrayList<>();
-
     @ConstructorProperties({"email", "walletAddress", "name", "address", "password", "cvu"})
     public User(String email, String walletAddress, String name, String surname, String address, String password, String cvu) {
         this.email = email;
@@ -72,7 +73,7 @@ public class User {
         this.address = address;
         this.password = password;
         this.cvu = cvu;
-        this.wallet = new DigitalWallet(walletAddress, this);
+        this.digitalWallet = new DigitalWallet(walletAddress, email);
     }
 
 }

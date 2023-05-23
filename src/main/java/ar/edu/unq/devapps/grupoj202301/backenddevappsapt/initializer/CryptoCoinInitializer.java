@@ -1,5 +1,4 @@
 package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.initializer;
-
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.CryptoCoin;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.CryptoCoinService;
 import jakarta.annotation.PostConstruct;
@@ -9,7 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,10 +25,10 @@ public class CryptoCoinInitializer {
     private CryptoCoinService cryptoCoinService;
 
     @PostConstruct
-    public void initialize(){
-        String h2_CLASS_NAME = "org.h2.Driver";
+    public void initialize() throws IOException {
+        String HSQLDB_CLASS_NAME = "org.hsqldb.jdbc.JDBCDriver";
 
-        if (className.equals(h2_CLASS_NAME)){
+        if (className.equals(HSQLDB_CLASS_NAME)){
             logger.warn("Init Data Using H2 DataBase - Initializing CryptoCoins");
             startInitialization();
         }else{
@@ -36,25 +36,15 @@ public class CryptoCoinInitializer {
         }
     }
 
-    private void startInitialization() {
-        List<CryptoCoin> cryptoCoinList = List.of(
-                new CryptoCoin("ALICEUSDT", "100"),
-                new CryptoCoin("MATICUSDT", "100"),
-                new CryptoCoin("AXSUSDT", "100"),
-                new CryptoCoin("AAVEUSDT", "100"),
-                new CryptoCoin("ATOMUSDT", "100"),
-                new CryptoCoin("NEOUSDT", "100"),
-                new CryptoCoin("DOTUSDT", "100"),
-                new CryptoCoin("ETHUSDT", "100"),
-                new CryptoCoin("CAKEUSDT", "100"),
-                new CryptoCoin("BTCUSDT", "100"),
-                new CryptoCoin("BNBUSDT", "100"),
-                new CryptoCoin("ADAUSDT", "100"),
-                new CryptoCoin("TRXUSDT", "100"),
-                new CryptoCoin("AUDIOUSDT", "100")
+    private void startInitialization() throws IOException {
+        List<CryptoCoin> cryptoCoinList = new ArrayList<>();
+        List<String> cryptoCoinNamesList = List.of("ALICEUSDT", "MATICUSDT", "AXSUSDT", "AAVEUSDT", "ATOMUSDT",
+                "NEOUSDT", "DOTUSDT", "ETHUSDT", "CAKEUSDT", "BTCUSDT", "BNBUSDT", "ADAUSDT", "TRXUSDT", "AUDIOUSDT"
         );
-        cryptoCoinService.saveAll(cryptoCoinList);
+
+        for (String cryptoCoinName : cryptoCoinNamesList) {
+            cryptoCoinList.add(new CryptoCoin(cryptoCoinName, cryptoCoinService.getCryptoCoinCotizationByName(cryptoCoinName)));
+        }
+        cryptoCoinService.saveAllCryptoCoins(cryptoCoinList);
     }
-
-
 }
