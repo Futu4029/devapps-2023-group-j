@@ -15,7 +15,7 @@ import java.util.List;
 public interface TransactionRequestService {
     TransactionRequestVolumeInfo volumeOperatedBetweenDates(String email, LocalDateTime startDate, LocalDateTime endDate) throws IOException;
     String createIntentionPurchaseSale(User user, CryptoActive cryptoActive, TransactionType transactionType) throws IOException;
-    List<TransactionRequest> getTransactionsByState(TransactionState transactionState) throws IOException;
+    List<TransactionRequest> getTransactionsByState(String email, TransactionState transactionState) throws IOException;
     String updateStatus(TransactionRequest transactionRequest, TransactionState transactionState);
     TransactionRequest getTransactionsById(long transactionId);
     String interactWithATransactionRequest(User user, TransactionRequest transactionRequest);

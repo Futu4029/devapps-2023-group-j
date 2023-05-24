@@ -72,10 +72,10 @@ public class TransactionRequestWebService {
         return ResponseEntity.ok(transactionRequestService.volumeOperatedBetweenDates(email, startDate, endDate));
     }
 
-    @GetMapping("/getActivesTransactions")
+    @GetMapping("/getActivesTransactions/{email}")
     @ResponseBody
-    private ResponseEntity<List<TransactionRequest>> getActivesTransactions() throws IOException {
-        return ResponseEntity.ok(transactionRequestService.getTransactionsByState(TransactionState.ACTIVE));
+    private ResponseEntity<List<TransactionRequest>> getActivesTransactions(@PathVariable("email") String email) throws IOException {
+        return ResponseEntity.ok(transactionRequestService.getTransactionsByState(email, TransactionState.ACTIVE));
     }
 
     public ArrayList<Object> getInformationFrom(@Valid @RequestBody TransactionDataDTO transactionDataDTO) {

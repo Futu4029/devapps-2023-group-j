@@ -40,8 +40,8 @@ public class TransactionRequestServiceImpl implements TransactionRequestService 
     @Autowired
     private CryptoCoinService cryptoCoinService;
 
-    public List<TransactionRequest> getTransactionsByState(TransactionState transactionState) {
-        return transactionRequestPersistence.getTransactionsByState(transactionState);
+    public List<TransactionRequest> getTransactionsByState(String email, TransactionState transactionState) {
+        return transactionRequestPersistence.getTransactionsByState(email, transactionState);
     }
     public String updateStatus(TransactionRequest transactionRequest, TransactionState transactionState) {
         transactionRequest.setTransactionState(transactionState);

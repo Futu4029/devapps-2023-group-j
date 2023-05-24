@@ -22,6 +22,6 @@ public interface TransactionRequestPersistence extends JpaRepository<Transaction
                                                       @Param("endDate")LocalDateTime endDate,
                                                       @Param("state")TransactionState state);
 
-    @Query("SELECT t FROM TransactionRequest t WHERE t.transactionState= :state")
-    List<TransactionRequest>getTransactionsByState(@Param("state")TransactionState state);
+    @Query("SELECT t FROM TransactionRequest t WHERE  t.userOwner.email = :email AND t.transactionState= :state")
+    List<TransactionRequest>getTransactionsByState(@Param("email")String email, @Param("state")TransactionState state);
 }
