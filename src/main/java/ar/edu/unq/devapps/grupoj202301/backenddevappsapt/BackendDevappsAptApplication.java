@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication(exclude = SecurityAutoConfiguration.class)
-@OpenAPIDefinition(info = @Info(title = "Crypto API", version = "1.0", description = "First approach"))
+@OpenAPIDefinition(info = @Info(title = "Crypto API", version = "2.0", description = "CryptoApp Documentation"))
 @ComponentScan("ar.edu.unq.devapps.grupoj202301.backenddevappsapt")
 public class BackendDevappsAptApplication {
 	public static void main(String[] args) {
