@@ -4,12 +4,10 @@ import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.dto.TransactionRequestV
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.factories.*;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.*;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.enum_model.TransactionState;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.persistence.CryptoActivePersistence;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.persistence.CryptoCoinPersistence;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.persistence.DigitalWalletPersistence;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.persistence.TransactionRequestPersistence;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.persistence.*;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.TransactionRequestService;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.UserService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,8 +20,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-@SpringBootTest
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@SpringBootTest(properties = "spring.config.name=application-test")
 public class TransactionRequestServiceTest {
 
     @Autowired
@@ -44,6 +41,9 @@ public class TransactionRequestServiceTest {
     @Autowired
     UserService userService;
 
+    @Autowired
+    UserPersistence userPersistence;
+
     private TransactionRequest transactionRequest;
     private User user = UserFactory.anyUser();
     private CryptoActive cryptoActive = CryptoActiveFactory.anyCryptoActive();
@@ -59,6 +59,11 @@ public class TransactionRequestServiceTest {
         transactionRequestPersistence.save(transactionRequest = TransactionRequestFactory.anyTransactionRequest());
         user = UserFactory.anyUser();
     }
+    @AfterEach
+    void clear(){
+        transactionRequestPersistence.deleteAll();
+        userPersistence.deleteAll();
+    }
 
     @Test
     void volumeOperatedBetweenDates () throws IOException {
@@ -69,8 +74,8 @@ public class TransactionRequestServiceTest {
         transactionRequestPersistence.save(transactionRequestAccepted);
         TransactionRequestVolumeInfo result = transactionRequestService.volumeOperatedBetweenDates(user.getEmail(), yesterday, tomorrow);
         LocalDateTime date = LocalDateTime.now();
-        BigDecimal totalDollarAmount = new BigDecimal("10");
-        BigDecimal totalPesosAmount = new BigDecimal("0.01");
+        BigDecimal totalDollarAmount = new BigDecimal("10.00");
+        BigDecimal totalPesosAmount = new BigDecimal("0.01000000");
 
         Assertions.assertEquals(1, result.getCryptoActiveVolumeInfoList().size());
         Assertions.assertEquals(totalDollarAmount, result.getDollarAmount());
@@ -89,8 +94,8 @@ public class TransactionRequestServiceTest {
         transactionRequestPersistence.save(transactionRequestAccepted2);
         TransactionRequestVolumeInfo result = transactionRequestService.volumeOperatedBetweenDates(user.getEmail(), yesterday, tomorrow);
         LocalDateTime date = LocalDateTime.now();
-        BigDecimal totalDollarAmount = new BigDecimal("20");
-        BigDecimal totalPesosAmount = new BigDecimal("0.02");
+        BigDecimal totalDollarAmount = new BigDecimal("20.00");
+        BigDecimal totalPesosAmount = new BigDecimal("0.02000000");
 
         Assertions.assertEquals(2, result.getCryptoActiveVolumeInfoList().size());
         Assertions.assertEquals(totalDollarAmount, result.getDollarAmount());

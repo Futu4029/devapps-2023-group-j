@@ -82,10 +82,6 @@ public class TransactionRequestServiceImpl implements TransactionRequestService 
         return new TransactionRequestVolumeInfo(LocalDateTime.now(), totalDollarAmount, totalPesosAmount, cryptoActivesList);
     }
     public String createIntentionPurchaseSale(User user, CryptoActive cryptoActive, TransactionType transactionType) throws IOException {
-        if(TransactionType.SELL == transactionType && !user.getDigitalWallet().getCryptoActiveIfPossibleToSell(cryptoActive.getCryptoCoinName(), cryptoActive.getAmountOfCryptoCoin())) {
-            throw new CryptoActiveUnavailableException("The crypto asset you are trying to sell is not in your wallet " +
-                    "or the amount entered to sell is greater than that available.");
-        }
         BigDecimal quotation = cryptoCoinService.getQuotationByName(cryptoActive.getCryptoCoinName());
         BigDecimal dollarAmount = quotation.multiply(cryptoActive.getAmountOfCryptoCoin());
         BigDecimal pesosAmount = cryptoCoinService.getTheValueOfAnAmountOfCryptoCoinInPesos(cryptoActive.getCryptoCoinName(), cryptoActive.getAmountOfCryptoCoin());
