@@ -7,6 +7,7 @@ import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.enum_model.Transa
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.persistence.CryptoActivePersistence;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.persistence.CryptoCoinPersistence;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.persistence.DigitalWalletPersistence;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.persistence.TransactionRequestPersistence;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.TransactionRequestService;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.UserService;
 import org.junit.jupiter.api.Assertions;
@@ -29,6 +30,9 @@ public class TransactionRequestServiceTest {
     TransactionRequestService transactionRequestService;
 
     @Autowired
+    TransactionRequestPersistence transactionRequestPersistence;
+
+    @Autowired
     CryptoActivePersistence cryptoActivePersistence;
 
     @Autowired
@@ -42,7 +46,6 @@ public class TransactionRequestServiceTest {
 
     private TransactionRequest transactionRequest;
     private User user = UserFactory.anyUser();
-    private User userWithAnotherEmail = UserFactory.anyUserWithAnotherEmail();
     private CryptoActive cryptoActive = CryptoActiveFactory.anyCryptoActive();
     private CryptoCoin cryptoCoin = CryptoCoinFactory.anyCryptoCoin();
     private DigitalWallet digitalWallet = DigitalWalletFactory.anyDigitalWallet();
@@ -53,9 +56,8 @@ public class TransactionRequestServiceTest {
         cryptoCoinPersistence.save(cryptoCoin);
         digitalWalletPersistence.save(digitalWallet);
         cryptoActivePersistence.save(cryptoActive);
-        transactionRequestService.register(transactionRequest = TransactionRequestFactory.anyTransactionRequest());
+        transactionRequestPersistence.save(transactionRequest = TransactionRequestFactory.anyTransactionRequest());
         user = UserFactory.anyUser();
-        userWithAnotherEmail = UserFactory.anyUserWithAnotherEmail();
     }
 
     @Test
@@ -64,7 +66,7 @@ public class TransactionRequestServiceTest {
         LocalDateTime tomorrow = LocalDateTime.of(LocalDateTime.now().plusDays(1).toLocalDate(), LocalTime.NOON);
         TransactionRequest transactionRequestAccepted = TransactionRequestFactory.anyTransactionRequest();
         transactionRequestAccepted.setTransactionState(TransactionState.ACCEPTED);
-        transactionRequestService.register(transactionRequestAccepted);
+        transactionRequestPersistence.save(transactionRequestAccepted);
         TransactionRequestVolumeInfo result = transactionRequestService.volumeOperatedBetweenDates(user.getEmail(), yesterday, tomorrow);
         LocalDateTime date = LocalDateTime.now();
         BigDecimal totalDollarAmount = new BigDecimal("1.00");
@@ -83,8 +85,8 @@ public class TransactionRequestServiceTest {
         transactionRequestAccepted.setTransactionState(TransactionState.ACCEPTED);
         TransactionRequest transactionRequestAccepted2 = TransactionRequestFactory.anyTransactionRequest();
         transactionRequestAccepted2.setTransactionState(TransactionState.ACCEPTED);
-        transactionRequestService.register(transactionRequestAccepted);
-        transactionRequestService.register(transactionRequestAccepted2);
+        transactionRequestPersistence.save(transactionRequestAccepted);
+        transactionRequestPersistence.save(transactionRequestAccepted2);
         TransactionRequestVolumeInfo result = transactionRequestService.volumeOperatedBetweenDates(user.getEmail(), yesterday, tomorrow);
         LocalDateTime date = LocalDateTime.now();
         BigDecimal totalDollarAmount = new BigDecimal("2.00");
