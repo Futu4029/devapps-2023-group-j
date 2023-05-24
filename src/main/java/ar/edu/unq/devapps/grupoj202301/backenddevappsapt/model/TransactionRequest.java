@@ -28,7 +28,10 @@ public class TransactionRequest {
     private LocalDateTime date;
     @Column(nullable = false)
     private TransactionState transactionState = TransactionState.ACTIVE;
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 38, scale = 8)
+    @NotNull
+    private BigDecimal quotation;
+    @Column(nullable = false, precision = 38, scale = 8)
     @NotNull
     private BigDecimal pesosAmount;
     @Column(nullable = false)
@@ -44,10 +47,11 @@ public class TransactionRequest {
     @NotNull
     private TransactionType transactionType;
 
-    public TransactionRequest(CryptoActive cryptoActive, LocalDateTime date, User user, BigDecimal dollarAmount, BigDecimal pesosAmount, TransactionType transactionType) {
+    public TransactionRequest(CryptoActive cryptoActive, LocalDateTime date, User user, BigDecimal quotation, BigDecimal dollarAmount, BigDecimal pesosAmount, TransactionType transactionType) {
         this.cryptoActive = cryptoActive;
         this.date = date;
         this.userOwner = user;
+        this.quotation = quotation;
         this.dollarAmount = dollarAmount;
         this.pesosAmount = pesosAmount;
         this.transactionType = transactionType;

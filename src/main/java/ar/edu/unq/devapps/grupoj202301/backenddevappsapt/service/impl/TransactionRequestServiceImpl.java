@@ -76,9 +76,10 @@ public class TransactionRequestServiceImpl implements TransactionRequestService 
                     "or the amount entered to sell is greater than that available.");
         }
 
-        BigDecimal dollarAmount = cryptoCoinService.getQuotationByName(cryptoActive.getCryptoCoinName()).multiply(cryptoActive.getAmountOfCryptoCoin());
+        BigDecimal quotation = cryptoCoinService.getQuotationByName(cryptoActive.getCryptoCoinName());
+        BigDecimal dollarAmount = quotation.multiply(cryptoActive.getAmountOfCryptoCoin());
         BigDecimal pesosAmount = cryptoCoinService.getTheValueOfAnAmountOfCryptoCoinInPesos(cryptoActive.getCryptoCoinName(), cryptoActive.getAmountOfCryptoCoin());
-        TransactionRequest transactionRequest = new TransactionRequest(cryptoActive, LocalDateTime.now(), user, dollarAmount, pesosAmount, transactionType);
+        TransactionRequest transactionRequest = new TransactionRequest(cryptoActive, LocalDateTime.now(), user, quotation, dollarAmount, pesosAmount, transactionType);
         return String.valueOf(transactionRequestPersistence.save(transactionRequest).getId());
     }
 }
