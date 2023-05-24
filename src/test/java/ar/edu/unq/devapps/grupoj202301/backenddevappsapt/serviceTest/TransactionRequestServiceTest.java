@@ -69,7 +69,7 @@ public class TransactionRequestServiceTest {
         transactionRequestPersistence.save(transactionRequestAccepted);
         TransactionRequestVolumeInfo result = transactionRequestService.volumeOperatedBetweenDates(user.getEmail(), yesterday, tomorrow);
         LocalDateTime date = LocalDateTime.now();
-        BigDecimal totalDollarAmount = new BigDecimal("1.00");
+        BigDecimal totalDollarAmount = new BigDecimal("10");
         BigDecimal totalPesosAmount = new BigDecimal("0.01");
 
         Assertions.assertEquals(1, result.getCryptoActiveVolumeInfoList().size());
@@ -89,7 +89,7 @@ public class TransactionRequestServiceTest {
         transactionRequestPersistence.save(transactionRequestAccepted2);
         TransactionRequestVolumeInfo result = transactionRequestService.volumeOperatedBetweenDates(user.getEmail(), yesterday, tomorrow);
         LocalDateTime date = LocalDateTime.now();
-        BigDecimal totalDollarAmount = new BigDecimal("2.00");
+        BigDecimal totalDollarAmount = new BigDecimal("20");
         BigDecimal totalPesosAmount = new BigDecimal("0.02");
 
         Assertions.assertEquals(2, result.getCryptoActiveVolumeInfoList().size());

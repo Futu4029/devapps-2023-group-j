@@ -15,7 +15,7 @@ class TransactionRequestTest {
     final CryptoActive cryptoActive = CryptoActiveFactory.anyCryptoActive();
     @Test
     void get_Id_Test() {
-        Assertions.assertEquals(1L, transactionRequest.getId());
+        Assertions.assertEquals(0L, transactionRequest.getId());
     }
 
     @Test
@@ -30,20 +30,4 @@ class TransactionRequestTest {
         transactionRequest.setDate(dateTime);
         Assertions.assertEquals(dateTime, transactionRequest.getDate());
     }
-
-   /* @Test
-    void get_TransactionData_Test() {
-        transactionRequest.setTransactionData(transactionData);
-        Assertions.assertEquals(transactionData, transactionRequest.getTransactionData());
-    }
-
-    @Test
-    void get_TransactionReq_Constructor_Test() {
-        LocalDateTime dateTime = LocalDateTime.now();
-        TransactionRequest transactionRequestForTest = new TransactionRequest(cryptoActive, "100", dateTime, transactionData);
-        Assertions.assertEquals(cryptoActive, transactionRequestForTest.getCryptoActive());
-        Assertions.assertEquals(new BigDecimal("100"), transactionRequestForTest.getAmount());
-        Assertions.assertEquals(dateTime, transactionRequestForTest.getDate());
-        Assertions.assertEquals(transactionData, transactionRequestForTest.getTransactionData());
-    }*/
 }

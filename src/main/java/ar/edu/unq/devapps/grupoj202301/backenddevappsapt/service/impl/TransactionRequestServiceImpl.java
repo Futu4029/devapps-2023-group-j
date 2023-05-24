@@ -14,6 +14,8 @@ import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.TransactionRequ
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.validation.exception.CryptoActiveUnavailableException;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.validation.exception.PriceDifferenceException;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +32,8 @@ import static java.lang.Long.parseLong;
 @Transactional
 public class TransactionRequestServiceImpl implements TransactionRequestService {
 
+    protected final Log logger = LogFactory.getLog(getClass());
+
     @Autowired
     private TransactionRequestPersistence transactionRequestPersistence;
 
@@ -41,7 +45,9 @@ public class TransactionRequestServiceImpl implements TransactionRequestService 
     }
     public String updateStatus(TransactionRequest transactionRequest, TransactionState transactionState) {
         transactionRequest.setTransactionState(transactionState);
-        return transactionRequestPersistence.save(transactionRequest).getTransactionState().name();
+        var response = transactionRequestPersistence.save(transactionRequest).getTransactionState().name();
+        logger.info("Transaction request with ID: " + transactionRequest.getId() + " updated. New Transaction State: "+transactionState.name() );
+        return response;
     }
     public TransactionRequest getTransactionsById(long transactionId) {
         return transactionRequestPersistence.findById(transactionId).orElseThrow();
@@ -80,12 +86,13 @@ public class TransactionRequestServiceImpl implements TransactionRequestService 
             throw new CryptoActiveUnavailableException("The crypto asset you are trying to sell is not in your wallet " +
                     "or the amount entered to sell is greater than that available.");
         }
-
         BigDecimal quotation = cryptoCoinService.getQuotationByName(cryptoActive.getCryptoCoinName());
         BigDecimal dollarAmount = quotation.multiply(cryptoActive.getAmountOfCryptoCoin());
         BigDecimal pesosAmount = cryptoCoinService.getTheValueOfAnAmountOfCryptoCoinInPesos(cryptoActive.getCryptoCoinName(), cryptoActive.getAmountOfCryptoCoin());
         TransactionRequest transactionRequest = new TransactionRequest(cryptoActive, LocalDateTime.now(), user, quotation, dollarAmount, pesosAmount, transactionType);
-        return String.valueOf(transactionRequestPersistence.save(transactionRequest).getId());
+        var response = String.valueOf(transactionRequestPersistence.save(transactionRequest).getId());
+        logger.info("new Intention created: " + response + " for user "+user.getEmail());
+        return response;
     }
     public String interactWithATransactionRequest(User user, TransactionRequest transactionRequest) {
         transactionRequest.setUserSecondary(user);
@@ -95,7 +102,9 @@ public class TransactionRequestServiceImpl implements TransactionRequestService 
         } else {
             transactionRequest.setActionType(ActionType.CONFIRMRECEPTION);
         }
-        return transactionRequestPersistence.save(transactionRequest).getActionType().name();
+        var respose = transactionRequestPersistence.save(transactionRequest).getActionType().name();
+        logger.info("Transaction request interaction. Id: " + transactionRequest.getId() + " for user "+user.getEmail()+". Update action state: "+ respose);
+        return respose;
     }
 
     @Override
@@ -107,7 +116,9 @@ public class TransactionRequestServiceImpl implements TransactionRequestService 
             transactionRequest.setActionType(null);
             transactionRequest.setUserSecondary(null);
         }
-        return transactionRequestPersistence.save(transactionRequest).getTransactionState().name();
+        var respose = transactionRequestPersistence.save(transactionRequest).getActionType().name();
+        logger.info("Transaction request cancelled. Id: " + transactionRequest.getId() + " for user "+user.getEmail());
+        return respose;
     }
 
     @Override
