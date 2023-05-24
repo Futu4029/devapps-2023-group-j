@@ -22,48 +22,30 @@ import java.util.List;
 public class TransactionRequestWebService {
 
     @Autowired
-    private UserService userService;
-    @Autowired
-    private CryptoActiveService cryptoActiveService;
-    @Autowired
     private TransactionRequestService transactionRequestService;
 
     @PostMapping("/createIntentionPS")
     @ResponseBody
     public ResponseEntity<String> createIntentionPurchaseSale(@Valid @RequestBody IntentionPSDTO intention) throws IOException {
-        User user = userService.getUserByEmail(intention.getUserEmail());
-        CryptoActive cryptoActive = cryptoActiveService.save(new CryptoActive(intention.getCryptoCoinName(), intention.getAmountOfCryptoCoin()));
-        return ResponseEntity.ok(transactionRequestService.createIntentionPurchaseSale(user, cryptoActive, intention.getTransactionType()));
+        return ResponseEntity.ok(transactionRequestService.createIntentionPurchaseSale(intention));
     }
 
     @PostMapping("/interactWithATransactionRequest")
     @ResponseBody
     public ResponseEntity<String> interactWithATransactionRequest(@Valid @RequestBody TransactionDataDTO transactionDataDTO) {
-        ArrayList<Object> result = getInformationFrom(transactionDataDTO);
-        User user = (User) result.get(0);
-        TransactionRequest transactionRequest = (TransactionRequest) result.get(1);
-        return ResponseEntity.ok(transactionRequestService.interactWithATransactionRequest(user, transactionRequest));
+        return ResponseEntity.ok(transactionRequestService.interactWithATransactionRequest(transactionDataDTO));
     }
 
     @PostMapping("/confirmTransaction")
     @ResponseBody
     public ResponseEntity<String> confirmReception(@Valid @RequestBody TransactionDataDTO transactionDataDTO) {
-        ArrayList<Object> result = getInformationFrom(transactionDataDTO);
-        User user = (User) result.get(0);
-        TransactionRequest transactionRequest = (TransactionRequest) result.get(1);
-        transactionRequestService.checkPriceDifference(transactionDataDTO);
-        userService.confirmReception(user, transactionRequest);
-        return ResponseEntity.ok(transactionRequestService.updateStatus(transactionRequest, TransactionState.ACCEPTED));
+        return ResponseEntity.ok(transactionRequestService.confirmReception(transactionDataDTO));
     }
 
     @PostMapping("/cancel")
     @ResponseBody
     public ResponseEntity<String> cancelTheRequest(@Valid @RequestBody TransactionDataDTO transactionDataDTO) {
-        ArrayList<Object> result = getInformationFrom(transactionDataDTO);
-        User user = (User) result.get(0);
-        TransactionRequest transactionRequest = (TransactionRequest) result.get(1);
-        userService.discountReputation(user, transactionRequest);
-        return ResponseEntity.ok(transactionRequestService.cancelIfYouAreTheOwner(user, transactionRequest));
+        return ResponseEntity.ok(transactionRequestService.cancelTransactionRequest(transactionDataDTO));
     }
 
     @GetMapping("/betweenDates/{email}/{startDate}/{endDate}")
@@ -78,12 +60,5 @@ public class TransactionRequestWebService {
         return ResponseEntity.ok(transactionRequestService.getTransactionsByState(email, TransactionState.ACTIVE));
     }
 
-    public ArrayList<Object> getInformationFrom(@Valid @RequestBody TransactionDataDTO transactionDataDTO) {
-        User user = userService.getUserByEmail(transactionDataDTO.getEmail());
-        TransactionRequest transactionRequest = transactionRequestService.getTransactionsById(transactionDataDTO.getTransactionId());
-        ArrayList<Object> result = new ArrayList<>();
-        result.add(user);
-        result.add(transactionRequest);
-        return  result;
-    }
+
 }
