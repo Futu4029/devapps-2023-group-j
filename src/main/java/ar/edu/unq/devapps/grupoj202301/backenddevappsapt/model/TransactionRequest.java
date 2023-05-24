@@ -1,4 +1,5 @@
 package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.enum_model.ActionType;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.enum_model.TransactionState;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.enum_model.TransactionType;
 import jakarta.persistence.*;
@@ -39,13 +40,22 @@ public class TransactionRequest {
     private BigDecimal dollarAmount;
     @Column(nullable = false)
     private LocalDateTime creationDate = LocalDateTime.now();
+
     @OneToOne
     @JoinColumn(name = "user_owner_email", referencedColumnName = "email")
     @NotNull
     private User userOwner;
+
+    @OneToOne
+    @JoinColumn(name = "user_secondary_email", referencedColumnName = "email")
+    private User userSecondary;
+
     @Column(nullable = false)
     @NotNull
     private TransactionType transactionType;
+
+    @Column
+    private ActionType actionType;
 
     public TransactionRequest(CryptoActive cryptoActive, LocalDateTime date, User user, BigDecimal quotation, BigDecimal dollarAmount, BigDecimal pesosAmount, TransactionType transactionType) {
         this.cryptoActive = cryptoActive;
@@ -55,5 +65,13 @@ public class TransactionRequest {
         this.dollarAmount = dollarAmount;
         this.pesosAmount = pesosAmount;
         this.transactionType = transactionType;
+    }
+
+    public boolean isPurchase() {
+        return transactionType.equals(TransactionType.PURCHASE);
+    }
+
+    public boolean isSell() {
+        return transactionType.equals(TransactionType.SELL);
     }
 }

@@ -14,8 +14,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.core.config.AppenderControlArraySet;
 
 import java.beans.ConstructorProperties;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,6 +67,16 @@ public class User {
     @NumbersOnlyAdmits
     private String cvu;
 
+    @Column(nullable = false)
+    private BigDecimal score = new BigDecimal(0);
+
+    @Column(nullable = false)
+    private int numberOfOperations = 0;
+
+    @Column(nullable = false)
+    private int reputation = 0;
+
+
     @ConstructorProperties({"email", "walletAddress", "name", "address", "password", "cvu"})
     public User(String email, String walletAddress, String name, String surname, String address, String password, String cvu) {
         this.email = email;
@@ -76,4 +88,12 @@ public class User {
         this.digitalWallet = new DigitalWallet(walletAddress, email);
     }
 
+    public void modifyReputation(int reputationToAdd) {
+        reputation = reputation + reputationToAdd;
+    }
+
+    public void recalculateScore(int reputationToAdd) {
+        modifyReputation(reputationToAdd);
+        numberOfOperations = numberOfOperations + 1;
+    }
 }

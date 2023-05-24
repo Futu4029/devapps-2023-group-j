@@ -62,7 +62,6 @@ public class CryptoCoinServiceImpl implements CryptoCoinService {
         throw new ExternalAPIException("Could not obtain dolarSi resource");
     }
 
-    @Override
     public BigDecimal getQuotationByName(String name) {
         return cryptoCoinPersistence.getQuotationByName(name);
     }

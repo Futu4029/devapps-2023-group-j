@@ -1,5 +1,6 @@
 package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.webservice;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.dto.IntentionPSDTO;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.dto.TransactionDataDTO;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.dto.TransactionRequestVolumeInfo;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.*;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.enum_model.TransactionState;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -34,6 +36,36 @@ public class TransactionRequestWebService {
         return ResponseEntity.ok(transactionRequestService.createIntentionPurchaseSale(user, cryptoActive, intention.getTransactionType()));
     }
 
+    @PostMapping("/interactWithATransactionRequest")
+    @ResponseBody
+    public void interactWithATransactionRequest(@Valid @RequestBody TransactionDataDTO transactionDataDTO) {
+        ArrayList<Object> result = getInformationFrom(transactionDataDTO);
+        User user = (User) result.get(0);
+        TransactionRequest transactionRequest = (TransactionRequest) result.get(1);
+        transactionRequestService.interactWithATransactionRequest(user, transactionRequest);
+    }
+
+    @PostMapping("/confirmTransaction")
+    @ResponseBody
+    public void confirmReception(@Valid @RequestBody TransactionDataDTO transactionDataDTO) {
+        ArrayList<Object> result = getInformationFrom(transactionDataDTO);
+        User user = (User) result.get(0);
+        TransactionRequest transactionRequest = (TransactionRequest) result.get(1);
+        transactionRequestService.checkPriceDifference(transactionDataDTO);
+        userService.confirmReception(user, transactionRequest);
+        transactionRequestService.updateStatus(transactionRequest, TransactionState.ACCEPTED);
+    }
+
+    @PostMapping("/cancel")
+    @ResponseBody
+    public void cancelTheRequest(@Valid @RequestBody TransactionDataDTO transactionDataDTO) {
+        ArrayList<Object> result = getInformationFrom(transactionDataDTO);
+        User user = (User) result.get(0);
+        TransactionRequest transactionRequest = (TransactionRequest) result.get(1);
+        userService.discountReputation(user, transactionRequest);
+        transactionRequestService.cancelIfYouAreTheOwner(user, transactionRequest);
+    }
+
     @GetMapping("/betweenDates/{email}/{startDate}/{endDate}")
     @ResponseBody
     private ResponseEntity<TransactionRequestVolumeInfo> volumeOperatedBetweenDates(@PathVariable("email") String email, @PathVariable("startDate") LocalDateTime startDate, @PathVariable("endDate") LocalDateTime endDate) throws IOException {
@@ -44,5 +76,14 @@ public class TransactionRequestWebService {
     @ResponseBody
     private ResponseEntity<List<TransactionRequest>> getActivesTransactions() throws IOException {
         return ResponseEntity.ok(transactionRequestService.getTransactionsByState(TransactionState.ACTIVE));
+    }
+
+    public ArrayList<Object> getInformationFrom(@Valid @RequestBody TransactionDataDTO transactionDataDTO) {
+        User user = userService.getUserByEmail(transactionDataDTO.getEmail());
+        TransactionRequest transactionRequest = transactionRequestService.getTransactionsById(transactionDataDTO.getTransactionId());
+        ArrayList<Object> result = new ArrayList<>();
+        result.add(user);
+        result.add(transactionRequest);
+        return  result;
     }
 }
