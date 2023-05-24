@@ -16,9 +16,9 @@ public interface TransactionRequestService {
     TransactionRequestVolumeInfo volumeOperatedBetweenDates(String email, LocalDateTime startDate, LocalDateTime endDate) throws IOException;
     String createIntentionPurchaseSale(User user, CryptoActive cryptoActive, TransactionType transactionType) throws IOException;
     List<TransactionRequest> getTransactionsByState(TransactionState transactionState) throws IOException;
-    void updateStatus(TransactionRequest transactionRequest, TransactionState transactionState);
+    String updateStatus(TransactionRequest transactionRequest, TransactionState transactionState);
     TransactionRequest getTransactionsById(long transactionId);
-    void interactWithATransactionRequest(User user, TransactionRequest transactionRequest);
-    void cancelIfYouAreTheOwner(User user, TransactionRequest transactionRequest);
+    String interactWithATransactionRequest(User user, TransactionRequest transactionRequest);
+    String cancelIfYouAreTheOwner(User user, TransactionRequest transactionRequest);
     void checkPriceDifference(TransactionDataDTO transactionDataDTO);
 }

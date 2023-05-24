@@ -39,9 +39,9 @@ public class TransactionRequestServiceImpl implements TransactionRequestService 
     public List<TransactionRequest> getTransactionsByState(TransactionState transactionState) {
         return transactionRequestPersistence.getTransactionsByState(transactionState);
     }
-    public void updateStatus(TransactionRequest transactionRequest, TransactionState transactionState) {
+    public String updateStatus(TransactionRequest transactionRequest, TransactionState transactionState) {
         transactionRequest.setTransactionState(transactionState);
-        transactionRequestPersistence.save(transactionRequest);
+        return transactionRequestPersistence.save(transactionRequest).getTransactionState().name();
     }
     public TransactionRequest getTransactionsById(long transactionId) {
         return transactionRequestPersistence.findById(transactionId).orElseThrow();
@@ -87,8 +87,7 @@ public class TransactionRequestServiceImpl implements TransactionRequestService 
         TransactionRequest transactionRequest = new TransactionRequest(cryptoActive, LocalDateTime.now(), user, quotation, dollarAmount, pesosAmount, transactionType);
         return String.valueOf(transactionRequestPersistence.save(transactionRequest).getId());
     }
-    public void interactWithATransactionRequest(User user, TransactionRequest transactionRequest) {
-        User userOwner = transactionRequest.getUserOwner();
+    public String interactWithATransactionRequest(User user, TransactionRequest transactionRequest) {
         transactionRequest.setUserSecondary(user);
 
         if(transactionRequest.getTransactionType() == TransactionType.PURCHASE) {
@@ -96,11 +95,11 @@ public class TransactionRequestServiceImpl implements TransactionRequestService 
         } else {
             transactionRequest.setActionType(ActionType.CONFIRMRECEPTION);
         }
-        transactionRequestPersistence.save(transactionRequest);
+        return transactionRequestPersistence.save(transactionRequest).getActionType().name();
     }
 
     @Override
-    public void cancelIfYouAreTheOwner(User user, TransactionRequest transactionRequest) {
+    public String cancelIfYouAreTheOwner(User user, TransactionRequest transactionRequest) {
         if(user.getEmail().equals(transactionRequest.getUserOwner().getEmail())) {
             transactionRequest.setTransactionState(TransactionState.CANCELLED);
         }
@@ -108,7 +107,7 @@ public class TransactionRequestServiceImpl implements TransactionRequestService 
             transactionRequest.setActionType(null);
             transactionRequest.setUserSecondary(null);
         }
-        transactionRequestPersistence.save(transactionRequest);
+        return transactionRequestPersistence.save(transactionRequest).getTransactionState().name();
     }
 
     @Override

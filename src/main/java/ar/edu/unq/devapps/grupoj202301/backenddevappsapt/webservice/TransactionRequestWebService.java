@@ -38,32 +38,32 @@ public class TransactionRequestWebService {
 
     @PostMapping("/interactWithATransactionRequest")
     @ResponseBody
-    public void interactWithATransactionRequest(@Valid @RequestBody TransactionDataDTO transactionDataDTO) {
+    public ResponseEntity<String> interactWithATransactionRequest(@Valid @RequestBody TransactionDataDTO transactionDataDTO) {
         ArrayList<Object> result = getInformationFrom(transactionDataDTO);
         User user = (User) result.get(0);
         TransactionRequest transactionRequest = (TransactionRequest) result.get(1);
-        transactionRequestService.interactWithATransactionRequest(user, transactionRequest);
+        return ResponseEntity.ok(transactionRequestService.interactWithATransactionRequest(user, transactionRequest));
     }
 
     @PostMapping("/confirmTransaction")
     @ResponseBody
-    public void confirmReception(@Valid @RequestBody TransactionDataDTO transactionDataDTO) {
+    public ResponseEntity<String> confirmReception(@Valid @RequestBody TransactionDataDTO transactionDataDTO) {
         ArrayList<Object> result = getInformationFrom(transactionDataDTO);
         User user = (User) result.get(0);
         TransactionRequest transactionRequest = (TransactionRequest) result.get(1);
         transactionRequestService.checkPriceDifference(transactionDataDTO);
         userService.confirmReception(user, transactionRequest);
-        transactionRequestService.updateStatus(transactionRequest, TransactionState.ACCEPTED);
+        return ResponseEntity.ok(transactionRequestService.updateStatus(transactionRequest, TransactionState.ACCEPTED));
     }
 
     @PostMapping("/cancel")
     @ResponseBody
-    public void cancelTheRequest(@Valid @RequestBody TransactionDataDTO transactionDataDTO) {
+    public ResponseEntity<String> cancelTheRequest(@Valid @RequestBody TransactionDataDTO transactionDataDTO) {
         ArrayList<Object> result = getInformationFrom(transactionDataDTO);
         User user = (User) result.get(0);
         TransactionRequest transactionRequest = (TransactionRequest) result.get(1);
         userService.discountReputation(user, transactionRequest);
-        transactionRequestService.cancelIfYouAreTheOwner(user, transactionRequest);
+        return ResponseEntity.ok(transactionRequestService.cancelIfYouAreTheOwner(user, transactionRequest));
     }
 
     @GetMapping("/betweenDates/{email}/{startDate}/{endDate}")
