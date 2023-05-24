@@ -6,6 +6,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
@@ -29,7 +30,7 @@ public class CryptoCoinInitializer {
         String HSQLDB_CLASS_NAME = "org.hsqldb.jdbc.JDBCDriver";
 
         if (className.equals(HSQLDB_CLASS_NAME)){
-            logger.warn("Init Data Using H2 DataBase - Initializing CryptoCoins");
+            logger.warn("Init Data Using HSQLDB DataBase - Initializing CryptoCoins");
             startInitialization();
         }else{
             logger.warn("No database was set for the initialization");
