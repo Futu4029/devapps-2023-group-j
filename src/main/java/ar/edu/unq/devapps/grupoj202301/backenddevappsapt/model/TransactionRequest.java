@@ -2,6 +2,7 @@ package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.enum_model.ActionType;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.enum_model.TransactionState;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.enum_model.TransactionType;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,7 @@ public class TransactionRequest {
     private CryptoActive cryptoActive;
     @Column(nullable = false)
     @NotNull
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSS")
     private LocalDateTime date;
     @Column(nullable = false)
     private TransactionState transactionState = TransactionState.ACTIVE;
@@ -39,6 +41,7 @@ public class TransactionRequest {
     @NotNull
     private BigDecimal dollarAmount;
     @Column(nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSS")
     private LocalDateTime creationDate = LocalDateTime.now();
 
     @OneToOne

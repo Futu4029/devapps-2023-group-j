@@ -19,22 +19,13 @@ public class CryptoCoinInitializer {
 
     protected final Log logger = LogFactory.getLog(getClass());
 
-    @Value("${spring.datasource.driver-class-name:NONE}")
-    private String className;
-
     @Autowired
     private CryptoCoinService cryptoCoinService;
 
     @PostConstruct
     public void initialize() throws IOException {
-        String HSQLDB_CLASS_NAME = "org.hsqldb.jdbc.JDBCDriver";
-
-        if (className.equals(HSQLDB_CLASS_NAME)){
-            logger.warn("Init Data Using HSQLDB DataBase - Initializing CryptoCoins");
-            startInitialization();
-        }else{
-            logger.warn("No database was set for the initialization");
-        }
+        logger.warn("Init Data Using DataBase - Initializing CryptoCoins");
+        startInitialization();
     }
 
     private void startInitialization() throws IOException {

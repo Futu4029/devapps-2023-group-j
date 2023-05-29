@@ -169,14 +169,14 @@ public class TransactionRequestServiceImpl implements TransactionRequestService 
         userService.discountReputation(user, transactionRequest);
         if(user.getEmail().equals(transactionRequest.getUserOwner().getEmail())) {
             transactionRequest.setTransactionState(TransactionState.CANCELLED);
+            logger.info("Transaction request cancelled with ID: " + transactionRequest.getId() + " for owneruser "+user.getEmail());
         }
         if(user.getEmail().equals(transactionRequest.getUserSecondary().getEmail())) {
             transactionRequest.setActionType(null);
             transactionRequest.setUserSecondary(null);
+            logger.info("Transaction request cancelled with ID: " + transactionRequest.getId() + " by user "+user.getEmail());
         }
-        var response = transactionRequestPersistence.save(transactionRequest).getActionType().name();
-        logger.info("Transaction request cancelled with ID: " + transactionRequest.getId() + " for user "+user.getEmail());
-        return response;
+        return transactionRequestPersistence.save(transactionRequest).getTransactionState().name();
     }
 
     private boolean isADifferenceOf5BetweenQuotations(BigDecimal quotationA, BigDecimal quotationB) {
