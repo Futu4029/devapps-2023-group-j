@@ -1,4 +1,4 @@
-package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.unitTest.webServiceTest;
+package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.integrationTest.webServiceTest;
 
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.dto.IntentionPSDTO;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.dto.TransactionDataDTO;
