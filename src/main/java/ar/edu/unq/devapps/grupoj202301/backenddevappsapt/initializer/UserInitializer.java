@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-@Profile("!test")
+@Profile({"!test", "dev"})
 public class UserInitializer {
 
     protected final Log logger = LogFactory.getLog(getClass());
