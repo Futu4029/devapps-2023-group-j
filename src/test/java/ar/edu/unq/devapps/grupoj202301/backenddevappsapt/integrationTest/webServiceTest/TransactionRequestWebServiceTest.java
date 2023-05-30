@@ -16,6 +16,7 @@ import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.UserService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.junit.Ignore;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -83,6 +84,8 @@ class TransactionRequestWebServiceTest {
 
     @BeforeEach
     void setUp()  {
+        transactionRequestPersistence.deleteAllInBatch();
+        userPersistence.deleteAllInBatch();
         userService.register(user);
         userService.register(anyOtherUser);
         intentionPurchase =  new IntentionPSDTO("example@example.com", "BNBUSDT", new BigDecimal("11.0"),new BigDecimal("100"), TransactionType.PURCHASE);
