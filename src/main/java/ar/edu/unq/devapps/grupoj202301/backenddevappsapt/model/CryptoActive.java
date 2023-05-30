@@ -1,4 +1,5 @@
 package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.crypto.CryptoCoin;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
@@ -22,16 +23,11 @@ public class CryptoActive {
     @NotEmpty
     private CryptoCoin coin;
 
-    @ManyToOne()
-    @JoinColumn(name = "wallet_address", referencedColumnName = "address")
-    private DigitalWallet digitalWallet;
-
     @Column(nullable = false, precision = 38, scale = 2)
     private BigDecimal price;
 
-    public CryptoActive(String name, DigitalWallet digitalWallet, String price) {
-        this.coin = new CryptoCoin(name,"0");
-        this.digitalWallet = digitalWallet;
+    public CryptoActive(String name, String price) {
+        this.coin = new CryptoCoin(name);
         this.price = new BigDecimal(price);
     }
 }
