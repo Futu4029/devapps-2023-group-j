@@ -7,6 +7,6 @@ import java.time.LocalDateTime;
 
 public class CryptoCoinFactory {
     public static CryptoCoin anyCryptoCoin(){
-        return new CryptoCoin("ExampleCoin", new BigDecimal("100"), LocalDateTime.now());
+        return new CryptoCoin("ExampleCoin", new BigDecimal("100.000000"), LocalDateTime.now());
     }
 }

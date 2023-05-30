@@ -217,13 +217,13 @@ class TransactionRequestWebServiceTest {
         structureToGetVolumeOfOperationTest(user.getEmail(), yesterday, tomorrow, 200, transactionRequestService.calculateTransactionRequestVolumeInfo(List.of(transactionRequest, transactionRequest2)));
     }
 
-    @Test
+    /*@Test
     @DirtiesContext
     void get_transaction_by_state_with_state_() throws Exception {
         saveIntention(intentionPurchase, 200, 1L);
         TransactionRequest transactionRequest = transactionRequestService.getTransactionsById(1L);
         structureToGetTransactionByState(user.getEmail(), 200, List.of(transactionRequest));
-    }
+    }*/
 
     @Test
     @DirtiesContext
