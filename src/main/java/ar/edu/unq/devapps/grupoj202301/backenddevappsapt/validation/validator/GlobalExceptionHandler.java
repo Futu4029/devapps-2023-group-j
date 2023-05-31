@@ -12,19 +12,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-        FieldError fieldError = ex.getBindingResult().getFieldError();
-        String[] parts = fieldError.getField().split("\\.");
-        String field = parts[0];
-        if(parts.length > 1) {
-            field = parts[0] + parts[1].substring(0, 1).toUpperCase() + parts[1].substring(1);
-        }
-        String message = fieldError.getDefaultMessage();
-        return ResponseEntity.badRequest().body("Field " + field + " has an error: " + message);
-    }
-
     @ExceptionHandler(DataIntegrityViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
