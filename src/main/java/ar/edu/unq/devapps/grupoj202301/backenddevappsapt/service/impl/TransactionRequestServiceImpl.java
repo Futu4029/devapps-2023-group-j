@@ -120,7 +120,7 @@ public class TransactionRequestServiceImpl implements TransactionRequestService 
     }
     @Override
     public String interactWithATransactionRequest( TransactionDataDTO transactionDataDTO) {
-        ArrayList<Object> result = getInformationFrom(transactionDataDTO);
+        List<Object> result = getInformationFrom(transactionDataDTO);
         User user = (User) result.get(0);
         TransactionRequest transactionRequest = (TransactionRequest) result.get(1);
         transactionRequest.setUserSecondary(user);
@@ -153,7 +153,7 @@ public class TransactionRequestServiceImpl implements TransactionRequestService 
 
     @Override
     public String confirmReception(TransactionDataDTO transactionDataDTO) {
-        ArrayList<Object> result = getInformationFrom(transactionDataDTO);
+        List<Object> result = getInformationFrom(transactionDataDTO);
         User user = (User) result.get(0);
         TransactionRequest transactionRequest = (TransactionRequest) result.get(1);
         checkPriceDifference(transactionDataDTO);
@@ -163,7 +163,7 @@ public class TransactionRequestServiceImpl implements TransactionRequestService 
 
     @Override
     public String cancelTransactionRequest(TransactionDataDTO transactionDataDTO) {
-        ArrayList<Object> result = getInformationFrom(transactionDataDTO);
+        List<Object> result = getInformationFrom(transactionDataDTO);
         User user = (User) result.get(0);
         TransactionRequest transactionRequest = (TransactionRequest) result.get(1);
         userService.discountReputation(user, transactionRequest);
@@ -190,7 +190,7 @@ public class TransactionRequestServiceImpl implements TransactionRequestService 
         return comparisonResult >= 0;
     }
 
-    public ArrayList<Object> getInformationFrom(TransactionDataDTO transactionDataDTO) {
+    public List<Object> getInformationFrom(TransactionDataDTO transactionDataDTO) {
         User user = userService.getUserByEmail(transactionDataDTO.getEmail());
         TransactionRequest transactionRequest = getTransactionsById(transactionDataDTO.getTransactionId());
         ArrayList<Object> result = new ArrayList<>();
