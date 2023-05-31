@@ -12,7 +12,6 @@ import jakarta.annotation.PostConstruct;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,9 +30,6 @@ public class TransactionRequestInitializer {
 
     protected final Log logger = LogFactory.getLog(getClass());
 
-    @Value("${spring.datasource.driver-class-name:NONE}")
-    private String className;
-
     @Autowired
     private TransactionRequestPersistence transactionRequestPersistence;
     @Autowired
@@ -45,14 +41,8 @@ public class TransactionRequestInitializer {
 
     @PostConstruct
     public void initialize() throws IOException {
-        String HSQLDB_CLASS_NAME = "org.hsqldb.jdbc.JDBCDriver";
-
-        if (className.equals(HSQLDB_CLASS_NAME)){
-            logger.warn("Init Data Using HSQLDB DataBase - Initializing Transactions");
-            startInitialization();
-        }else{
-            logger.warn("No database was set for the initialization");
-        }
+        logger.warn("Init Data Using HSQLDB DataBase - Initializing Transactions");
+        startInitialization();
     }
 
     private void startInitialization() throws IOException {
