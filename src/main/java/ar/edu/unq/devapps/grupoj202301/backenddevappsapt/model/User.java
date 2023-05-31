@@ -9,7 +9,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +21,8 @@ import lombok.RequiredArgsConstructor;
 @Table(name="users")
 @Builder
 @RequiredArgsConstructor
-public class User implements GenericSystemElement{
+@AllArgsConstructor
+public class User implements GenericSystemElement {
 
     @Id
     @Column(nullable = false, unique=true)
@@ -57,6 +60,14 @@ public class User implements GenericSystemElement{
     @Size(min=22, max=22)
     @NumbersOnlyAdmits
     private String cvu;
+
+    @Column(nullable = false)
+    @NotNull
+    private int pointsObtained = 0;
+
+    @Column(nullable = false)
+    @NotNull
+    private int operationsPerformed = 0;
 
     public User(String email, String walletAddress, String name, String surname, String address, String password, String cvu) {
         this.email = email;

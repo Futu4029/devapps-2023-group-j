@@ -1,4 +1,4 @@
-package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.crypto;
+package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.cryptoCoin;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

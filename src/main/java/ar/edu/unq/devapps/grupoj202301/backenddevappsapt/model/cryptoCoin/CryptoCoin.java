@@ -1,4 +1,4 @@
-package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.crypto;
+package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.cryptoCoin;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.GenericSystemElement;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -21,7 +21,7 @@ public class CryptoCoin implements GenericSystemElement {
     @NotBlank
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "crypto_coin_id")
     private List<QuotationByDate> quotationByDates = new ArrayList<>();
 
