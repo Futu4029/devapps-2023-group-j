@@ -43,7 +43,19 @@ public class IntentionPurchaseSaleWebService {
 
     @PostMapping("/interaction/cancel/{intentionID}/{email}")
     @ResponseBody
-    public ResponseEntity<String> createIntentionPurchaseSale(@PathVariable("intentionID") String intentionID, @PathVariable("email") String email) {
+    public ResponseEntity<String> cancelIntentionPurchaseSale(@PathVariable("intentionID") String intentionID, @PathVariable("email") String email) {
         return ResponseEntity.ok(intentionPurchaseSaleService.cancel(intentionID, email));
+    }
+
+    @PostMapping("/interaction/proceed/{intentionID}/{email}")
+    @ResponseBody
+    public ResponseEntity<String> proceedIntentionPurchaseSale(@PathVariable("intentionID") String intentionID, @PathVariable("email") String email) {
+        return ResponseEntity.ok(intentionPurchaseSaleService.proceed(intentionID, email));
+    }
+
+    @PostMapping("/interaction/confirm/{intentionID}/{email}")
+    @ResponseBody
+    public ResponseEntity<String> confirmIntentionPurchaseSale(@PathVariable("intentionID") String intentionID, @PathVariable("email") String email) {
+        return ResponseEntity.ok(intentionPurchaseSaleService.confirm(intentionID, email));
     }
 }

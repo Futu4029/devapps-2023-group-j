@@ -73,7 +73,7 @@ public class IntentionPurchaseSaleServiceImpl implements IntentionPurchaseSaleSe
          if(intentionPurchaseSale.getStatusType().equals(StatusType.ACTIVE)) {
              if(intentionPurchaseSale.getEmail().equals(email)) {
                  intentionPurchaseSale.setStatusType(StatusType.CANCEL);
-             } else if (intentionPurchaseSale.getAnotherUserEmail().equals(email)){
+             } else if (intentionPurchaseSale.getAnotherUserEmail() != null && intentionPurchaseSale.getAnotherUserEmail().equals(email)){
                  intentionPurchaseSale.setAnotherUserEmail(null);
              } else {
                  throw new UserException("Error: The user entered is not related to this intention");
@@ -85,8 +85,43 @@ public class IntentionPurchaseSaleServiceImpl implements IntentionPurchaseSaleSe
              return "The operation was successfully canceled. You have lost 20 points.";
 
          } else  {
-             throw new UserException("Error: Intent is not active");
+             throw new UserException("Error: Intent is not active.");
          }
+     }
+
+     @Override
+     public String proceed(String intentionID, String email) {
+         IntentionPurchaseSale intentionPurchaseSale = intentionPurchaseSalePersistence.findById(intentionID).get();
+         User user = userService.findElementById(email).get();
+         if(intentionPurchaseSale.getEmail().equals(email)) {
+             throw new UserException("Error: You cannot proceed on your own intention.");
+         }
+
+         if(intentionPurchaseSale.getStatusType().equals(StatusType.ACTIVE)) {
+             intentionPurchaseSale.setAnotherUserEmail(email);
+             if(intentionPurchaseSale.getIntentionType().equals(IntentionType.PURCHASE)) {
+                     intentionPurchaseSale.setDestiny(user.getCvu());
+                 } else {
+                     intentionPurchaseSale.setDestiny(user.getWalletAddress());
+                 }
+             intentionPurchaseSale.setStatusType(StatusType.WAITINGCONFIRMATION);
+         } else {
+             throw new UserException("Error: Intent is not active.");
+         }
+
+         return "Congratulations, the interaction with the intention was successful. " +
+                 "Wait for the other user to confirm.";
+     }
+
+     @Override
+     public String confirm(String intentionID, String email) {
+         IntentionPurchaseSale intentionPurchaseSale = intentionPurchaseSalePersistence.findById(intentionID).get();
+         if(intentionPurchaseSale.getEmail().equals(email)) {
+             intentionPurchaseSale.setStatusType(StatusType.FINISHED);
+         } else {
+             throw new UserException("Error: The entered user is not the owner of the intention.");
+         }
+        return "Congratulations, the intent was completed successfully.";
      }
 
      @Override

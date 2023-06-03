@@ -3,5 +3,6 @@ package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.IntentionPurchas
 public enum StatusType {
     FINISHED,
     ACTIVE,
-    CANCEL
+    CANCEL,
+    WAITINGCONFIRMATION
 }
