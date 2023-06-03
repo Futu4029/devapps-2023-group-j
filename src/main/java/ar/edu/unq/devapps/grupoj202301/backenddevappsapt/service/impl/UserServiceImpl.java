@@ -26,6 +26,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void updateElement(User user) {
+        if(elementIsPresent(user)) {
+            userPersistence.save(user);
+        }
+    }
+
+    @Override
     public Optional<User> findElementById(String elementId) {
         return userPersistence.findById(elementId);
     }

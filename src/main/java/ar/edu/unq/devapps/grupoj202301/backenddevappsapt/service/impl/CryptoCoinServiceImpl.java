@@ -44,6 +44,13 @@ public class CryptoCoinServiceImpl implements CryptoCoinService {
     }
 
     @Override
+    public void updateElement(CryptoCoin cryptoCoin) {
+        if(elementIsPresent(cryptoCoin)) {
+            cryptoCoinPersistence.save(cryptoCoin);
+        }
+    }
+
+    @Override
     public Optional<CryptoCoin> findElementById(String elementId) {
         return cryptoCoinPersistence.findById(elementId);
     }

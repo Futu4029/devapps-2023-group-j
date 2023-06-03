@@ -1,15 +1,20 @@
  package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.impl;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.IntentionPurchaseSale.*;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.IntentionPurchaseSale.flags.IntentionType;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.IntentionPurchaseSale.flags.StatusType;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.User;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.persistence.IntentionPurchaseSalePersistence;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.CryptoCoinService;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.GenericService;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.IntentionPurchaseSaleService;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.utilities.validation.exception.UserException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
+import java.math.MathContext;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -39,13 +44,20 @@ public class IntentionPurchaseSaleServiceImpl implements IntentionPurchaseSaleSe
         return intentionPurchaseSaleResult.getId().toString();
     }
 
-    @Override
+     @Override
+     public void updateElement(IntentionPurchaseSale intentionPurchaseSale) {
+         if(elementIsPresent(intentionPurchaseSale)) {
+             intentionPurchaseSalePersistence.save(intentionPurchaseSale);
+         }
+     }
+
+     @Override
     public Optional<IntentionPurchaseSale> findElementById(String intentionPurchaseSaleId) {
         return intentionPurchaseSalePersistence.findById(intentionPurchaseSaleId);
     }
 
     @Override
-    public IntentionPurchaseSale createIntentionPurchaseSale(IntentionPurchaseSaleCoreData intentionPurchaseSaleInitialData) {
+    public IntentionPurchaseSale create(IntentionPurchaseSaleCoreData intentionPurchaseSaleInitialData) {
         User user = userService.findElementById(intentionPurchaseSaleInitialData.getEmail()).get();
         String cryptoCoinName = intentionPurchaseSaleInitialData.getCryptoCoinName();
         BigDecimal amountOfCryptoCoin = intentionPurchaseSaleInitialData.getAmountOfCryptoCoin();
@@ -55,7 +67,78 @@ public class IntentionPurchaseSaleServiceImpl implements IntentionPurchaseSaleSe
         return intentionPurchaseSalePersistence.save(new IntentionPurchaseSale(user, cryptoCoinName, amountOfCryptoCoin, quotationBase, pesosAmount, intentionType));
     }
 
-    @Override
+     @Override
+     public String cancel(String intentionID, String email) {
+         IntentionPurchaseSale intentionPurchaseSale = intentionPurchaseSalePersistence.findById(intentionID).get();
+         User user = userService.findElementById(email).get();
+
+         if(intentionPurchaseSale.getStatusType().equals(StatusType.ACTIVE)) {
+             if(intentionPurchaseSale.getEmail().equals(email)) {
+                 intentionPurchaseSale.setStatusType(StatusType.CANCEL);
+             } else if (intentionPurchaseSale.getAnotherUserEmail() != null && intentionPurchaseSale.getAnotherUserEmail().equals(email)){
+                 intentionPurchaseSale.setAnotherUserEmail(null);
+             } else {
+                 throw new UserException("Error: The user entered is not related to this intention");
+             }
+
+             user.discountPoints(20);
+             userService.updateElement(user);
+             this.updateElement(intentionPurchaseSale);
+             return "The operation was successfully canceled. You have lost 20 points.";
+
+         } else  {
+             throw new UserException("Error: Intent is not active.");
+         }
+     }
+
+     @Override
+     public String proceed(String intentionID, String email) {
+         IntentionPurchaseSale intentionPurchaseSale = intentionPurchaseSalePersistence.findById(intentionID).get();
+         User user = userService.findElementById(email).get();
+         if(intentionPurchaseSale.getEmail().equals(email)) {
+             throw new UserException("Error: You cannot proceed on your own intention.");
+         }
+
+         if(intentionPurchaseSale.getStatusType().equals(StatusType.ACTIVE)) {
+             intentionPurchaseSale.setAnotherUserEmail(email);
+             if(intentionPurchaseSale.getIntentionType().equals(IntentionType.PURCHASE)) {
+                     intentionPurchaseSale.setDestiny(user.getCvu());
+                 } else {
+                     intentionPurchaseSale.setDestiny(user.getWalletAddress());
+                 }
+             intentionPurchaseSale.setStatusType(StatusType.WAITINGCONFIRMATION);
+         } else {
+             throw new UserException("Error: Intent is not active.");
+         }
+
+         return "Congratulations, the interaction with the intention was successful. " +
+                 "Wait for the other user to confirm.";
+     }
+
+     @Override
+     public String confirm(String intentionID, String email) throws IOException {
+         IntentionPurchaseSale intentionPurchaseSale = intentionPurchaseSalePersistence.findById(intentionID).get();
+         this.checkPriceDifference(intentionPurchaseSale);
+         if(intentionPurchaseSale.getEmail().equals(email)) {
+             intentionPurchaseSale.setStatusType(StatusType.FINISHED);
+             LocalDateTime now = LocalDateTime.now();
+             long minutesDifference = ChronoUnit.MINUTES.between(intentionPurchaseSale.getCreationDate(), now);
+             User userOwner = userService.findElementById(intentionPurchaseSale.getEmail()).get();
+             User otherUser = userService.findElementById(intentionPurchaseSale.getAnotherUserEmail()).get();
+             if(minutesDifference < 30) {
+                 userOwner.addPoints(10);
+                 otherUser.addPoints(10);
+             } else {
+                 userOwner.addPoints(5);
+                 otherUser.addPoints(5);
+             }
+         } else {
+             throw new UserException("Error: The entered user is not the owner of the intention.");
+         }
+        return "Congratulations, the intent was completed successfully.";
+     }
+
+     @Override
     public IntentionPurchaseSaleUserInfo getActivesTransactions(String email) throws IOException {
         User user = userService.findElementById(email).get();
         List<IntentionPurchaseSaleSummarized> intentionPurchaseSaleSummarizedList = new ArrayList<>();
@@ -118,5 +201,31 @@ public class IntentionPurchaseSaleServiceImpl implements IntentionPurchaseSaleSe
          }
 
          return new IntentionPurchaseSaleVolumeInfo(totalDollarAmount, totalPesosAmount, intentionPurchaseSaleResultList);
+     }
+
+     public void checkPriceDifference(IntentionPurchaseSale intentionPurchaseSale) throws IOException {
+         BigDecimal originalQuotation = intentionPurchaseSale.getQuotationBase();
+         BigDecimal currentQuotation = cryptoCoinService.getExternalQuotationByName(intentionPurchaseSale.getCryptoCoinName());
+
+         if(intentionPurchaseSale.getIntentionType().equals(IntentionType.PURCHASE) &&
+            this.isADifferenceOf5BetweenQuotations(originalQuotation, currentQuotation)) {
+             throw new UserException("There is a 5% difference between the quotes. The operation is cancelled.");
+         }
+
+         if(intentionPurchaseSale.getIntentionType().equals(IntentionType.SELL) &&
+                 this.isADifferenceOf5BetweenQuotations(currentQuotation, originalQuotation)) {
+             throw new UserException("There is a 5% difference between the quotes. The operation is cancelled.");
+         }
+     }
+
+     public boolean isADifferenceOf5BetweenQuotations(BigDecimal quotationA, BigDecimal quotationB) {
+         BigDecimal differencePercentage = quotationA.subtract(quotationB)
+                 .divide(quotationB, MathContext.DECIMAL32)
+                 .multiply(BigDecimal.valueOf(100));
+
+         BigDecimal fivePercent = BigDecimal.valueOf(5);
+         int comparisonResult = differencePercentage.compareTo(fivePercent);
+
+         return comparisonResult >= 0;
      }
  }
