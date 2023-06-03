@@ -1,7 +1,6 @@
 package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.webServiceTest.initialization;
-
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.IntentionPurchaseSale.IntentionPurchaseSale;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.IntentionPurchaseSale.StatusType;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.IntentionPurchaseSale.flags.StatusType;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.User;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.IntentionPurchaseSaleService;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.UserService;
@@ -47,10 +46,10 @@ public class IntentionPurchaseSaleInitializerForTesting {
         IntentionPurchaseSale intentionPurchaseSaleFinished2 = IntentionPurchaseSaleFactory.anyIntentionPurchaseSale();
         intentionPurchaseSaleFinished2.setStatusType(StatusType.FINISHED);
 
-        intentionPurchaseSaleService.createIntentionPurchaseSale(intentionPurchaseSaleActive);
-        intentionPurchaseSaleService.createIntentionPurchaseSale(intentionPurchaseSaleCancelled);
-        intentionPurchaseSaleService.createIntentionPurchaseSale(intentionPurchaseSaleFinished1);
-        intentionPurchaseSaleService.createIntentionPurchaseSale(intentionPurchaseSaleFinished2);
+        intentionPurchaseSaleService.create(intentionPurchaseSaleActive);
+        intentionPurchaseSaleService.create(intentionPurchaseSaleCancelled);
+        intentionPurchaseSaleService.create(intentionPurchaseSaleFinished1);
+        intentionPurchaseSaleService.create(intentionPurchaseSaleFinished2);
     }
 
 }

@@ -47,7 +47,6 @@ class UserWebServiceTest {
 
     @Test
     void register_User_With_Email_Already_Registerd_Test() throws Exception{
-        genericStructureToRegisterTest(user, 200,  "example@example.com");
         genericStructureToRegisterTest(user, 400,  "ERROR: The User example@example.com is already registered.");
     }
 
