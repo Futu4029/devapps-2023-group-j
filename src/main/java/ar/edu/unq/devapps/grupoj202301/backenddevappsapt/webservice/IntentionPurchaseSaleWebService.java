@@ -55,7 +55,7 @@ public class IntentionPurchaseSaleWebService {
 
     @PostMapping("/interaction/confirm/{intentionID}/{email}")
     @ResponseBody
-    public ResponseEntity<String> confirmIntentionPurchaseSale(@PathVariable("intentionID") String intentionID, @PathVariable("email") String email) {
+    public ResponseEntity<String> confirmIntentionPurchaseSale(@PathVariable("intentionID") String intentionID, @PathVariable("email") String email) throws IOException {
         return ResponseEntity.ok(intentionPurchaseSaleService.confirm(intentionID, email));
     }
 }

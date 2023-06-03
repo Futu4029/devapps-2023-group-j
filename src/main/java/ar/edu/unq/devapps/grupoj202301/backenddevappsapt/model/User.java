@@ -87,4 +87,7 @@ public class User implements GenericSystemElement {
     public void discountPoints(int points) {
         pointsObtained = pointsObtained - Math.abs(points);
     }
+    public void addPoints(int points) {
+        pointsObtained = pointsObtained + Math.abs(points);
+    }
 }
