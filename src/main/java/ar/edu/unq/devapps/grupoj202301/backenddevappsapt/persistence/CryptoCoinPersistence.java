@@ -8,4 +8,10 @@ import java.time.LocalDateTime;
 
 @Repository
 public interface CryptoCoinPersistence extends JpaRepository<CryptoCoin, String> {
+    @Query("SELECT c FROM CryptoCoin c JOIN FETCH c.quotationByDates q " +
+            "WHERE c.name = :cryptoCoinName AND q.date >= :startDate AND q.date <= :endDate")
+    CryptoCoin findCryptoCoinWithQuotationByDatesWithin24Hours(
+            @Param("cryptoCoinName") String cryptoCoinName,
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate);
 }
