@@ -15,11 +15,10 @@ import java.util.List;
 
 @Service
 @Transactional
-@Profile("prod")
+@Profile("dev")
 public class CryptoCoinInitializer {
 
     protected final Log logger = LogFactory.getLog(getClass());
-
 
         @Value("${spring.datasource.driver-class-name:NONE}")
         private String className;

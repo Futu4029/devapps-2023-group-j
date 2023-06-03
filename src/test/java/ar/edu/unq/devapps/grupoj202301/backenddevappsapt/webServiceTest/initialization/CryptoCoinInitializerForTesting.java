@@ -1,5 +1,6 @@
 package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.webServiceTest.initialization;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.cryptoCoin.CryptoCoin;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.cryptoCoin.CryptoCoinDTO;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.CryptoCoinService;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.webServiceTest.factories.CryptoCoinFactory;
 import jakarta.annotation.PostConstruct;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @Transactional
@@ -25,7 +27,7 @@ public class CryptoCoinInitializerForTesting {
 
     @PostConstruct
     public void initialize() throws IOException {
-        logger.warn("Init Data Using DataBase - Initializing CryptoCoins");
+        logger.warn("Init Data Using DataBase Test - Initializing CryptoCoins");
         startInitialization();
     }
 
