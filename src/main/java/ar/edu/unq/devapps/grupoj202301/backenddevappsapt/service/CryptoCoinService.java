@@ -4,10 +4,12 @@ import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.cryptoCoin.Crypto
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.List;
 
 public interface CryptoCoinService extends GenericService<CryptoCoin> {
-    CryptoCoinDTO findCryptoCoinWithQuotationByDatesWithin24Hours(String cryptoCoinName);
+    CryptoCoin findCryptoCoinWithQuotationByDatesWithin24Hours(String cryptoCoinName);
     BigDecimal getExternalQuotationByName(String cryptoCoinName) throws IOException;
     BigDecimal getThePriceOfThePurchaseDollar() throws IOException;
     BigDecimal getThePriceOfTheSellDollar() throws IOException;
+    List<CryptoCoinDTO> getCryptoCoinsQuotations();
 }

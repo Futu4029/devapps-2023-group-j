@@ -1,6 +1,7 @@
 package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.impl;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.cryptoCoin.CryptoCoin;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.cryptoCoin.CryptoCoinDTO;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.cryptoCoin.QuotationByDate;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.persistence.CryptoCoinPersistence;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.CryptoCoinService;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.utilities.validation.exception.ExternalAPIException;
@@ -18,7 +19,10 @@ import org.json.JSONArray;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -45,10 +49,10 @@ public class CryptoCoinServiceImpl implements CryptoCoinService {
     }
 
     @Override
-    public CryptoCoinDTO findCryptoCoinWithQuotationByDatesWithin24Hours(String cryptoCoinName) {
-        LocalDateTime startDate = LocalDateTime.now().minusHours(24);
-        CryptoCoin cryptoCoin = cryptoCoinPersistence.findCryptoCoinWithQuotationByDatesWithin24Hours(cryptoCoinName, startDate, LocalDateTime.now());
-        return new CryptoCoinDTO(cryptoCoin.getName(), cryptoCoin.getQuotationByDates());
+    public CryptoCoin findCryptoCoinWithQuotationByDatesWithin24Hours(String cryptoCoinName) {
+        LocalDateTime now = LocalDateTime.now();
+        CryptoCoin cryptoCoin = cryptoCoinPersistence.findCryptoCoinWithQuotationByDatesWithin24Hours(cryptoCoinName,now.minusHours(24),now);
+        return cryptoCoin;
     }
 
     @Override
@@ -71,6 +75,17 @@ public class CryptoCoinServiceImpl implements CryptoCoinService {
     public BigDecimal getThePriceOfTheSellDollar() throws IOException {
         return getPesosValueByDollar("venta");
     }
+
+    @Override
+    public List<CryptoCoinDTO> getCryptoCoinsQuotations() {
+        List<CryptoCoin> cryptoCoinList = cryptoCoinPersistence.getCryptoCoinsQuotations();
+        List<CryptoCoinDTO> responseList = new ArrayList<>();
+        for(CryptoCoin c : cryptoCoinList){
+            responseList.add(new CryptoCoinDTO(c.getName(), c.getQuotationByDates().get(0)));
+        }
+        return responseList;
+    }
+
 
     private Response genericQueryToAnExternalApi(String url) throws IOException {
         OkHttpClient client = new OkHttpClient();

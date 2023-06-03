@@ -23,10 +23,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.*;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -50,6 +48,9 @@ public class CryptoCoinWebServiceTest {
     private int port;
 
     @Autowired
+    private CryptoCoinService cryptoCoinService;
+
+    @Autowired
     private CryptoCoinWebService cryptoCoinWebService;
 
     @Autowired
@@ -62,8 +63,20 @@ public class CryptoCoinWebServiceTest {
     @Test
     @DirtiesContext
     void get_The_Last_24_Hours_Of_Quotation() {
-        this.restTemplate.getRestTemplate();
-        CryptoCoinDTO cryptoCoinDTO = this.restTemplate.getForObject(HTTP_LOCALHOST + port + "/cryptocoins/getTheLast24HoursOfQuotation/BTCUSDT", CryptoCoinDTO.class);
+        CryptoCoin cryptoCoin = this.restTemplate.getForObject(HTTP_LOCALHOST + port + "/cryptocoins/getTheLast24HoursOfQuotation/BTCUSDT", CryptoCoin.class);
+        Assertions.assertEquals(2, cryptoCoin.getQuotationByDates().size());
+    }
+
+    @Test
+    @DirtiesContext
+    void get_Quotation_List() {
+        String url = HTTP_LOCALHOST + port + "/cryptocoins/getCryptoCoinsQuotations";
+        ParameterizedTypeReference<List<CryptoCoinDTO>> responseType = new ParameterizedTypeReference<List<CryptoCoinDTO>>() {};
+        ResponseEntity<List<CryptoCoinDTO>> response = restTemplate.exchange(url, HttpMethod.GET, null, responseType);
+        List<CryptoCoinDTO> cryptoCoinList = response.getBody();
+        Assertions.assertEquals(14, cryptoCoinList.size());
+        Assertions.assertEquals("ALICEUSDT", cryptoCoinList.get(0).getName());
+        Assertions.assertEquals(new BigDecimal("100.00"), cryptoCoinList.get(0).getQuotationByDate().getQuotation());
     }
 
     @Test

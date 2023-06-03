@@ -1,6 +1,7 @@
 package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.webServiceTest.initialization;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.cryptoCoin.CryptoCoin;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.cryptoCoin.CryptoCoinDTO;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.cryptoCoin.QuotationByDate;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.CryptoCoinService;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.webServiceTest.factories.CryptoCoinFactory;
 import jakarta.annotation.PostConstruct;
@@ -10,6 +11,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,6 +42,15 @@ public class CryptoCoinInitializerForTesting {
         for (String cryptoCoinName : cryptoCoinNamesList) {
             CryptoCoin cryptoCoin = CryptoCoinFactory.anyCryptoCoin();
             cryptoCoin.setName(cryptoCoinName);
+            BigDecimal quotation = new BigDecimal("100");
+            QuotationByDate firstQuotation = new QuotationByDate(quotation);
+            QuotationByDate secondQuotation = new QuotationByDate(quotation);
+            QuotationByDate thirdQuotation = new QuotationByDate(quotation);
+            secondQuotation.setDate(LocalDateTime.now().minusHours(10L));
+            thirdQuotation.setDate(LocalDateTime.now().minusDays(10L));
+            cryptoCoin.addQuotation(firstQuotation);
+            cryptoCoin.addQuotation(secondQuotation);
+            cryptoCoin.addQuotation(thirdQuotation);
             cryptoCoinService.registerElement(cryptoCoin);
         }
     }

@@ -20,9 +20,7 @@ class CryptoCoinDTOTest {
     @Test
     void get_QuotationByDates_Test() {
         QuotationByDate quotationByDate = QuotationByDateFactory.anyQuotationByDate("11");
-        List<QuotationByDate> quotationByDates = new ArrayList<>();
-        quotationByDates.add(quotationByDate);
-        cryptoCoinDTO.setQuotationByDates(quotationByDates);
-        Assertions.assertEquals(quotationByDates, cryptoCoinDTO.getQuotationByDates());
+        cryptoCoinDTO.setQuotationByDate(quotationByDate);
+        Assertions.assertEquals(quotationByDate, cryptoCoinDTO.getQuotationByDate());
     }
 }

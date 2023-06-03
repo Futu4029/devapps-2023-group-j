@@ -10,10 +10,10 @@ import java.util.List;
 public class CryptoCoinDTO {
     private String name;
 
-    private List<QuotationByDate> quotationByDates;
+    private QuotationByDate quotationByDate;
 
-    public CryptoCoinDTO(String name, List<QuotationByDate> quotationByDates) {
+    public CryptoCoinDTO(String name, QuotationByDate quotationByDates) {
         this.name = name;
-        this.quotationByDates = quotationByDates;
+        this.quotationByDate = quotationByDates;
     }
 }
