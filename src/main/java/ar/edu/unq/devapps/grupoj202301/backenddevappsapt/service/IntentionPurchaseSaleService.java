@@ -8,7 +8,8 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 
 public interface IntentionPurchaseSaleService extends GenericService<IntentionPurchaseSale> {
-    IntentionPurchaseSale createIntentionPurchaseSale(IntentionPurchaseSaleCoreData intentionPurchaseSaleInitialData);
+    IntentionPurchaseSale create(IntentionPurchaseSaleCoreData intentionPurchaseSaleInitialData);
+    String cancel(String intentionID, String email);
     IntentionPurchaseSaleUserInfo getActivesTransactions(String email) throws IOException;
     IntentionPurchaseSaleVolumeInfo volumeOperatedBetweenDates(String email, LocalDateTime startDate, LocalDateTime endDate) throws IOException;
 }

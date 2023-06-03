@@ -40,6 +40,13 @@ public class CryptoCoinServiceImpl implements CryptoCoinService {
     }
 
     @Override
+    public void updateElement(CryptoCoin cryptoCoin) {
+        if(elementIsPresent(cryptoCoin)) {
+            cryptoCoinPersistence.save(cryptoCoin);
+        }
+    }
+
+    @Override
     public Optional<CryptoCoin> findElementById(String elementId) {
         return cryptoCoinPersistence.findById(elementId);
     }
@@ -47,7 +54,7 @@ public class CryptoCoinServiceImpl implements CryptoCoinService {
     @Override
     public CryptoCoinDTO findCryptoCoinWithQuotationByDatesWithin24Hours(String cryptoCoinName) {
         LocalDateTime startDate = LocalDateTime.now().minusHours(24);
-        CryptoCoin cryptoCoin = cryptoCoinPersistence.findCryptoCoinWithQuotationByDatesWithin24Hours(cryptoCoinName, startDate, LocalDateTime.now());
+        CryptoCoin cryptoCoin = cryptoCoinPersistence.findById(cryptoCoinName).get();
         return new CryptoCoinDTO(cryptoCoin.getName(), cryptoCoin.getQuotationByDates());
     }
 

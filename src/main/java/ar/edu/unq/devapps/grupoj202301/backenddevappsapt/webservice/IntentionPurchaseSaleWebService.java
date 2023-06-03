@@ -26,7 +26,7 @@ public class IntentionPurchaseSaleWebService {
     @PostMapping("/create")
     @ResponseBody
     public ResponseEntity<IntentionPurchaseSale> createIntentionPurchaseSale(@Valid @RequestBody IntentionPurchaseSaleCoreData IntentionPurchaseSaleInitialData) {
-        return ResponseEntity.ok(intentionPurchaseSaleService.createIntentionPurchaseSale(IntentionPurchaseSaleInitialData));
+        return ResponseEntity.ok(intentionPurchaseSaleService.create(IntentionPurchaseSaleInitialData));
     }
 
     @GetMapping("/getActivesIntentions/{email}")
@@ -39,5 +39,11 @@ public class IntentionPurchaseSaleWebService {
     @ResponseBody
     private ResponseEntity<IntentionPurchaseSaleVolumeInfo> volumeOperatedBetweenDates(@PathVariable("email") String email, @PathVariable("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS") LocalDateTime startDate, @PathVariable("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS") LocalDateTime endDate) throws IOException {
         return ResponseEntity.ok(intentionPurchaseSaleService.volumeOperatedBetweenDates(email, startDate, endDate));
+    }
+
+    @PostMapping("/interaction/cancel/{intentionID}/{email}")
+    @ResponseBody
+    public ResponseEntity<String> createIntentionPurchaseSale(@PathVariable("intentionID") String intentionID, @PathVariable("email") String email) {
+        return ResponseEntity.ok(intentionPurchaseSaleService.cancel(intentionID, email));
     }
 }

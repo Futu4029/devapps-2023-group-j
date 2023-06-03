@@ -83,4 +83,8 @@ public class User implements GenericSystemElement {
     public String getId() {
         return this.email;
     }
+
+    public void discountPoints(int points) {
+        pointsObtained = pointsObtained - Math.abs(points);
+    }
 }
