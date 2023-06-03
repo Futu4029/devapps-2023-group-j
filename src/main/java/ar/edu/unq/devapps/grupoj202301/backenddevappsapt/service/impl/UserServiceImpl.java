@@ -2,6 +2,7 @@ package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.impl;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.User;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.persistence.UserPersistence;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.GenericService;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.UserService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class UserServiceImpl implements GenericService<User> {
+public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserPersistence userPersistence;

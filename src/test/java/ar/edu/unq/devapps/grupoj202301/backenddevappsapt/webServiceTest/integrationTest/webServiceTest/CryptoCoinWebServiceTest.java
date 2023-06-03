@@ -48,9 +48,6 @@ public class CryptoCoinWebServiceTest {
     private int port;
 
     @Autowired
-    private CryptoCoinService cryptoCoinService;
-
-    @Autowired
     private CryptoCoinWebService cryptoCoinWebService;
 
     @Autowired
