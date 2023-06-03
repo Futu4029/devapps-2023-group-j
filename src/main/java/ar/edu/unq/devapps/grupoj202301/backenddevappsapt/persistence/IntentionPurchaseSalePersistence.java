@@ -1,7 +1,6 @@
 package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.persistence;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.IntentionPurchaseSale.IntentionPurchaseSale;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.IntentionPurchaseSale.StatusType;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.cryptoCoin.CryptoCoin;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.IntentionPurchaseSale.flags.StatusType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

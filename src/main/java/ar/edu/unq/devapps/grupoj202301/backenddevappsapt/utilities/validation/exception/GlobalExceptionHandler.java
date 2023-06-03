@@ -27,4 +27,16 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> handleElementAlreadyRegisteredException(ElementAlreadyRegisteredException ex) {
         return ResponseEntity.badRequest().body(ex.getMessage());
     }
+
+    @ExceptionHandler(ElementNotRegisteredException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Object> handleElementNotRegisteredException(ElementNotRegisteredException ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
+    @ExceptionHandler(UserException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Object> handleUserException(UserException ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
 }
