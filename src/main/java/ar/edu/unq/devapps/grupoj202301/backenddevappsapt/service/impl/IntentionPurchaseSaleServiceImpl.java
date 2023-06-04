@@ -3,6 +3,7 @@ import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.IntentionPurchase
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.IntentionPurchaseSale.flags.IntentionType;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.IntentionPurchaseSale.flags.StatusType;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.User;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.cryptoCoin.CryptoCoin;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.persistence.IntentionPurchaseSalePersistence;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.CryptoCoinService;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.GenericService;
@@ -59,7 +60,8 @@ public class IntentionPurchaseSaleServiceImpl implements IntentionPurchaseSaleSe
     @Override
     public IntentionPurchaseSale create(IntentionPurchaseSaleCoreData intentionPurchaseSaleInitialData) {
         User user = userService.findElementById(intentionPurchaseSaleInitialData.getEmail()).get();
-        String cryptoCoinName = intentionPurchaseSaleInitialData.getCryptoCoinName();
+        CryptoCoin cryptoCoin = cryptoCoinService.findElementById(intentionPurchaseSaleInitialData.getCryptoCoinName()).get();
+        String cryptoCoinName = cryptoCoin.getName();
         BigDecimal amountOfCryptoCoin = intentionPurchaseSaleInitialData.getAmountOfCryptoCoin();
         BigDecimal quotationBase = intentionPurchaseSaleInitialData.getQuotationBase();
         BigDecimal pesosAmount = quotationBase.multiply(quotationBase);
@@ -78,7 +80,7 @@ public class IntentionPurchaseSaleServiceImpl implements IntentionPurchaseSaleSe
              } else if (intentionPurchaseSale.getAnotherUserEmail() != null && intentionPurchaseSale.getAnotherUserEmail().equals(email)){
                  intentionPurchaseSale.setAnotherUserEmail(null);
              } else {
-                 throw new UserException("Error: The user entered is not related to this intention");
+                 throw new UserException("Error: The user entered is not related to this intention.");
              }
 
              user.discountPoints(20);

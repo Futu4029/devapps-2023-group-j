@@ -36,20 +36,24 @@ public class IntentionPurchaseSaleInitializerForTesting {
     }
 
     private void startInitialization() {
-        User anyUser = UserFactory.anyUser();
-        userService.registerElement(anyUser);
+        User anyUserOne = UserFactory.anyUser();
+        User anyUserTwo = UserFactory.anyUserWithAnotherEmail();
+        userService.registerElement(anyUserOne);
+        userService.registerElement(anyUserTwo);
         IntentionPurchaseSale intentionPurchaseSaleActive = IntentionPurchaseSaleFactory.anyIntentionPurchaseSale();
         IntentionPurchaseSale intentionPurchaseSaleCancelled = IntentionPurchaseSaleFactory.anyIntentionPurchaseSale();
+        IntentionPurchaseSale intentionPurchaseSaleFinishedOne = IntentionPurchaseSaleFactory.anyIntentionPurchaseSale();
+        IntentionPurchaseSale intentionPurchaseSaleFinishedTwo = IntentionPurchaseSaleFactory.anyIntentionPurchaseSale();
+        intentionPurchaseSaleActive = intentionPurchaseSaleService.create(intentionPurchaseSaleActive);
+        intentionPurchaseSaleCancelled = intentionPurchaseSaleService.create(intentionPurchaseSaleCancelled);
+        intentionPurchaseSaleFinishedOne = intentionPurchaseSaleService.create(intentionPurchaseSaleFinishedOne);
+        intentionPurchaseSaleFinishedTwo = intentionPurchaseSaleService.create(intentionPurchaseSaleFinishedTwo);
         intentionPurchaseSaleCancelled.setStatusType(StatusType.CANCEL);
-        IntentionPurchaseSale intentionPurchaseSaleFinished1 = IntentionPurchaseSaleFactory.anyIntentionPurchaseSale();
-        intentionPurchaseSaleFinished1.setStatusType(StatusType.FINISHED);
-        IntentionPurchaseSale intentionPurchaseSaleFinished2 = IntentionPurchaseSaleFactory.anyIntentionPurchaseSale();
-        intentionPurchaseSaleFinished2.setStatusType(StatusType.FINISHED);
-
-        intentionPurchaseSaleService.create(intentionPurchaseSaleActive);
-        intentionPurchaseSaleService.create(intentionPurchaseSaleCancelled);
-        intentionPurchaseSaleService.create(intentionPurchaseSaleFinished1);
-        intentionPurchaseSaleService.create(intentionPurchaseSaleFinished2);
+        intentionPurchaseSaleFinishedOne.setStatusType(StatusType.FINISHED);
+        intentionPurchaseSaleFinishedTwo.setStatusType(StatusType.FINISHED);
+        intentionPurchaseSaleService.updateElement(intentionPurchaseSaleCancelled);
+        intentionPurchaseSaleService.updateElement(intentionPurchaseSaleFinishedOne);
+        intentionPurchaseSaleService.updateElement(intentionPurchaseSaleFinishedTwo);
     }
 
 }
