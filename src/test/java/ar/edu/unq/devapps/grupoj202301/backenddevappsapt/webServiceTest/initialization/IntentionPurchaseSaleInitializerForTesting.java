@@ -1,5 +1,6 @@
 package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.webServiceTest.initialization;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.IntentionPurchaseSale.IntentionPurchaseSale;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.IntentionPurchaseSale.flags.IntentionType;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.IntentionPurchaseSale.flags.StatusType;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.User;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.IntentionPurchaseSaleService;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 
 @Component
 @Transactional
@@ -40,14 +42,21 @@ public class IntentionPurchaseSaleInitializerForTesting {
         User anyUserTwo = UserFactory.anyUserWithAnotherEmail();
         userService.registerElement(anyUserOne);
         userService.registerElement(anyUserTwo);
-        IntentionPurchaseSale intentionPurchaseSaleActive = IntentionPurchaseSaleFactory.anyIntentionPurchaseSale();
+        IntentionPurchaseSale intentionPurchaseSaleActiveOne = IntentionPurchaseSaleFactory.anyIntentionPurchaseSale();
+        IntentionPurchaseSale intentionPurchaseSaleActiveTwo = IntentionPurchaseSaleFactory.anyIntentionPurchaseSale();
+        IntentionPurchaseSale intentionPurchaseSaleActiveThree = IntentionPurchaseSaleFactory.anyIntentionPurchaseSale();
         IntentionPurchaseSale intentionPurchaseSaleCancelled = IntentionPurchaseSaleFactory.anyIntentionPurchaseSale();
         IntentionPurchaseSale intentionPurchaseSaleFinishedOne = IntentionPurchaseSaleFactory.anyIntentionPurchaseSale();
         IntentionPurchaseSale intentionPurchaseSaleFinishedTwo = IntentionPurchaseSaleFactory.anyIntentionPurchaseSale();
-        intentionPurchaseSaleActive = intentionPurchaseSaleService.create(intentionPurchaseSaleActive);
+        intentionPurchaseSaleActiveTwo.setQuotationBase(new BigDecimal("0.01"));
+        intentionPurchaseSaleActiveThree.setQuotationBase(new BigDecimal("0.130"));
+        intentionPurchaseSaleActiveTwo.setIntentionType(IntentionType.PURCHASE);
+        intentionPurchaseSaleService.create(intentionPurchaseSaleActiveOne);
         intentionPurchaseSaleCancelled = intentionPurchaseSaleService.create(intentionPurchaseSaleCancelled);
         intentionPurchaseSaleFinishedOne = intentionPurchaseSaleService.create(intentionPurchaseSaleFinishedOne);
         intentionPurchaseSaleFinishedTwo = intentionPurchaseSaleService.create(intentionPurchaseSaleFinishedTwo);
+        intentionPurchaseSaleService.create(intentionPurchaseSaleActiveTwo);
+        intentionPurchaseSaleService.create(intentionPurchaseSaleActiveThree);
         intentionPurchaseSaleCancelled.setStatusType(StatusType.CANCEL);
         intentionPurchaseSaleFinishedOne.setStatusType(StatusType.FINISHED);
         intentionPurchaseSaleFinishedTwo.setStatusType(StatusType.FINISHED);

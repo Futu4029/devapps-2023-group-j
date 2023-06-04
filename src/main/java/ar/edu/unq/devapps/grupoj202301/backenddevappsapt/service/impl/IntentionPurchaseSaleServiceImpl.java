@@ -210,24 +210,25 @@ public class IntentionPurchaseSaleServiceImpl implements IntentionPurchaseSaleSe
          BigDecimal currentQuotation = cryptoCoinService.getExternalQuotationByName(intentionPurchaseSale.getCryptoCoinName());
 
          if(intentionPurchaseSale.getIntentionType().equals(IntentionType.PURCHASE) &&
-            this.isADifferenceOf5BetweenQuotations(originalQuotation, currentQuotation)) {
+            VerifyPurchaseIntention(currentQuotation, originalQuotation)) {
              throw new UserException("There is a 5% difference between the quotes. The operation is cancelled.");
          }
 
          if(intentionPurchaseSale.getIntentionType().equals(IntentionType.SELL) &&
-                 this.isADifferenceOf5BetweenQuotations(currentQuotation, originalQuotation)) {
+                 VerifySellIntention(currentQuotation, originalQuotation)) {
              throw new UserException("There is a 5% difference between the quotes. The operation is cancelled.");
          }
      }
 
-     public boolean isADifferenceOf5BetweenQuotations(BigDecimal quotationA, BigDecimal quotationB) {
-         BigDecimal differencePercentage = quotationA.subtract(quotationB)
-                 .divide(quotationB, MathContext.DECIMAL32)
-                 .multiply(BigDecimal.valueOf(100));
+     public static boolean VerifyPurchaseIntention(BigDecimal currentQuotation, BigDecimal userQuotation) {
+         BigDecimal percentage = userQuotation.multiply(new BigDecimal("0.05"));
+         BigDecimal maximumQuotation = userQuotation.add(percentage);
+         return currentQuotation.compareTo(maximumQuotation) >= 0;
+     }
 
-         BigDecimal fivePercent = BigDecimal.valueOf(5);
-         int comparisonResult = differencePercentage.compareTo(fivePercent);
-
-         return comparisonResult >= 0;
+     public static boolean VerifySellIntention(BigDecimal currentQuotation, BigDecimal userQuotation) {
+         BigDecimal percentage = userQuotation.multiply(new BigDecimal("0.05"));
+         BigDecimal minimumQuotation = userQuotation.subtract(percentage);
+         return currentQuotation.compareTo(minimumQuotation) <= 0;
      }
  }

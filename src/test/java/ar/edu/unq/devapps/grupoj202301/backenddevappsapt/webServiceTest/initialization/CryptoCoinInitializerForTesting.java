@@ -1,5 +1,4 @@
 package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.webServiceTest.initialization;
-
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.cryptoCoin.CryptoCoin;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.cryptoCoin.QuotationByDate;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.CryptoCoinService;
@@ -35,12 +34,16 @@ public class CryptoCoinInitializerForTesting {
     }
 
     private void startInitialization() throws IOException {
+        CryptoCoin cryptoCoin = new CryptoCoin("AUDIOUSDT");
+        QuotationByDate quotationByDate = new QuotationByDate(cryptoCoinService.getExternalQuotationByName("AUDIOUSDT"));
+        cryptoCoin.addQuotation(quotationByDate);
+        cryptoCoinService.registerElement(cryptoCoin);
+
         List<String> cryptoCoinNamesList = List.of("ALICEUSDT", "MATICUSDT", "AXSUSDT", "AAVEUSDT", "ATOMUSDT",
-                "NEOUSDT", "DOTUSDT", "ETHUSDT", "CAKEUSDT", "BTCUSDT", "BNBUSDT", "ADAUSDT", "TRXUSDT", "AUDIOUSDT"
-        );
+                "NEOUSDT", "DOTUSDT", "ETHUSDT", "CAKEUSDT", "BTCUSDT", "BNBUSDT", "ADAUSDT", "TRXUSDT");
 
         for (String cryptoCoinName : cryptoCoinNamesList) {
-            CryptoCoin cryptoCoin = CryptoCoinFactory.anyCryptoCoin();
+            cryptoCoin = CryptoCoinFactory.anyCryptoCoin();
             cryptoCoin.setName(cryptoCoinName);
             QuotationByDate firstQuotation = QuotationByDateFactory.anyQuotationByDate("100");
             QuotationByDate secondQuotation = QuotationByDateFactory.anyQuotationByDate("100");

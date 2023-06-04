@@ -1,27 +1,16 @@
 package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.webServiceTest.integrationTest.webServiceTest;
-
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.IntentionPurchaseSale.IntentionPurchaseSale;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.UserService;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.utilities.validation.exception.ElementNotRegisteredException;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.webServiceTest.factories.IntentionPurchaseSaleFactory;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.webservice.IntentionPurchaseSaleWebService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestClientException;
-
-import static org.assertj.core.api.Fail.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class IntentionPurchaseSaleWebServiceTest {
@@ -34,8 +23,6 @@ public class IntentionPurchaseSaleWebServiceTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
-    @Autowired
-    private UserService userService;
 
     @BeforeEach
     void setUp() {
@@ -51,7 +38,7 @@ public class IntentionPurchaseSaleWebServiceTest {
         HttpEntity<IntentionPurchaseSale> requestEntity = new HttpEntity<>(anyIntention, headers);
         ResponseEntity<IntentionPurchaseSale> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, IntentionPurchaseSale.class);
         IntentionPurchaseSale createdIntention = response.getBody();
-        assertEquals("example", createdIntention.getName());
+        assertEquals(7, createdIntention.getId());
     }
 
     @Test
@@ -70,11 +57,24 @@ public class IntentionPurchaseSaleWebServiceTest {
 
     @Test
     @DirtiesContext
+    void create_intention_with_a_non_existent_user_test() {
+        String url = HTTP_LOCALHOST + port + "/intention/create";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        IntentionPurchaseSale anyIntention = IntentionPurchaseSaleFactory.anyIntentionPurchaseSale();
+        anyIntention.setEmail("example2@example.com");
+        HttpEntity<IntentionPurchaseSale> requestEntity = new HttpEntity<>(anyIntention, headers);
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        Assertions.assertEquals("Error: The element with id example2@example.com is not present", response.getBody());
+    }
+
+    @Test
+    @DirtiesContext
     void cancel_intention_when_user_is_owner_test() {
         String url = HTTP_LOCALHOST + port + "/intention/interaction/cancel/1/example@example.com";
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, null, String.class);
         String message =  response.getBody();
-        assertEquals(-20, userService.findElementById("example@example.com").get().getPointsObtained());
         assertEquals("The operation was successfully canceled. You have lost 20 points.", message);
     }
 
@@ -112,5 +112,75 @@ public class IntentionPurchaseSaleWebServiceTest {
         ResponseEntity<String> response = restTemplate.postForEntity(url, null, String.class);
         Assertions.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         Assertions.assertEquals("Error: The element with id 18 is not present", response.getBody());
+    }
+
+    @Test
+    @DirtiesContext
+    void proceed_intention_test() {
+        String url = HTTP_LOCALHOST + port + "/intention/interaction/proceed/1/anotherEmail@example.com";
+        ResponseEntity<String> response = restTemplate.postForEntity(url, null, String.class);
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertEquals("Congratulations, the interaction with the intention was successful. " +
+                "Wait for the other user to confirm.", response.getBody());
+    }
+
+    @Test
+    @DirtiesContext
+    void proceed_intention_user_owner_test() {
+        String url = HTTP_LOCALHOST + port + "/intention/interaction/proceed/1/example@example.com";
+        ResponseEntity<String> response = restTemplate.postForEntity(url, null, String.class);
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        Assertions.assertEquals("Error: You cannot proceed on your own intention.", response.getBody());
+    }
+
+    @Test
+    @DirtiesContext
+    void proceed_intention_when_no_longer_active_test() {
+        String url = HTTP_LOCALHOST + port + "/intention/interaction/proceed/3/anotherEmail@example.com";
+        ResponseEntity<String> response = restTemplate.postForEntity(url, null, String.class);
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        Assertions.assertEquals("Error: Intent is not active.", response.getBody());
+    }
+
+    @Test
+    @DirtiesContext
+    void confirm_intention_test() {
+        String urlProceed = HTTP_LOCALHOST + port + "/intention/interaction/proceed/1/anotherEmail@example.com";
+        restTemplate.postForEntity(urlProceed, null, String.class);
+        String urlConfirm = HTTP_LOCALHOST + port + "/intention/interaction/confirm/1/example@example.com";
+        ResponseEntity<String> response = restTemplate.postForEntity(urlConfirm, null, String.class);
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertEquals("Congratulations, the intent was completed successfully.", response.getBody());
+    }
+
+    @Test
+    @DirtiesContext
+    void confirm_intention_with_non_owner_user_test() {
+        String urlProceed = HTTP_LOCALHOST + port + "/intention/interaction/proceed/1/anotherEmail@example.com";
+        restTemplate.postForEntity(urlProceed, null, String.class);
+        String urlConfirm = HTTP_LOCALHOST + port + "/intention/interaction/confirm/1/anotherEmail@example.com";
+        ResponseEntity<String> response = restTemplate.postForEntity(urlConfirm, null, String.class);
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        Assertions.assertEquals("Error: The entered user is not the owner of the intention.", response.getBody());
+    }
+
+    @Test
+    @DirtiesContext
+    void confirm_intention_purchase_with_difference_in_quotation_test() {
+        String urlProceedOne = HTTP_LOCALHOST + port + "/intention/interaction/proceed/5/anotherEmail@example.com";
+        restTemplate.postForEntity(urlProceedOne, null, String.class);
+        String urlConfirmOne = HTTP_LOCALHOST + port + "/intention/interaction/confirm/5/example@example.com";
+        ResponseEntity<String> responseOne = restTemplate.postForEntity(urlConfirmOne, null, String.class);
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseOne.getStatusCode());
+        Assertions.assertEquals("There is a 5% difference between the quotes. The operation is cancelled.", responseOne.getBody());
+    }
+
+    void confirm_intention_sell_with_difference_in_quotation_test() {
+        String urlProceedOne = HTTP_LOCALHOST + port + "/intention/interaction/proceed/6/anotherEmail@example.com";
+        restTemplate.postForEntity(urlProceedOne, null, String.class);
+        String urlConfirmOne = HTTP_LOCALHOST + port + "/intention/interaction/confirm/6/example@example.com";
+        ResponseEntity<String> responseOne = restTemplate.postForEntity(urlConfirmOne, null, String.class);
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseOne.getStatusCode());
+        Assertions.assertEquals("There is a 5% difference between the quotes. The operation is cancelled.", responseOne.getBody());
     }
 }

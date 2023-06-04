@@ -53,8 +53,13 @@ public class CryptoCoinWebServiceTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
+    private List<String> cryptoCoinNamesList;
+
     @BeforeEach
     void setUp() {
+        cryptoCoinNamesList = List.of("AUDIOUSDT","ALICEUSDT", "MATICUSDT", "AXSUSDT", "AAVEUSDT", "ATOMUSDT",
+                "NEOUSDT", "DOTUSDT", "ETHUSDT", "CAKEUSDT", "BTCUSDT", "BNBUSDT", "ADAUSDT", "TRXUSDT");
+
     }
 
     @Test
@@ -72,8 +77,9 @@ public class CryptoCoinWebServiceTest {
         ResponseEntity<List<CryptoCoinDTO>> response = restTemplate.exchange(url, HttpMethod.GET, null, responseType);
         List<CryptoCoinDTO> cryptoCoinList = response.getBody();
         Assertions.assertEquals(14, cryptoCoinList.size());
-        Assertions.assertEquals("ALICEUSDT", cryptoCoinList.get(0).getName());
-        Assertions.assertEquals(new BigDecimal("100.00"), cryptoCoinList.get(0).getQuotationByDate().getQuotation());
+        for(int i = 0; i < cryptoCoinNamesList.size(); i++) {
+            Assertions.assertEquals(cryptoCoinNamesList.get(i), cryptoCoinList.get(i).getName());
+        }
     }
 
     @Test

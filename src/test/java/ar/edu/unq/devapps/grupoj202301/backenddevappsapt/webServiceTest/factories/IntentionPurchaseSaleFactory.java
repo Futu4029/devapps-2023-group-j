@@ -10,7 +10,7 @@ public class IntentionPurchaseSaleFactory {
 
     public static IntentionPurchaseSale anyIntentionPurchaseSale(){
         User anyUser = UserFactory.anyUser();
-        return new IntentionPurchaseSale(anyUser, "NEOUSDT", new BigDecimal("1"), new BigDecimal("1"), new BigDecimal("1"), IntentionType.SELL);
+        return new IntentionPurchaseSale(anyUser, "AUDIOUSDT", new BigDecimal("1"), new BigDecimal("0.25"), new BigDecimal("1"), IntentionType.SELL);
     }
 
 }
