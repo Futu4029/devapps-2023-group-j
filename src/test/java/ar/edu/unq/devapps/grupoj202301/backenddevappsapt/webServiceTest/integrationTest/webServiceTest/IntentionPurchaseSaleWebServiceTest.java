@@ -179,7 +179,8 @@ public class IntentionPurchaseSaleWebServiceTest {
         Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseOne.getStatusCode());
         Assertions.assertEquals("There is a 5% difference between the quotes. The operation is cancelled.", responseOne.getBody());
     }
-
+    @Test
+    @DirtiesContext
     void confirm_intention_sell_with_difference_in_quotation_test() {
         String urlProceedOne = HTTP_LOCALHOST + port + "/intention/interaction/proceed/6/anotherEmail@example.com";
         restTemplate.postForEntity(urlProceedOne, null, String.class);

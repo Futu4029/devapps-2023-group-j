@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -64,7 +65,7 @@ public class CryptoCoinServiceImpl implements CryptoCoinService {
 
     @Override
     public BigDecimal getExternalQuotationByName(String cryptoCoinName) throws IOException {
-        Response response = genericQueryToAnExternalApi("https://api.binance.com/api/v3/ticker/price?symbol=" + cryptoCoinName);
+        Response response = genericQueryToAnExternalApi("https://api.binance.us/api/v3/ticker/price?symbol=" + cryptoCoinName);
         ResponseBody responseBody = response.body();
         if (response.isSuccessful() && responseBody != null) {
             String result = new JSONObject(responseBody.string()).getString("price");
@@ -95,13 +96,15 @@ public class CryptoCoinServiceImpl implements CryptoCoinService {
 
 
     private Response genericQueryToAnExternalApi(String url) throws IOException {
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(120, TimeUnit.SECONDS)
+                .build();
         Request request = new Request.Builder().url(url).build();
         return client.newCall(request).execute();
     }
 
     private BigDecimal getPesosValueByDollar(String type) throws IOException {
-        Response response = genericQueryToAnExternalApi("https://www.dolarsi.com/api/api.php?type=valoresprincipales");
+        Response response = genericQueryToAnExternalApi("https://www.dolarsi.us/api/api.php?type=valoresprincipales");
         ResponseBody responseBody = response.body();
         if (response.isSuccessful() && responseBody != null) {
             JSONArray jsonArray = new JSONArray(responseBody.string());

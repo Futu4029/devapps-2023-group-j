@@ -49,7 +49,7 @@ public class IntentionPurchaseSaleInitializerForTesting {
         IntentionPurchaseSale intentionPurchaseSaleFinishedOne = IntentionPurchaseSaleFactory.anyIntentionPurchaseSale();
         IntentionPurchaseSale intentionPurchaseSaleFinishedTwo = IntentionPurchaseSaleFactory.anyIntentionPurchaseSale();
         intentionPurchaseSaleActiveTwo.setQuotationBase(new BigDecimal("0.01"));
-        intentionPurchaseSaleActiveThree.setQuotationBase(new BigDecimal("0.130"));
+        intentionPurchaseSaleActiveThree.setQuotationBase(new BigDecimal("0.8"));
         intentionPurchaseSaleActiveTwo.setIntentionType(IntentionType.PURCHASE);
         intentionPurchaseSaleService.create(intentionPurchaseSaleActiveOne);
         intentionPurchaseSaleCancelled = intentionPurchaseSaleService.create(intentionPurchaseSaleCancelled);
