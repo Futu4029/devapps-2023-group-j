@@ -104,7 +104,7 @@ public class CryptoCoinServiceImpl implements CryptoCoinService {
     }
 
     private BigDecimal getPesosValueByDollar(String type) throws IOException {
-        Response response = genericQueryToAnExternalApi("https://www.dolarsi.us/api/api.php?type=valoresprincipales");
+        Response response = genericQueryToAnExternalApi("https://www.dolarsi.com/api/api.php?type=valoresprincipales");
         ResponseBody responseBody = response.body();
         if (response.isSuccessful() && responseBody != null) {
             JSONArray jsonArray = new JSONArray(responseBody.string());
