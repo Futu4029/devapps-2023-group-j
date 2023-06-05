@@ -1,5 +1,7 @@
 package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.webServiceTest.integrationTest.webServiceTest;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.IntentionPurchaseSale.IntentionPurchaseSale;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.IntentionPurchaseSale.IntentionPurchaseSaleUserInfo;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.IntentionPurchaseSale.IntentionPurchaseSaleVolumeInfo;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.webServiceTest.factories.IntentionPurchaseSaleFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,8 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.test.annotation.DirtiesContext;
+
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -22,7 +28,6 @@ public class IntentionPurchaseSaleWebServiceTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
-
 
     @BeforeEach
     void setUp() {
@@ -183,4 +188,33 @@ public class IntentionPurchaseSaleWebServiceTest {
         Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseOne.getStatusCode());
         Assertions.assertEquals("There is a 5% difference between the quotes. The operation is cancelled.", responseOne.getBody());
     }
+
+    @Test
+    @DirtiesContext
+    void get_actives_intention_test() {
+        String url = HTTP_LOCALHOST + port + "/intention/getActivesIntentions/example@example.com";
+        ParameterizedTypeReference<IntentionPurchaseSaleUserInfo> responseType = new ParameterizedTypeReference<IntentionPurchaseSaleUserInfo>() {};
+        ResponseEntity<IntentionPurchaseSaleUserInfo> response = restTemplate.exchange(url, HttpMethod.GET, null, responseType);
+        IntentionPurchaseSaleUserInfo intentionPurchaseSaleUserInfo = response.getBody();
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertNotNull(intentionPurchaseSaleUserInfo);
+        Assertions.assertEquals(3, intentionPurchaseSaleUserInfo.getIntentionPurchaseSaleSummarizedList().size());
+        Assertions.assertEquals("example@example.com", intentionPurchaseSaleUserInfo.getEmail());
+    }
+
+    @Test
+    @DirtiesContext
+    void get_volume_operated_between_dates_test() {
+        LocalDateTime now = LocalDateTime.now();
+        String nowString = now.toString();
+        String yesterdayString = now.minusDays(1).toString();
+        String url = HTTP_LOCALHOST + port + "/intention/betweenDates/example@example.com/" + yesterdayString+ "/" + nowString;
+        ParameterizedTypeReference<IntentionPurchaseSaleVolumeInfo> responseType = new ParameterizedTypeReference<IntentionPurchaseSaleVolumeInfo>() {};
+        ResponseEntity<IntentionPurchaseSaleVolumeInfo> response = restTemplate.exchange(url, HttpMethod.GET, null, responseType);
+        IntentionPurchaseSaleVolumeInfo intentionPurchaseSaleVolumeInfo = response.getBody();
+        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertNotNull(intentionPurchaseSaleVolumeInfo);
+        Assertions.assertEquals(2, intentionPurchaseSaleVolumeInfo.getIntentionPurchaseSaleResultList().size());
+    }
+
 }
