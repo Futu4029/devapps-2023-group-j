@@ -12,10 +12,7 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Aspect
 @Component
@@ -32,12 +29,16 @@ public class Aspects {
     @Before("registerElementPointcut()")
     public void beforeRegisterElement(JoinPoint joinPoint) {
         GenericService<Object> service = (GenericService<Object>) joinPoint.getTarget();
-        GenericSystemElement argument = (GenericSystemElement) Arrays.stream(joinPoint.getArgs()).findAny().get();
-        if(service.elementIsPresent(argument)) {
-            String className = argument.getClass().getName();
+        Optional<Object> argument = Arrays.stream(joinPoint.getArgs()).findAny();
+        if(argument.isEmpty()){
+            throw new NoSuchElementException();
+        };
+        GenericSystemElement presentArgument = (GenericSystemElement) argument.get();
+        if(service.elementIsPresent(presentArgument)) {
+            String className = presentArgument.getClass().getName();
             String simpleClassName = className.substring(className.lastIndexOf('.') + 1);
             throw new ElementAlreadyRegisteredException("ERROR: The " + simpleClassName + " "
-                                                                      + argument.getId() + " is already registered.");
+                    + presentArgument.getId() + " is already registered.");
         }
     }
 

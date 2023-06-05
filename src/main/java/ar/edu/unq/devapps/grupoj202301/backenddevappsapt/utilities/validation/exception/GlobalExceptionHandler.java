@@ -13,6 +13,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         FieldError fieldError = ex.getBindingResult().getFieldError();
+        assert fieldError != null;
         String[] parts = fieldError.getField().split("\\.");
         String field = parts[0];
         if(parts.length > 1) {
