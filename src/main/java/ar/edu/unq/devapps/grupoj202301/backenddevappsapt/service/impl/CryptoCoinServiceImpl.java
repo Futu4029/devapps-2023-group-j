@@ -71,6 +71,13 @@ public class CryptoCoinServiceImpl implements CryptoCoinService {
             String result = new JSONObject(responseBody.string()).getString("price");
             return new BigDecimal(result);
         }
+
+        response = genericQueryToAnExternalApi("https://api.binance.com/api/v3/ticker/price?symbol=" + cryptoCoinName);
+        if (response.isSuccessful() && responseBody != null) {
+            String result = new JSONObject(responseBody.string()).getString("price");
+            return new BigDecimal(result);
+        }
+
         throw new ExternalAPIException("Could not obtain Binance resource");
     }
 
