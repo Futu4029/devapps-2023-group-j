@@ -15,7 +15,7 @@ import java.util.List;
 
 @Service
 @Transactional
-@Profile("dev")
+@Profile("prod")
 public class CryptoCoinInitializer {
 
     protected final Log logger = LogFactory.getLog(getClass());
