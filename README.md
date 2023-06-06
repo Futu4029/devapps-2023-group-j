@@ -1,4 +1,5 @@
 # devapps-2023-group-j
 
-## RUN sh DockerDbInit.sh 
-## Si no se buildea bien se puede correr sh DockerDbStopper.sh
+## Proyecto para la materia de desarrollo de aplicaciones.
+## Gonzalo Zarate
+## Juan Pablo Contardo
