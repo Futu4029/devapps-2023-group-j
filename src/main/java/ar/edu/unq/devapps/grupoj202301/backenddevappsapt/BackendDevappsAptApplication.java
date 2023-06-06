@@ -8,7 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 @SpringBootApplication(exclude = SecurityAutoConfiguration.class)
-@OpenAPIDefinition(info = @Info(title = "Crypto API", version = "1.0", description = "First approach"))
+@OpenAPIDefinition(info = @Info(title = "APP DOCUMENTATION", version = "2.0", description = "Crypto APP"))
 @EnableAspectJAutoProxy
 @ComponentScan("ar.edu.unq.devapps.grupoj202301.backenddevappsapt")
 public class BackendDevappsAptApplication {

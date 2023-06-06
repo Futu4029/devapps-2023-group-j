@@ -205,32 +205,13 @@ public class IntentionPurchaseSaleServiceImpl implements IntentionPurchaseSaleSe
      public IntentionPurchaseSaleVolumeInfo volumeOperatedBetweenDates(String email, LocalDateTime startDate, LocalDateTime endDate) throws IOException {
          List<IntentionPurchaseSale> intentionPurchaseSaleList = intentionPurchaseSalePersistence.findOperationBetweenDates(email, startDate, endDate, StatusType.FINISHED);
          List<IntentionPurchaseSale> intentionPurchaseSaleResultList = new ArrayList<>();
-         Map<String, BigDecimal> cryptoQuotationCache = new HashMap<>();
-         BigDecimal purchaseQuotation = cryptoCoinService.getThePriceOfThePurchaseDollar();
-         BigDecimal sellQuotation = cryptoCoinService.getThePriceOfTheSellDollar();
          BigDecimal totalDollarAmount = BigDecimal.ZERO;
          BigDecimal totalPesosAmount = BigDecimal.ZERO;
 
          for(IntentionPurchaseSale intentionPurchaseSale : intentionPurchaseSaleList) {
-             totalDollarAmount = totalDollarAmount.add(intentionPurchaseSale.getQuotationBase());
+             totalDollarAmount = totalDollarAmount.add(intentionPurchaseSale.getQuotationBase().multiply(intentionPurchaseSale.getAmountOfCryptoCoin()));
              totalPesosAmount = totalPesosAmount.add(intentionPurchaseSale.getPesosAmount());
-             String cryptoCoinName = intentionPurchaseSale.getCryptoCoinName();
-             BigDecimal pesosAmount;
 
-             if(!cryptoQuotationCache.containsKey(cryptoCoinName)) {
-                 cryptoQuotationCache.put(cryptoCoinName, cryptoCoinService.getExternalQuotationByName(cryptoCoinName));
-             }
-
-             BigDecimal actuallyQuotationBase = cryptoQuotationCache.get(cryptoCoinName);
-
-             if(intentionPurchaseSale.getIntentionType() == IntentionType.PURCHASE) {
-                 pesosAmount = actuallyQuotationBase.multiply(purchaseQuotation);
-             } else {
-                 pesosAmount = actuallyQuotationBase.multiply(sellQuotation);
-             }
-
-             intentionPurchaseSale.setQuotationBase(actuallyQuotationBase);
-             intentionPurchaseSale.setPesosAmount(pesosAmount);
              intentionPurchaseSaleResultList.add(intentionPurchaseSale);
          }
 
