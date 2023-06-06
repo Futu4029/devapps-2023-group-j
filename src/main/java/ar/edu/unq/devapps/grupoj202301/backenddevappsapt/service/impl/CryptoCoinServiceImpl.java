@@ -65,7 +65,7 @@ public class CryptoCoinServiceImpl implements CryptoCoinService {
 
     @Override
     public BigDecimal getExternalQuotationByName(String cryptoCoinName) throws IOException {
-        Response response = genericQueryToAnExternalApi("https://api.binance.com/api/v3/ticker/price?symbol=" + cryptoCoinName);
+        Response response = genericQueryToAnExternalApi("https://api.binance.us/api/v3/ticker/price?symbol=" + cryptoCoinName);
         ResponseBody responseBody = response.body();
         if (response.isSuccessful() && responseBody != null) {
             String result = new JSONObject(responseBody.string()).getString("price");
