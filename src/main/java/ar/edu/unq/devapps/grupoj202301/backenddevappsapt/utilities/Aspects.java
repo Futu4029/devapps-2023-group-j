@@ -6,10 +6,9 @@ import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.utilities.validation.ex
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -18,7 +17,7 @@ import java.util.*;
 @Component
 @SuppressWarnings("unchecked")
 public class Aspects {
-    protected final Log logger = LogFactory.getLog(getClass());
+    static Logger logger = LoggerFactory.getLogger(Aspects.class);
 
     @Pointcut("execution(* ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.*.registerElement(..))")
     public void registerElementPointcut() {}
@@ -34,12 +33,13 @@ public class Aspects {
             throw new NoSuchElementException();
         };
         GenericSystemElement presentArgument = (GenericSystemElement) argument.get();
+        String className = presentArgument.getClass().getName();
+        String simpleClassName = className.substring(className.lastIndexOf('.') + 1);
         if(service.elementIsPresent(presentArgument)) {
-            String className = presentArgument.getClass().getName();
-            String simpleClassName = className.substring(className.lastIndexOf('.') + 1);
             throw new ElementAlreadyRegisteredException("ERROR: The " + simpleClassName + " "
                     + presentArgument.getId() + " is already registered.");
         }
+        logger.info(simpleClassName + " class is persisted with ID: " + presentArgument.getId());
     }
 
     @AfterReturning(pointcut = "findElementPointCut()", returning = "result")

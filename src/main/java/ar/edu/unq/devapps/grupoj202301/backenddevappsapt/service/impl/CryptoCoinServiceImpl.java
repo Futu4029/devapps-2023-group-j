@@ -1,20 +1,19 @@
 package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.impl;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.cryptoCoin.CryptoCoin;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.cryptoCoin.CryptoCoinDTO;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.cryptoCoin.QuotationByDate;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.persistence.CryptoCoinPersistence;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.CryptoCoinService;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.utilities.validation.exception.ExternalAPIException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import org.json.JSONObject;
 import org.json.JSONArray;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -23,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -59,8 +57,7 @@ public class CryptoCoinServiceImpl implements CryptoCoinService {
     @Override
     public CryptoCoin findCryptoCoinWithQuotationByDatesWithin24Hours(String cryptoCoinName) {
         LocalDateTime now = LocalDateTime.now();
-        CryptoCoin cryptoCoin = cryptoCoinPersistence.findCryptoCoinWithQuotationByDatesWithin24Hours(cryptoCoinName,now.minusHours(24),now);
-        return cryptoCoin;
+        return cryptoCoinPersistence.findCryptoCoinWithQuotationByDatesWithin24Hours(cryptoCoinName,now.minusHours(24),now);
     }
 
     @Override

@@ -1,31 +1,36 @@
  package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.impl;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.IntentionPurchaseSale.*;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.IntentionPurchaseSale.flags.IntentionType;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.IntentionPurchaseSale.flags.StatusType;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.User;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.cryptoCoin.CryptoCoin;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.persistence.IntentionPurchaseSalePersistence;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.CryptoCoinService;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.GenericService;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.IntentionPurchaseSaleService;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.utilities.validation.exception.UserException;
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import java.io.IOException;
-import java.math.MathContext;
-import java.time.temporal.ChronoUnit;
-import java.util.*;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
+
+ import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.IntentionPurchaseSale.*;
+ import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.IntentionPurchaseSale.flags.IntentionType;
+ import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.IntentionPurchaseSale.flags.StatusType;
+ import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.User;
+ import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.cryptoCoin.CryptoCoin;
+ import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.persistence.IntentionPurchaseSalePersistence;
+ import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.CryptoCoinService;
+ import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.GenericService;
+ import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.IntentionPurchaseSaleService;
+ import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.utilities.validation.exception.UserException;
+ import jakarta.transaction.Transactional;
+ import lombok.RequiredArgsConstructor;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.stereotype.Service;
+
+ import java.io.IOException;
+ import java.math.BigDecimal;
+ import java.time.LocalDateTime;
+ import java.time.temporal.ChronoUnit;
+ import java.util.*;
 
  @Service
 @RequiredArgsConstructor
 @Transactional
 public class IntentionPurchaseSaleServiceImpl implements IntentionPurchaseSaleService {
 
-    @Autowired
+     static Logger logger = LoggerFactory.getLogger(IntentionPurchaseSaleServiceImpl.class);
+
+     @Autowired
     private IntentionPurchaseSalePersistence intentionPurchaseSalePersistence;
 
     @Autowired
@@ -85,7 +90,10 @@ public class IntentionPurchaseSaleServiceImpl implements IntentionPurchaseSaleSe
 
              user.discountPoints(20);
              userService.updateElement(user);
-             this.updateElement(intentionPurchaseSale);
+             logger.info("User with ID: {}" + " has lost 20 points. Points updated: {}", user.getEmail(), user.getPointsObtained());
+             updateElement(intentionPurchaseSale);
+             logger.info("Intention with ID: {}" + " has been canceled",
+                     intentionPurchaseSale.getId());
              return "The operation was successfully canceled. You have lost 20 points.";
 
          } else  {
@@ -112,7 +120,10 @@ public class IntentionPurchaseSaleServiceImpl implements IntentionPurchaseSaleSe
          } else {
              throw new UserException("Error: Intent is not active.");
          }
-
+         updateElement(intentionPurchaseSale);
+         logger.info("Intention with ID: {}" + " has been updated. New status: {}",
+                 intentionPurchaseSale.getId(),
+                 intentionPurchaseSale.getStatusType().name());
          return "Congratulations, the interaction with the intention was successful. " +
                  "Wait for the other user to confirm.";
      }
@@ -127,17 +138,38 @@ public class IntentionPurchaseSaleServiceImpl implements IntentionPurchaseSaleSe
              long minutesDifference = ChronoUnit.MINUTES.between(intentionPurchaseSale.getCreationDate(), now);
              User userOwner = userService.findElementById(intentionPurchaseSale.getEmail()).get();
              User otherUser = userService.findElementById(intentionPurchaseSale.getAnotherUserEmail()).get();
+             int currentPointsObtained;
              if(minutesDifference < 30) {
                  userOwner.addPoints(10);
                  otherUser.addPoints(10);
+                 currentPointsObtained = 10;
              } else {
                  userOwner.addPoints(5);
                  otherUser.addPoints(5);
+                 currentPointsObtained = 5;
              }
+             userService.updateElement(userOwner);
+             userService.updateElement(otherUser);
+
+             makeUserLogForSuccessfulOperation(userOwner, currentPointsObtained);
+             makeUserLogForSuccessfulOperation(otherUser, currentPointsObtained);
+
+             updateElement(intentionPurchaseSale);
+             logger.info("Intention with ID: {}" + " has been completed successfully.",
+                     intentionPurchaseSale.getId());
          } else {
              throw new UserException("Error: The entered user is not the owner of the intention.");
          }
         return "Congratulations, the intent was completed successfully.";
+     }
+
+     private void makeUserLogForSuccessfulOperation(User user, int currentPointsObtained) {
+         logger.info("User with ID: {}" +
+                 " has successfully completed an intention and got {}" +
+                 " new points!. Points updated: {}",
+                 user.getEmail(),
+                 currentPointsObtained,
+                 user.getPointsObtained());
      }
 
      @Override
