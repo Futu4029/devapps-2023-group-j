@@ -1,0 +1,8 @@
+version: 2
+commands:
+  - name: Build
+    command: mvn package -DskipTests
+  - name: Deploy
+    command: java -jar target/backend-devapps-apt-0.0.1-SNAPSHOT.jar
+    services:
+      - myapp
