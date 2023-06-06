@@ -79,7 +79,7 @@ public class IntentionPurchaseSaleServiceImpl implements IntentionPurchaseSaleSe
          IntentionPurchaseSale intentionPurchaseSale = intentionPurchaseSalePersistence.findById(intentionID).get();
          User user = userService.findElementById(email).get();
 
-         if(intentionPurchaseSale.getStatusType().equals(StatusType.ACTIVE)) {
+         if(intentionPurchaseSale.getStatusType().equals(StatusType.ACTIVE) || intentionPurchaseSale.getStatusType().equals(StatusType.WAITINGCONFIRMATION)) {
              if(intentionPurchaseSale.getEmail().equals(email)) {
                  intentionPurchaseSale.setStatusType(StatusType.CANCEL);
              } else if (intentionPurchaseSale.getAnotherUserEmail() != null && intentionPurchaseSale.getAnotherUserEmail().equals(email)){
