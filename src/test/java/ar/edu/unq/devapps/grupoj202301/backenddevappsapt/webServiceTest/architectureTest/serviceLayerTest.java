@@ -28,6 +28,20 @@ public class serviceLayerTest {
                 .importPackages("ar.edu.unq.devapps.grupoj202301.backenddevappsapt");
     }
 
+    // ------- GENERAL ARCH TEST -----------//
+    @Test
+    void layers_architecture_test(){
+        layeredArchitecture()
+                .consideringAllDependencies()
+                .layer("Controller").definedBy("..webservice..")
+                .layer("Service").definedBy("..service..")
+                .layer("Persistence").definedBy("..persitence..")
+
+                .whereLayer("Controller").mayNotAccessAnyLayer()
+                .whereLayer("Service").mayOnlyBeAccessedByLayers("Controller")
+                .whereLayer("Persistence").mayOnlyBeAccessedByLayers("Service");
+    }
+    // ------- SERVICE ARCH TEST -----------//
     @Test
     void should_have_impl_name_test(){
         classes().that().resideInAPackage("..service.impl..")
@@ -73,23 +87,12 @@ public class serviceLayerTest {
                 .check(baseClasses);
     }
 
+    // ------- CONTROLLER ARCH TEST -----------//
+
     @Test
-    void have_transactional_test(){
+    void controllers_are_called_by_controllers_test(){
         classes().that().resideInAPackage("..webservice..")
                 .should().haveSimpleNameEndingWith("WebService").check(baseClasses);
     }
 
-
-    @Test
-    void layers_architecture_test(){
-        layeredArchitecture()
-                .consideringAllDependencies()
-                .layer("Controller").definedBy("..webservice..")
-                .layer("Service").definedBy("..service..")
-                .layer("Persistence").definedBy("..persitence..")
-
-                .whereLayer("Controller").mayNotAccessAnyLayer()
-                .whereLayer("Service").mayOnlyBeAccessedByLayers("Controller")
-                .whereLayer("Persistence").mayOnlyBeAccessedByLayers("Service");
-    }
 }
