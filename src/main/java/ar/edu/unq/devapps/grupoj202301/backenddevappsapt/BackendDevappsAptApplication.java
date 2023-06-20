@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
+@SpringBootApplication
 @OpenAPIDefinition(info = @Info(title = "Crypto API", version = "1.0", description = "First approach"))
 @EnableAspectJAutoProxy
 @ComponentScan("ar.edu.unq.devapps.grupoj202301.backenddevappsapt")

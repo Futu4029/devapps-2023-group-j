@@ -69,8 +69,10 @@ public class User implements GenericSystemElement {
     @NotNull
     private int operationsPerformed = 0;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_role")
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_role",
+            joinColumns = @JoinColumn(name = "user_email", referencedColumnName = "email"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id_role"))
     private List<Role> roles = new ArrayList<>();
 
     public User(String email, String walletAddress, String name, String surname, String address, String password, String cvu) {
