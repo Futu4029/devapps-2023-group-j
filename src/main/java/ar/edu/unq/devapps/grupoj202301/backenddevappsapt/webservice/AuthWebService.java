@@ -24,7 +24,7 @@ import java.util.List;
 @RestController
 @ControllerAdvice
 @RequiredArgsConstructor
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 public class AuthWebService {
 
     private AuthenticationManager authenticationManager;
@@ -42,9 +42,6 @@ public class AuthWebService {
         this.rolePersistence = rolePersistence;
     }
 
-    /*@PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody DtoLogin userDtoLogin){
-    }*/
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody User user){
         if (userService.elementIsPresent(user)){
