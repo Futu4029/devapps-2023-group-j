@@ -13,6 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -42,15 +44,16 @@ public class SecurityConfig {
     private static final String[] AUTH_WHITELIST = {
             "/auth/**",
             "/doc/swagger-ui/**",
-            "/h2-console/**",
-            "/**"
+            "/v3/api-docs/**",
+            "/h2-console/**"
     };
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http.headers().frameOptions().disable();
         http
-                .csrf().disable()
+                .csrf()
+                .disable()
                 .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and()
@@ -58,12 +61,13 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers(AUTH_WHITELIST).permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .httpBasic()
-                .and()
-                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                .requestMatchers(AUTH_WHITELIST)
+                .permitAll()
+                .requestMatchers(toH2Console())
+                .permitAll()
+                .anyRequest()
+                .authenticated();
+        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
 
     }

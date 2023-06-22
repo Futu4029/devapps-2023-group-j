@@ -44,9 +44,6 @@ public class AuthWebService {
 
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody User user){
-        if (userService.elementIsPresent(user)){
-            return new ResponseEntity<>("User exist", HttpStatus.BAD_REQUEST);
-        }
         String password = user.getPassword();
         user.setPassword(passwordEncoder.encode(password));
         Role role = rolePersistence.findByName("USER").get();
@@ -58,9 +55,6 @@ public class AuthWebService {
 
     @PostMapping("/registerAdm")
     public ResponseEntity<String> registerAdmin(@RequestBody User user){
-        if (userService.elementIsPresent(user)){
-            return new ResponseEntity<>("User exist", HttpStatus.BAD_REQUEST);
-        }
         String password = user.getPassword();
         user.setPassword(passwordEncoder.encode(password));
         Role role = rolePersistence.findByName("ADMIN").get();

@@ -3,6 +3,7 @@ package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.security;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.Role;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.User;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.persistence.UserPersistence;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class CustomUserDetailsService implements UserDetailsService {
 
     private UserPersistence userPersistence;
