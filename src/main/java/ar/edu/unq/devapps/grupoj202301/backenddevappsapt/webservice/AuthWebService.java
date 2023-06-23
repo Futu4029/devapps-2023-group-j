@@ -48,8 +48,7 @@ public class AuthWebService {
         user.setPassword(passwordEncoder.encode(password));
         Role role = rolePersistence.findByName("USER").get();
         user.setRoles(List.of(role));
-        userService.registerElement(user);
-        return new ResponseEntity<>("Created", HttpStatus.CREATED);
+        return new ResponseEntity<>(userService.registerElement(user), HttpStatus.CREATED);
     }
 
 
@@ -59,8 +58,7 @@ public class AuthWebService {
         user.setPassword(passwordEncoder.encode(password));
         Role role = rolePersistence.findByName("ADMIN").get();
         user.setRoles(Collections.singletonList(role));
-        userService.registerElement(user);
-        return new ResponseEntity<>("Created", HttpStatus.CREATED);
+        return new ResponseEntity<>(userService.registerElement(user), HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
