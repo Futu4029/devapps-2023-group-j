@@ -4,7 +4,6 @@
  import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.IntentionPurchaseSale.flags.IntentionType;
  import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.IntentionPurchaseSale.flags.StatusType;
  import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.User;
- import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.auth.UserDetailsDto;
  import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.cryptoCoin.CryptoCoin;
  import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.persistence.IntentionPurchaseSalePersistence;
  import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.CryptoCoinService;
@@ -16,7 +15,6 @@
  import org.slf4j.Logger;
  import org.slf4j.LoggerFactory;
  import org.springframework.beans.factory.annotation.Autowired;
- import org.springframework.security.core.context.SecurityContextHolder;
  import org.springframework.stereotype.Service;
 
  import java.io.IOException;
@@ -68,7 +66,7 @@ public class IntentionPurchaseSaleServiceImpl implements IntentionPurchaseSaleSe
     public IntentionPurchaseSale create(IntentionPurchaseSaleCoreData intentionPurchaseSaleInitialData) {
         User user = userService.findElementById(intentionPurchaseSaleInitialData.getEmail()).get();
         // TODO: A esta clase userDetailsDto le podes pedir el mail que se consigue desde el jwt. ;>
-        //UserDetailsDto userDetailsDto = (UserDetailsDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        //UserDetailsDto userDetailsDto = SecurityUtils.getLoggedInUser();
         CryptoCoin cryptoCoin = cryptoCoinService.findElementById(intentionPurchaseSaleInitialData.getCryptoCoinName()).get();
         String cryptoCoinName = cryptoCoin.getName();
         BigDecimal amountOfCryptoCoin = intentionPurchaseSaleInitialData.getAmountOfCryptoCoin();
