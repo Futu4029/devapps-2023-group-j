@@ -1,4 +1,5 @@
 package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.webServiceTest.integrationTest.webServiceTest;
+
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.User;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.webServiceTest.factories.UserFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,42 +8,42 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import java.io.IOException;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-class UserWebServiceTest {
-
-    @Autowired
-    private MockMvc mockMvc;
+class UserWebServiceTest extends AuthHelper{
 
     private User user;
 
+    @Autowired
+    private TestRestTemplate restTemplate;
+
     @BeforeEach
-    void setUp() {
+    void setUp() throws IOException {
         user = UserFactory.anyUser();
+        registerUser();
     }
 
     @AfterEach
     void cleanUp() {
-        mockMvc = null;
+
     }
 
     private void genericStructureToRegisterTest(User user, int statusCode, String message) throws Exception {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(getToken());
         ObjectMapper objectMapper = new ObjectMapper();
         String userToRegister = objectMapper.writeValueAsString(user);
-        var result = mockMvc.perform(post("/user/register")
-                        .content(userToRegister)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is(statusCode))
-                .andReturn();
-        Assertions.assertEquals(message, result.getResponse().getContentAsString());
+        var httpEntity = new HttpEntity<>(userToRegister, headers);
+        var result = restTemplate.exchange("/user/register", HttpMethod.POST, httpEntity, String.class);
+        Assertions.assertEquals(message, result.getBody());
+        Assertions.assertTrue(result.getStatusCode().is4xxClientError());
     }
 
     @Test
