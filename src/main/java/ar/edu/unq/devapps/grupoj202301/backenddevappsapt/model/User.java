@@ -1,12 +1,6 @@
 package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.utilities.validation.anotation.LettersAndNumbersOnlyAdmits;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.utilities.validation.anotation.LettersOnlyAdmits;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.utilities.validation.anotation.NumbersOnlyAdmits;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.utilities.validation.anotation.SpecialCharactersOnlyAdmits;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.utilities.validation.anotation.*;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -15,6 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -52,8 +48,8 @@ public class User implements GenericSystemElement {
     private String address;
 
     @Column(nullable = false)
-    @Size(min=6, max=32)
     @SpecialCharactersOnlyAdmits
+    @PasswordSize
     private String password;
 
     @Column(nullable = false)
@@ -68,6 +64,10 @@ public class User implements GenericSystemElement {
     @Column(nullable = false)
     @NotNull
     private int operationsPerformed = 0;
+
+    @ManyToMany
+    @JoinColumn(name = "id_role")
+    private List<Role> roles = new ArrayList<>();
 
     public User(String email, String walletAddress, String name, String surname, String address, String password, String cvu) {
         this.email = email;

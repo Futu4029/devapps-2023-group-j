@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.io.IOException;
 import java.time.LocalDateTime;
 
@@ -30,32 +29,30 @@ public class IntentionPurchaseSaleWebService {
     }
 
     @GetMapping("/getActivesIntentions/{email}")
-    @ResponseBody
-    private ResponseEntity<IntentionPurchaseSaleUserInfo> getActivesTransactions(@PathVariable("email") String email) throws IOException {
+    public ResponseEntity<IntentionPurchaseSaleUserInfo> getActivesTransactions(@PathVariable("email") String email) throws IOException {
         return ResponseEntity.ok(intentionPurchaseSaleService.getActivesTransactions(email));
     }
 
-    @GetMapping("/betweenDates/{email}/{startDate}/{endDate}")
-    @ResponseBody
-    private ResponseEntity<IntentionPurchaseSaleVolumeInfo> volumeOperatedBetweenDates(@PathVariable("email") String email, @PathVariable("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS") LocalDateTime startDate, @PathVariable("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS") LocalDateTime endDate) throws IOException {
-        return ResponseEntity.ok(intentionPurchaseSaleService.volumeOperatedBetweenDates(email, startDate, endDate));
+    @GetMapping("/betweenDates/{startDate}/{endDate}")
+    public ResponseEntity<IntentionPurchaseSaleVolumeInfo> volumeOperatedBetweenDates(@PathVariable("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS") LocalDateTime startDate, @PathVariable("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS") LocalDateTime endDate) throws IOException {
+        return ResponseEntity.ok(intentionPurchaseSaleService.volumeOperatedBetweenDates(startDate, endDate));
     }
 
-    @PostMapping("/interaction/cancel/{intentionID}/{email}")
+    @PostMapping("/interaction/cancel/{intentionID}")
     @ResponseBody
-    public ResponseEntity<String> cancelIntentionPurchaseSale(@PathVariable("intentionID") String intentionID, @PathVariable("email") String email) {
-        return ResponseEntity.ok(intentionPurchaseSaleService.cancel(intentionID, email));
+    public ResponseEntity<String> cancelIntentionPurchaseSale(@PathVariable("intentionID") String intentionID) {
+        return ResponseEntity.ok(intentionPurchaseSaleService.cancel(intentionID));
     }
 
-    @PostMapping("/interaction/proceed/{intentionID}/{email}")
+    @PostMapping("/interaction/proceed/{intentionID}")
     @ResponseBody
-    public ResponseEntity<String> proceedIntentionPurchaseSale(@PathVariable("intentionID") String intentionID, @PathVariable("email") String email) {
-        return ResponseEntity.ok(intentionPurchaseSaleService.proceed(intentionID, email));
+    public ResponseEntity<String> proceedIntentionPurchaseSale(@PathVariable("intentionID") String intentionID) {
+        return ResponseEntity.ok(intentionPurchaseSaleService.proceed(intentionID));
     }
 
-    @PostMapping("/interaction/confirm/{intentionID}/{email}")
+    @PostMapping("/interaction/confirm/{intentionID}")
     @ResponseBody
-    public ResponseEntity<String> confirmIntentionPurchaseSale(@PathVariable("intentionID") String intentionID, @PathVariable("email") String email) throws IOException {
-        return ResponseEntity.ok(intentionPurchaseSaleService.confirm(intentionID, email));
+    public ResponseEntity<String> confirmIntentionPurchaseSale(@PathVariable("intentionID") String intentionID) throws IOException {
+        return ResponseEntity.ok(intentionPurchaseSaleService.confirm(intentionID));
     }
 }

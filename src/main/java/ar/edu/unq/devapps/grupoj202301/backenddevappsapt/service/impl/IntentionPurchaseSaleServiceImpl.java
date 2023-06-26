@@ -9,6 +9,7 @@
  import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.CryptoCoinService;
  import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.GenericService;
  import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.IntentionPurchaseSaleService;
+ import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.utilities.validation.SecurityUtils;
  import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.utilities.validation.exception.UserException;
  import jakarta.transaction.Transactional;
  import lombok.RequiredArgsConstructor;
@@ -75,92 +76,112 @@ public class IntentionPurchaseSaleServiceImpl implements IntentionPurchaseSaleSe
     }
 
      @Override
-     public String cancel(String intentionID, String email) {
-         IntentionPurchaseSale intentionPurchaseSale = intentionPurchaseSalePersistence.findById(intentionID).get();
-         User user = userService.findElementById(email).get();
+     public String cancel(String intentionID) {
+         try{
+             String email = SecurityUtils.getLoggedInUser().getUsername();
+             IntentionPurchaseSale intentionPurchaseSale = intentionPurchaseSalePersistence.findById(intentionID).get();
+             User user = userService.findElementById(email).get();
 
-         if(intentionPurchaseSale.getStatusType().equals(StatusType.ACTIVE) || intentionPurchaseSale.getStatusType().equals(StatusType.WAITINGCONFIRMATION)) {
-             if(intentionPurchaseSale.getEmail().equals(email)) {
-                 intentionPurchaseSale.setStatusType(StatusType.CANCEL);
-             } else if (intentionPurchaseSale.getAnotherUserEmail() != null && intentionPurchaseSale.getAnotherUserEmail().equals(email)){
-                 intentionPurchaseSale.setAnotherUserEmail(null);
-             } else {
-                 throw new UserException("Error: The user entered is not related to this intention.");
+             if(intentionPurchaseSale.getStatusType().equals(StatusType.ACTIVE)) {
+                 if(intentionPurchaseSale.getEmail().equals(email)) {
+                     intentionPurchaseSale.setStatusType(StatusType.CANCEL);
+                 } else if (intentionPurchaseSale.getAnotherUserEmail() != null && intentionPurchaseSale.getAnotherUserEmail().equals(email)){
+                     intentionPurchaseSale.setAnotherUserEmail(null);
+                 } else {
+                     throw new UserException("Error: The user entered is not related to this intention.");
+                 }
+
+                 user.discountPoints(20);
+                 userService.updateElement(user);
+                 logger.info("User with ID: {}" + " has lost 20 points. Points updated: {}", user.getEmail(), user.getPointsObtained());
+                 updateElement(intentionPurchaseSale);
+                 logger.info("Intention with ID: {}" + " has been canceled",
+                         intentionPurchaseSale.getId());
+             }else  {
+                 throw new UserException("Error: Intent is not active.");
              }
-
-             user.discountPoints(20);
-             userService.updateElement(user);
-             logger.info("User with ID: {}" + " has lost 20 points. Points updated: {}", user.getEmail(), user.getPointsObtained());
-             updateElement(intentionPurchaseSale);
-             logger.info("Intention with ID: {}" + " has been canceled",
-                     intentionPurchaseSale.getId());
-             return "The operation was successfully canceled. You have lost 20 points.";
-
-         } else  {
-             throw new UserException("Error: Intent is not active.");
+         }catch (RuntimeException e){
+             logger.error("There was an error cancelling the intention");
+             e.printStackTrace();
+             throw new UserException(e.getMessage());
          }
+         return "The operation was successfully canceled. You have lost 20 points.";
      }
 
      @Override
-     public String proceed(String intentionID, String email) {
-         IntentionPurchaseSale intentionPurchaseSale = intentionPurchaseSalePersistence.findById(intentionID).get();
-         User user = userService.findElementById(email).get();
-         if(intentionPurchaseSale.getEmail().equals(email)) {
-             throw new UserException("Error: You cannot proceed on your own intention.");
-         }
+     public String proceed(String intentionID) {
+         try{
+             String email = SecurityUtils.getLoggedInUser().getUsername();
+             IntentionPurchaseSale intentionPurchaseSale = intentionPurchaseSalePersistence.findById(intentionID).get();
+             User user = userService.findElementById(email).get();
+             if(intentionPurchaseSale.getEmail().equals(email)) {
+                 throw new UserException("Error: You cannot proceed on your own intention.");
+             }
 
-         if(intentionPurchaseSale.getStatusType().equals(StatusType.ACTIVE)) {
-             intentionPurchaseSale.setAnotherUserEmail(email);
-             if(intentionPurchaseSale.getIntentionType().equals(IntentionType.PURCHASE)) {
+             if(intentionPurchaseSale.getStatusType().equals(StatusType.ACTIVE)) {
+                 intentionPurchaseSale.setAnotherUserEmail(email);
+                 if(intentionPurchaseSale.getIntentionType().equals(IntentionType.PURCHASE)) {
                      intentionPurchaseSale.setDestiny(user.getCvu());
                  } else {
                      intentionPurchaseSale.setDestiny(user.getWalletAddress());
                  }
-             intentionPurchaseSale.setStatusType(StatusType.WAITINGCONFIRMATION);
-         } else {
-             throw new UserException("Error: Intent is not active.");
+                 intentionPurchaseSale.setStatusType(StatusType.WAITINGCONFIRMATION);
+             } else {
+                 throw new UserException("Error: Intent is not active.");
+             }
+             updateElement(intentionPurchaseSale);
+             logger.info("Intention with ID: {}" + " has been updated. New status: {}",
+                     intentionPurchaseSale.getId(),
+                     intentionPurchaseSale.getStatusType().name());
+         }catch (RuntimeException e){
+             logger.error("There was an error proceeding with the intention");
+             e.printStackTrace();
+             throw new UserException(e.getMessage());
          }
-         updateElement(intentionPurchaseSale);
-         logger.info("Intention with ID: {}" + " has been updated. New status: {}",
-                 intentionPurchaseSale.getId(),
-                 intentionPurchaseSale.getStatusType().name());
          return "Congratulations, the interaction with the intention was successful. " +
                  "Wait for the other user to confirm.";
      }
 
      @Override
-     public String confirm(String intentionID, String email) throws IOException {
-         IntentionPurchaseSale intentionPurchaseSale = intentionPurchaseSalePersistence.findById(intentionID).get();
-         this.checkPriceDifference(intentionPurchaseSale);
-         if(intentionPurchaseSale.getEmail().equals(email)) {
-             intentionPurchaseSale.setStatusType(StatusType.FINISHED);
-             LocalDateTime now = LocalDateTime.now();
-             long minutesDifference = ChronoUnit.MINUTES.between(intentionPurchaseSale.getCreationDate(), now);
-             User userOwner = userService.findElementById(intentionPurchaseSale.getEmail()).get();
-             User otherUser = userService.findElementById(intentionPurchaseSale.getAnotherUserEmail()).get();
-             int currentPointsObtained;
-             if(minutesDifference < 30) {
-                 userOwner.addPoints(10);
-                 otherUser.addPoints(10);
-                 currentPointsObtained = 10;
+     public String confirm(String intentionID) throws IOException {
+         try {
+             String email = SecurityUtils.getLoggedInUser().getUsername();
+             IntentionPurchaseSale intentionPurchaseSale = intentionPurchaseSalePersistence.findById(intentionID).get();
+             this.checkPriceDifference(intentionPurchaseSale);
+             if (intentionPurchaseSale.getEmail().equals(email)) {
+                 intentionPurchaseSale.setStatusType(StatusType.FINISHED);
+                 LocalDateTime now = LocalDateTime.now();
+                 long minutesDifference = ChronoUnit.MINUTES.between(intentionPurchaseSale.getCreationDate(), now);
+                 User userOwner = userService.findElementById(intentionPurchaseSale.getEmail()).get();
+                 User otherUser = userService.findElementById(intentionPurchaseSale.getAnotherUserEmail()).get();
+                 int currentPointsObtained;
+                 if (minutesDifference < 30) {
+                     userOwner.addPoints(10);
+                     otherUser.addPoints(10);
+                     currentPointsObtained = 10;
+                 } else {
+                     userOwner.addPoints(5);
+                     otherUser.addPoints(5);
+                     currentPointsObtained = 5;
+                 }
+                 userService.updateElement(userOwner);
+                 userService.updateElement(otherUser);
+
+                 makeUserLogForSuccessfulOperation(userOwner, currentPointsObtained);
+                 makeUserLogForSuccessfulOperation(otherUser, currentPointsObtained);
+
+                 updateElement(intentionPurchaseSale);
+                 logger.info("Intention with ID: {}" + " has been completed successfully.",
+                         intentionPurchaseSale.getId());
              } else {
-                 userOwner.addPoints(5);
-                 otherUser.addPoints(5);
-                 currentPointsObtained = 5;
+                 throw new UserException("Error: The entered user is not the owner of the intention.");
              }
-             userService.updateElement(userOwner);
-             userService.updateElement(otherUser);
-
-             makeUserLogForSuccessfulOperation(userOwner, currentPointsObtained);
-             makeUserLogForSuccessfulOperation(otherUser, currentPointsObtained);
-
-             updateElement(intentionPurchaseSale);
-             logger.info("Intention with ID: {}" + " has been completed successfully.",
-                     intentionPurchaseSale.getId());
-         } else {
-             throw new UserException("Error: The entered user is not the owner of the intention.");
+         }catch (RuntimeException e){
+             logger.error("There was an error confirming intention");
+             e.printStackTrace();
+             throw new UserException(e.getMessage());
          }
-        return "Congratulations, the intent was completed successfully.";
+            return "Congratulations, the intent was completed successfully.";
      }
 
      private void makeUserLogForSuccessfulOperation(User user, int currentPointsObtained) {
@@ -174,48 +195,79 @@ public class IntentionPurchaseSaleServiceImpl implements IntentionPurchaseSaleSe
 
      @Override
     public IntentionPurchaseSaleUserInfo getActivesTransactions(String email) throws IOException {
-        User user = userService.findElementById(email).get();
-        List<IntentionPurchaseSaleSummarized> intentionPurchaseSaleSummarizedList = new ArrayList<>();
-        List<IntentionPurchaseSale> intentionPurchaseSaleList = intentionPurchaseSalePersistence.getActivesTransactions(email, StatusType.ACTIVE);
-        BigDecimal purchaseQuotation = cryptoCoinService.getThePriceOfThePurchaseDollar();
-        BigDecimal sellQuotation = cryptoCoinService.getThePriceOfTheSellDollar();
+        try {
+            User user = userService.findElementById(email).get();
+            List<IntentionPurchaseSaleSummarized> intentionPurchaseSaleSummarizedList = new ArrayList<>();
+            List<IntentionPurchaseSale> intentionPurchaseSaleList = intentionPurchaseSalePersistence.getActivesTransactions(email, StatusType.ACTIVE);
+            BigDecimal purchaseQuotation = cryptoCoinService.getThePriceOfThePurchaseDollar();
+            BigDecimal sellQuotation = cryptoCoinService.getThePriceOfTheSellDollar();
 
-        for (IntentionPurchaseSale intentionPurchaseSale : intentionPurchaseSaleList) {
-            String cryptoCoinName = intentionPurchaseSale.getCryptoCoinName();
-            BigDecimal amountOfCryptoCoin = intentionPurchaseSale.getAmountOfCryptoCoin();
-            BigDecimal quotationByIntentionType = intentionPurchaseSale.getQuotationBase();
-            BigDecimal pesosAmountByIntentionType = intentionPurchaseSale.getPesosAmount();
-            IntentionType intentionType = intentionPurchaseSale.getIntentionType();
+            for (IntentionPurchaseSale intentionPurchaseSale : intentionPurchaseSaleList) {
+                String cryptoCoinName = intentionPurchaseSale.getCryptoCoinName();
+                BigDecimal amountOfCryptoCoin = intentionPurchaseSale.getAmountOfCryptoCoin();
+                BigDecimal quotationByIntentionType = intentionPurchaseSale.getQuotationBase();
+                BigDecimal pesosAmountByIntentionType = intentionPurchaseSale.getPesosAmount();
+                IntentionType intentionType = intentionPurchaseSale.getIntentionType();
 
-            if(intentionPurchaseSale.getIntentionType() == IntentionType.PURCHASE) {
-                quotationByIntentionType = quotationByIntentionType.multiply(purchaseQuotation);
-                pesosAmountByIntentionType = pesosAmountByIntentionType.multiply(purchaseQuotation);
-            } else {
-                quotationByIntentionType = quotationByIntentionType.multiply(sellQuotation);
-                pesosAmountByIntentionType = pesosAmountByIntentionType.multiply(sellQuotation);
+                if(intentionPurchaseSale.getIntentionType() == IntentionType.PURCHASE) {
+                    quotationByIntentionType = quotationByIntentionType.multiply(purchaseQuotation);
+                    pesosAmountByIntentionType = pesosAmountByIntentionType.multiply(purchaseQuotation);
+                } else {
+                    quotationByIntentionType = quotationByIntentionType.multiply(sellQuotation);
+                    pesosAmountByIntentionType = pesosAmountByIntentionType.multiply(sellQuotation);
 
+                }
+                IntentionPurchaseSaleSummarized intentionPurchaseSaleSummarized = new IntentionPurchaseSaleSummarized(null, cryptoCoinName, amountOfCryptoCoin, quotationByIntentionType, pesosAmountByIntentionType, intentionType);
+                intentionPurchaseSaleSummarizedList.add(intentionPurchaseSaleSummarized);
             }
-            IntentionPurchaseSaleSummarized intentionPurchaseSaleSummarized = new IntentionPurchaseSaleSummarized(null, cryptoCoinName, amountOfCryptoCoin, quotationByIntentionType, pesosAmountByIntentionType, intentionType);
-            intentionPurchaseSaleSummarizedList.add(intentionPurchaseSaleSummarized);
+            return new IntentionPurchaseSaleUserInfo(user.getName(), user.getSurname(), user.getEmail(), user.getPointsObtained(), user.getOperationsPerformed(), intentionPurchaseSaleSummarizedList );
+        } catch (RuntimeException e){
+            logger.error("There was an error getting actives intentions");
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
         }
-        return new IntentionPurchaseSaleUserInfo(user.getName(), user.getSurname(), user.getEmail(), user.getPointsObtained(), user.getOperationsPerformed(), intentionPurchaseSaleSummarizedList );
     }
 
      @Override
-     public IntentionPurchaseSaleVolumeInfo volumeOperatedBetweenDates(String email, LocalDateTime startDate, LocalDateTime endDate) throws IOException {
-         List<IntentionPurchaseSale> intentionPurchaseSaleList = intentionPurchaseSalePersistence.findOperationBetweenDates(email, startDate, endDate, StatusType.FINISHED);
-         List<IntentionPurchaseSale> intentionPurchaseSaleResultList = new ArrayList<>();
-         BigDecimal totalDollarAmount = BigDecimal.ZERO;
-         BigDecimal totalPesosAmount = BigDecimal.ZERO;
+     public IntentionPurchaseSaleVolumeInfo volumeOperatedBetweenDates(LocalDateTime startDate, LocalDateTime endDate) throws IOException {
+         try{
+             String email = SecurityUtils.getLoggedInUser().getUsername();
+             List<IntentionPurchaseSale> intentionPurchaseSaleList = intentionPurchaseSalePersistence.findOperationBetweenDates(email, startDate, endDate, StatusType.FINISHED);
+             List<IntentionPurchaseSale> intentionPurchaseSaleResultList = new ArrayList<>();
+             Map<String, BigDecimal> cryptoQuotationCache = new HashMap<>();
+             BigDecimal purchaseQuotation = cryptoCoinService.getThePriceOfThePurchaseDollar();
+             BigDecimal sellQuotation = cryptoCoinService.getThePriceOfTheSellDollar();
+             BigDecimal totalDollarAmount = BigDecimal.ZERO;
+             BigDecimal totalPesosAmount = BigDecimal.ZERO;
 
-         for(IntentionPurchaseSale intentionPurchaseSale : intentionPurchaseSaleList) {
-             totalDollarAmount = totalDollarAmount.add(intentionPurchaseSale.getQuotationBase().multiply(intentionPurchaseSale.getAmountOfCryptoCoin()));
-             totalPesosAmount = totalPesosAmount.add(intentionPurchaseSale.getPesosAmount());
+             for(IntentionPurchaseSale intentionPurchaseSale : intentionPurchaseSaleList) {
+                 totalDollarAmount = totalDollarAmount.add(intentionPurchaseSale.getQuotationBase());
+                 totalPesosAmount = totalPesosAmount.add(intentionPurchaseSale.getPesosAmount());
+                 String cryptoCoinName = intentionPurchaseSale.getCryptoCoinName();
+                 BigDecimal pesosAmount;
 
-             intentionPurchaseSaleResultList.add(intentionPurchaseSale);
+                 if(!cryptoQuotationCache.containsKey(cryptoCoinName)) {
+                     cryptoQuotationCache.put(cryptoCoinName, cryptoCoinService.getExternalQuotationByName(cryptoCoinName));
+                 }
+
+                 BigDecimal actuallyQuotationBase = cryptoQuotationCache.get(cryptoCoinName);
+
+                 if(intentionPurchaseSale.getIntentionType() == IntentionType.PURCHASE) {
+                     pesosAmount = actuallyQuotationBase.multiply(purchaseQuotation);
+                 } else {
+                     pesosAmount = actuallyQuotationBase.multiply(sellQuotation);
+                 }
+
+                 intentionPurchaseSale.setQuotationBase(actuallyQuotationBase);
+                 intentionPurchaseSale.setPesosAmount(pesosAmount);
+                 intentionPurchaseSaleResultList.add(intentionPurchaseSale);
+             }
+             return new IntentionPurchaseSaleVolumeInfo(totalDollarAmount, totalPesosAmount, intentionPurchaseSaleResultList);
+         }catch (RuntimeException e){
+             logger.error("There was an error getting volume operated between dates");
+             e.printStackTrace();
+             throw new RuntimeException(e.getMessage());
          }
-
-         return new IntentionPurchaseSaleVolumeInfo(totalDollarAmount, totalPesosAmount, intentionPurchaseSaleResultList);
      }
 
      public void checkPriceDifference(IntentionPurchaseSale intentionPurchaseSale) throws IOException {

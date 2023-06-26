@@ -4,36 +4,26 @@ import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.cryptoCoin.Quotat
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.CryptoCoinService;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.webServiceTest.factories.CryptoCoinFactory;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.webServiceTest.factories.QuotationByDateFactory;
-import jakarta.annotation.PostConstruct;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
 @Transactional
-@Profile("test")
 public class CryptoCoinInitializerForTesting {
+    protected final Log logger = LogFactory.getLog(getClass());
+    private final CryptoCoinService cryptoCoinService;
 
     public CryptoCoinInitializerForTesting(CryptoCoinService cryptoCoinService){
         this.cryptoCoinService = cryptoCoinService;
     }
-    protected final Log logger = LogFactory.getLog(getClass());
 
-    private final CryptoCoinService cryptoCoinService;
-
-    @PostConstruct
-    public void initialize() throws IOException {
-        logger.warn("Init Data Using DataBase Test - Initializing CryptoCoins");
-        startInitialization();
-    }
-
-    private void startInitialization() throws IOException {
+    protected void startInitialization() throws IOException {
+        logger.warn("TEST - Initializing CryptoCoins");
         CryptoCoin cryptoCoin = new CryptoCoin("AUDIOUSDT");
         QuotationByDate quotationByDate = new QuotationByDate(cryptoCoinService.getExternalQuotationByName("AUDIOUSDT"));
         cryptoCoin.addQuotation(quotationByDate);

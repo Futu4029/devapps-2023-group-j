@@ -3,53 +3,51 @@ import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.IntentionPurchase
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.IntentionPurchaseSale.flags.IntentionType;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.IntentionPurchaseSale.flags.StatusType;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.User;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.cryptoCoin.CryptoCoin;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.cryptoCoin.QuotationByDate;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.CryptoCoinService;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.IntentionPurchaseSaleService;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.UserService;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.webServiceTest.factories.IntentionPurchaseSaleFactory;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.webServiceTest.factories.UserFactory;
-import jakarta.annotation.PostConstruct;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.webservice.CryptoCoinWebService;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.webservice.UserWebService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 
 @Component
-@Transactional
-@Profile("test")
 public class IntentionPurchaseSaleInitializerForTesting {
-
-    public IntentionPurchaseSaleInitializerForTesting(IntentionPurchaseSaleService intentionPurchaseSaleService, UserService userService){
-        this.userService = userService;
-        this.intentionPurchaseSaleService = intentionPurchaseSaleService;
-    }
     protected final Log logger = LogFactory.getLog(getClass());
-
     private final IntentionPurchaseSaleService intentionPurchaseSaleService;
-    private final UserService userService;
+    private final UserWebService userWebService;
+    private final CryptoCoinService cryptoCoinService;
 
-    @PostConstruct
-    public void initialize() throws IOException {
-        logger.warn("Init Data Using DataBase Test - Initializing IntentionPurchaseSale");
-        startInitialization();
+    public IntentionPurchaseSaleInitializerForTesting(IntentionPurchaseSaleService intentionPurchaseSaleService, UserWebService userWebService, CryptoCoinService cryptoCoinService){
+        this.userWebService = userWebService;
+        this.intentionPurchaseSaleService = intentionPurchaseSaleService;
+        this.cryptoCoinService = cryptoCoinService;
     }
 
-    private void startInitialization() {
+    protected void startInitialization() throws IOException {
+        logger.warn("TEST - Initializing IntentionPurchaseSale");
+        BigDecimal quotation = cryptoCoinService.getExternalQuotationByName("AUDIOUSDT");
         User anyUserOne = UserFactory.anyUser();
         User anyUserTwo = UserFactory.anyUserWithAnotherEmail();
-        userService.registerElement(anyUserOne);
-        userService.registerElement(anyUserTwo);
+        userWebService.registerUser(anyUserOne);
+        userWebService.registerUser(anyUserTwo);
         IntentionPurchaseSale intentionPurchaseSaleActiveOne = IntentionPurchaseSaleFactory.anyIntentionPurchaseSale();
         IntentionPurchaseSale intentionPurchaseSaleActiveTwo = IntentionPurchaseSaleFactory.anyIntentionPurchaseSale();
         IntentionPurchaseSale intentionPurchaseSaleActiveThree = IntentionPurchaseSaleFactory.anyIntentionPurchaseSale();
         IntentionPurchaseSale intentionPurchaseSaleCancelled = IntentionPurchaseSaleFactory.anyIntentionPurchaseSale();
         IntentionPurchaseSale intentionPurchaseSaleFinishedOne = IntentionPurchaseSaleFactory.anyIntentionPurchaseSale();
         IntentionPurchaseSale intentionPurchaseSaleFinishedTwo = IntentionPurchaseSaleFactory.anyIntentionPurchaseSale();
-        intentionPurchaseSaleActiveTwo.setQuotationBase(new BigDecimal("0.01"));
-        intentionPurchaseSaleActiveThree.setQuotationBase(new BigDecimal("0.8"));
+        intentionPurchaseSaleActiveOne.setQuotationBase(quotation);
+        intentionPurchaseSaleActiveTwo.setQuotationBase(quotation.subtract(quotation.multiply(new BigDecimal("0.07"))));
+        intentionPurchaseSaleActiveThree.setQuotationBase(quotation.add(quotation.multiply(new BigDecimal("0.06"))));
         intentionPurchaseSaleActiveTwo.setIntentionType(IntentionType.PURCHASE);
         intentionPurchaseSaleService.create(intentionPurchaseSaleActiveOne);
         intentionPurchaseSaleCancelled = intentionPurchaseSaleService.create(intentionPurchaseSaleCancelled);
@@ -64,5 +62,4 @@ public class IntentionPurchaseSaleInitializerForTesting {
         intentionPurchaseSaleService.updateElement(intentionPurchaseSaleFinishedOne);
         intentionPurchaseSaleService.updateElement(intentionPurchaseSaleFinishedTwo);
     }
-
 }

@@ -6,10 +6,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
-@SpringBootApplication(exclude = SecurityAutoConfiguration.class)
-@OpenAPIDefinition(info = @Info(title = "APP DOCUMENTATION", version = "2.0", description = "Crypto APP"))
+@SpringBootApplication
+@OpenAPIDefinition(info = @Info(title = "Crypto API", version = "1.0", description = "First approach"))
 @EnableAspectJAutoProxy
+@EnableScheduling
 @ComponentScan("ar.edu.unq.devapps.grupoj202301.backenddevappsapt")
 public class BackendDevappsAptApplication {
 	public static void main(String[] args) {

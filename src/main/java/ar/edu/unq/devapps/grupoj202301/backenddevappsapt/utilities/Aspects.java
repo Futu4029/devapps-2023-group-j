@@ -1,29 +1,36 @@
 package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.utilities;
+
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.GenericSystemElement;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.GenericService;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.utilities.validation.exception.ElementAlreadyRegisteredException;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.utilities.validation.exception.ElementNotRegisteredException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.lang3.time.StopWatch;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
-import java.util.*;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Aspect
 @Component
 @SuppressWarnings("unchecked")
 public class Aspects {
-    static Logger logger = LoggerFactory.getLogger(Aspects.class);
+    private static final Logger logger = LoggerFactory.getLogger(Aspects.class);
+    private StopWatch stopWatch;
 
     @Pointcut("execution(* ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.*.registerElement(..))")
     public void registerElementPointcut() {}
 
     @Pointcut("execution(* ar.edu.unq.devapps.grupoj202301.backenddevappsapt.persistence.*.*(..)) && (execution(* *find*(..)) || execution(* *Find*(..)))")
     public void findElementPointCut() {}
+
+    @Pointcut("execution(* ar.edu.unq.devapps.grupoj202301.backenddevappsapt.webservice.*.*(..))")
+    public void webServiceMethod() {}
 
     @Before("registerElementPointcut()")
     public void beforeRegisterElement(JoinPoint joinPoint) {
@@ -48,5 +55,27 @@ public class Aspects {
             String argument = (String) joinPoint.getArgs()[0];
             throw new ElementNotRegisteredException("Error: The element with id " + argument + " is not present");
         }
+    }
+
+    @Around("webServiceMethod()")
+    public Object afterMethodExecutionWebService(ProceedingJoinPoint joinPoint) throws Throwable {
+        LocalDateTime localDateTime = java.time.LocalDateTime.now();
+        String id = "PublicUser";
+        Object parameters = "No Parameters";
+        String methodName = joinPoint.getSignature().getName();
+        long startTime = System.currentTimeMillis();
+        Object result = joinPoint.proceed();
+
+        if(joinPoint.getArgs().length > 0) {
+            Optional<Object> potentialResult = Arrays.stream(joinPoint.getArgs()).findAny();
+            if(potentialResult.isPresent()) {
+                parameters = potentialResult.get().toString();
+            }
+        }
+
+        long endTime = System.currentTimeMillis();
+        long elapsedTime = endTime - startTime;
+        logger.debug(localDateTime + " - " + id + " - " + methodName + " - " + parameters + " - Execution time: " + elapsedTime + " ms");
+        return result;
     }
 }
