@@ -1,8 +1,5 @@
 package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.utilities.validation.anotation.LettersAndNumbersOnlyAdmits;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.utilities.validation.anotation.LettersOnlyAdmits;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.utilities.validation.anotation.NumbersOnlyAdmits;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.utilities.validation.anotation.SpecialCharactersOnlyAdmits;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.utilities.validation.anotation.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -12,8 +9,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.annotations.Fetch;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +48,8 @@ public class User implements GenericSystemElement {
     private String address;
 
     @Column(nullable = false)
+    @SpecialCharactersOnlyAdmits
+    @PasswordSize
     private String password;
 
     @Column(nullable = false)

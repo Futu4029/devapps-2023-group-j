@@ -15,6 +15,6 @@ public class UserFactory {
     }
 
     public static User anyUserWithAnotherEmail() {
-        return new User("anotherEmail@example.com", "00000001", "example", "example", "exampleAddres", "exampleP1!", "0123456789012345678900");
+        return new User("anotherEmail@example.com", "00000001", "example", "example", "exampleAddres", "exampleP2!", "0123456789012345678900");
     }
 }

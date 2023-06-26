@@ -45,7 +45,9 @@ public class SecurityConfig {
             "/auth/**",
             "/doc/swagger-ui/**",
             "/v3/api-docs/**",
-            "/h2-console/**"
+            "/h2-console/**",
+            "/cryptocoins/**",
+            "/intention/getActivesIntentions/**"
     };
 
     @Bean

@@ -1,4 +1,4 @@
-package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.initializer;
+package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.Initializer;
 
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.Role;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.persistence.RolePersistence;
