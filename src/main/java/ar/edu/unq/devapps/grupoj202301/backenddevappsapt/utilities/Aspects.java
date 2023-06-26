@@ -75,7 +75,7 @@ public class Aspects {
 
         long endTime = System.currentTimeMillis();
         long elapsedTime = endTime - startTime;
-        logger.info(localDateTime + " - " + id + " - " + methodName + " - " + parameters + " - Execution time: " + elapsedTime + " ms");
+        logger.debug(localDateTime + " - " + id + " - " + methodName + " - " + parameters + " - Execution time: " + elapsedTime + " ms");
         return result;
     }
 }

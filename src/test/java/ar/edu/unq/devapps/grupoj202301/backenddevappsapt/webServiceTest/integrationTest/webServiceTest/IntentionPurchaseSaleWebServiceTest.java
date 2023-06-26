@@ -236,28 +236,33 @@ public class IntentionPurchaseSaleWebServiceTest {
     @Test
     @DirtiesContext
     void confirm_intention_purchase_with_difference_in_quotation_test() throws IOException {
-        String urlProceedOne = HTTP_LOCALHOST + port + "/intention/interaction/proceed/5/anotherEmail@example.com";
+        String urlProceedOne = HTTP_LOCALHOST + port + "/intention/interaction/proceed/5";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(authHelper.getToken(userLoginTwo));
+        restTemplate.postForEntity(urlProceedOne, new HttpEntity<>(headers), String.class);
+        headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth(authHelper.getToken(userLoginOne));
-        var httpEntity = new HttpEntity<>(headers);
-        restTemplate.postForEntity(urlProceedOne, httpEntity, String.class);
-        String urlConfirmOne = HTTP_LOCALHOST + port + "/intention/interaction/confirm/5/example@example.com";
-        ResponseEntity<String> responseOne = restTemplate.postForEntity(urlConfirmOne, httpEntity, String.class);
+        String urlConfirmOne = HTTP_LOCALHOST + port + "/intention/interaction/confirm/5";
+        ResponseEntity<String> responseOne = restTemplate.postForEntity(urlConfirmOne, new HttpEntity<>(headers), String.class);
         Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseOne.getStatusCode());
         Assertions.assertEquals("There is a 5% difference between the quotes. The operation is cancelled.", responseOne.getBody());
     }
+
     @Test
     @DirtiesContext
     void confirm_intention_sell_with_difference_in_quotation_test() throws IOException {
-        String urlProceedOne = HTTP_LOCALHOST + port + "/intention/interaction/proceed/6/anotherEmail@example.com";
+        String urlProceedOne = HTTP_LOCALHOST + port + "/intention/interaction/proceed/6";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth(authHelper.getToken(userLoginOne));
-        var httpEntity = new HttpEntity<>(headers);
-        restTemplate.postForEntity(urlProceedOne, httpEntity, String.class);
-        String urlConfirmOne = HTTP_LOCALHOST + port + "/intention/interaction/confirm/6/example@example.com";
-        ResponseEntity<String> responseOne = restTemplate.postForEntity(urlConfirmOne, httpEntity, String.class);
+        restTemplate.postForEntity(urlProceedOne, new HttpEntity<>(headers), String.class);
+        headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(authHelper.getToken(userLoginOne));
+        String urlConfirmOne = HTTP_LOCALHOST + port + "/intention/interaction/confirm/6";
+        ResponseEntity<String> responseOne = restTemplate.postForEntity(urlConfirmOne, new HttpEntity<>(headers), String.class);
         Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseOne.getStatusCode());
         Assertions.assertEquals("There is a 5% difference between the quotes. The operation is cancelled.", responseOne.getBody());
     }

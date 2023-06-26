@@ -29,20 +29,17 @@ import java.util.Optional;
 @Transactional
 public class UserServiceImpl implements UserService {
 
+    @Autowired
     private UserPersistence userPersistence;
+    @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
     private JwtTokenProvider jwtTokenProvider;
+    @Autowired
     private RolePersistence rolePersistence;
+    @Autowired
     private AuthenticationManager authenticationManager;
 
-    @Autowired
-    public UserServiceImpl(AuthenticationManager authenticationManager, UserPersistence userPersistence, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider, RolePersistence rolePersistence) {
-        this.authenticationManager = authenticationManager;
-        this.userPersistence = userPersistence;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtTokenProvider = jwtTokenProvider;
-        this.rolePersistence = rolePersistence;
-    }
 
     @Override
     public String registerElement(@Valid User user) {

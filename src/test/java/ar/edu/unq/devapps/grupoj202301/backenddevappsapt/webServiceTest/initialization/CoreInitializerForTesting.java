@@ -7,7 +7,7 @@ import java.io.IOException;
 
 @Component
 @Profile("test")
-public class PostConstructor {
+public class CoreInitializerForTesting {
 
     @Autowired
     private RoleInitializerForTesting roleInitializerForTesting;
