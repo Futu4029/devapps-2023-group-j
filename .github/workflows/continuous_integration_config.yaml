@@ -1,5 +1,10 @@
 name: Continuous Integration Config
 on: [push]
+
+env:
+  SECRET_KEY: ${{ secrets.SECRET_KEY }}
+  EXP_TIME: 30000
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -15,6 +20,10 @@ jobs:
         env:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           EXP_TIME: ${{ env.EXP_TIME }}
+      - name: Testing echo
+        run: echo "${{ secrets.SECRET_KEY }} o a ver qe onda con esto ${{ env.SECRET_KEY }}"
+        env:
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
   test:
     runs-on: ubuntu-latest
     steps:
@@ -27,5 +36,5 @@ jobs:
       - name: Run Tests with Maven
         run: mvn test --batch-mode
         env:
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          SECRET_KEY: ${{ env.SECRET_KEY }}
           EXP_TIME: ${{ env.EXP_TIME }}
