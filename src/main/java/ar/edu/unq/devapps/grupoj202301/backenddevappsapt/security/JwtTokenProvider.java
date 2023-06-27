@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 
 @Component
-@PropertySource(value={"classpath:application.properties"})
 public class JwtTokenProvider {
 
     private final String secretKey;
