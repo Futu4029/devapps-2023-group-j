@@ -5,11 +5,6 @@ on:
       - main
   pull_request:
     types: [opened, synchronize, reopened]
-
-env:
-  SECRET_KEY: ${{ secrets.SECRET_KEY }}
-  EXP_TIME:  ${{ env.EXP_TIME }}
-
 jobs:
   build:
     name: Build and analyze
@@ -39,6 +34,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}
-          EXP_TIME: ${{ env.EXP_TIME }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Futu4029_devapps-2023-group-j

@@ -1,0 +1,21 @@
+name: Mi Flujo de Trabajo
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  SECRET_KEY: ${{ secrets.SECRET_KEY }}
+  EXP_TIME: valor_de_expiracion
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Ejecutar la Aplicación
+        run: echo "${{ env.SECRET_KEY }} dale que va x aca tmb ${{ env.EXP_TIME }}"
+        env:
+          SECRET_KEY: ${{ env.SECRET_KEY }}
+          EXP_TIME: ${{ env.EXP_TIME }}
