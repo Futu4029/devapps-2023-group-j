@@ -1,8 +1,9 @@
-package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.Initializer;
+package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.initializer;
 
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.cryptoCoin.CryptoCoin;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.cryptoCoin.QuotationByDate;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.CryptoCoinService;
+import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.utilities.validation.exception.ExternalAPIException;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import org.apache.commons.logging.Log;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -49,10 +51,16 @@ public class CryptoCoinInitializer {
         @Scheduled(initialDelay = 600000, fixedRate = 600000)
         public void updateCrypto() throws IOException {
             for (String cryptoCoinName : cryptoCoinNamesList) {
-                CryptoCoin cryptoCoin = cryptoCoinService.findElementById(cryptoCoinName).get();
-                QuotationByDate quotationByDate = new QuotationByDate(cryptoCoinService.getExternalQuotationByName(cryptoCoinName));
-                cryptoCoin.addQuotation(quotationByDate);
-                cryptoCoinService.updateElement(cryptoCoin);
+                Optional<CryptoCoin> cryptoCoinOptional = cryptoCoinService.findElementById(cryptoCoinName);
+                if(cryptoCoinOptional.isPresent()){
+                    CryptoCoin cryptoCoin = cryptoCoinOptional.get();
+                    QuotationByDate quotationByDate = new QuotationByDate(cryptoCoinService.getExternalQuotationByName(cryptoCoinName));
+                    cryptoCoin.addQuotation(quotationByDate);
+                    cryptoCoinService.updateElement(cryptoCoin);
+                    logger.info("Updating quotation from binance");
+                }else{
+                    throw new ExternalAPIException("Could not obtain Binance resource");
+                }
             }
         }
 
