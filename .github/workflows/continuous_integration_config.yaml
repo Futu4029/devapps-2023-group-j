@@ -12,6 +12,9 @@ jobs:
           distribution: 'temurin'
       - name: Build with Maven
         run: mvn --batch-mode --update-snapshots package -DskipTests
+        env:
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          EXP_TIME: ${{ env.EXP_TIME }}
   test:
     runs-on: ubuntu-latest
     steps:
@@ -23,6 +26,6 @@ jobs:
           distribution: 'temurin'
       - name: Run Tests with Maven
         run: mvn test --batch-mode
-      env:
-        SECRET_KEY: ${{ secrets.SECRET_KEY }}
-        EXP_TIME: ${{ env.EXP_TIME }}
+        env:
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          EXP_TIME: ${{ env.EXP_TIME }}
