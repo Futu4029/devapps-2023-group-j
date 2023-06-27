@@ -10,7 +10,12 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
 
-    private final String secretKey = "myKey";
+    private final String secretKey;
+
+
+    public JwtTokenProvider(@Value("${app.security.jwt.secret-key}") String secretKey){
+        this.secretKey = secretKey;
+    }
 
     public String generateToken(Authentication authentication){
         String email = authentication.getName();
