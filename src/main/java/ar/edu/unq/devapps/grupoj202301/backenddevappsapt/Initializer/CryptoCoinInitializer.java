@@ -57,11 +57,11 @@ public class CryptoCoinInitializer {
                     QuotationByDate quotationByDate = new QuotationByDate(cryptoCoinService.getExternalQuotationByName(cryptoCoinName));
                     cryptoCoin.addQuotation(quotationByDate);
                     cryptoCoinService.updateElement(cryptoCoin);
-                    logger.info("Updating quotation from binance");
                 }else{
                     throw new ExternalAPIException("Could not obtain Binance resource");
                 }
             }
+            logger.info("Updating quotation from binance");
         }
 
 

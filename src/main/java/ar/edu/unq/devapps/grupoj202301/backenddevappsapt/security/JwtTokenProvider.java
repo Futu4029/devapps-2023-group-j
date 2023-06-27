@@ -11,18 +11,16 @@ import java.util.Date;
 public class JwtTokenProvider {
 
     private final String secretKey;
-    private final Long expTimeMillis;
 
-    public JwtTokenProvider(@Value("${app.security.jwt.secret-key}") String secretKey,
-                            @Value("${app.security.expiration-time}") Long expTimeMillis){
+
+    public JwtTokenProvider(@Value("${app.security.jwt.secret-key}") String secretKey){
         this.secretKey = secretKey;
-        this.expTimeMillis = expTimeMillis;
     }
 
     public String generateToken(Authentication authentication){
         String email = authentication.getName();
         Date now = new Date();
-        Date expirationToken = new Date(now.getTime() + expTimeMillis);
+        Date expirationToken = new Date(now.getTime() + 300000L);
 
         String token = Jwts.builder()
                 .setSubject(email)
