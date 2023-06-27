@@ -23,3 +23,6 @@ jobs:
           distribution: 'temurin'
       - name: Run Tests with Maven
         run: mvn test --batch-mode
+      env:
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        EXP_TIME: ${{ env.EXP_TIME }}
