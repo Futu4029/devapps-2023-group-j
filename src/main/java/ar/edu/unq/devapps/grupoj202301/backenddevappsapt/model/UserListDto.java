@@ -1,8 +1,10 @@
 package ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class UserListDto {
 
     private String name;
