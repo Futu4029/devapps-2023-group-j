@@ -24,7 +24,7 @@ public class CryptoCoinInitializer {
 
     protected final Log logger = LogFactory.getLog(getClass());
     List<String> cryptoCoinNamesList = List.of("ALICEUSDT", "MATICUSDT", "AXSUSDT", "AAVEUSDT", "ATOMUSDT",
-            "NEOUSDT", "DOTUSDT", "ETHUSDT", "CAKEUSDT", "BTCUSDT", "BNBUSDT", "ADAUSDT", "TRXUSDT", "AUDIOUSDT");
+            "NEOUSDT", "DOTUSDT", "ETHUSDT", "BTCUSDT", "BNBUSDT", "ADAUSDT", "TRXUSDT", "AUDIOUSDT");
 
 
         @Autowired

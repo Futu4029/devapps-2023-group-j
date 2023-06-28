@@ -30,7 +30,7 @@ public class CryptoCoinInitializerForTesting {
         cryptoCoinService.registerElement(cryptoCoin);
 
         List<String> cryptoCoinNamesList = List.of("ALICEUSDT", "MATICUSDT", "AXSUSDT", "AAVEUSDT", "ATOMUSDT",
-                "NEOUSDT", "DOTUSDT", "ETHUSDT", "CAKEUSDT", "BTCUSDT", "BNBUSDT", "ADAUSDT", "TRXUSDT");
+                "NEOUSDT", "DOTUSDT", "ETHUSDT", "BTCUSDT", "BNBUSDT", "ADAUSDT", "TRXUSDT");
 
         for (String cryptoCoinName : cryptoCoinNamesList) {
             cryptoCoin = CryptoCoinFactory.anyCryptoCoin();
