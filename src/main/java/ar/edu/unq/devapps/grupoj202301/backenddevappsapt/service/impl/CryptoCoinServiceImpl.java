@@ -4,7 +4,6 @@ import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.cryptoCoin.Crypto
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.persistence.CryptoCoinPersistence;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.CryptoCoinService;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.utilities.validation.exception.ExternalAPIException;
-import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.utilities.validation.exception.UserException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import okhttp3.OkHttpClient;
@@ -13,11 +12,8 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -30,8 +26,6 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 @Transactional
 public class CryptoCoinServiceImpl implements CryptoCoinService {
-
-    static Logger logger = LoggerFactory.getLogger(IntentionPurchaseSaleServiceImpl.class);
 
     @Autowired
     private CryptoCoinPersistence cryptoCoinPersistence;
@@ -67,7 +61,6 @@ public class CryptoCoinServiceImpl implements CryptoCoinService {
 
     @Override
     public BigDecimal getExternalQuotationByName(String cryptoCoinName) throws IOException {
-        try {
             Response response = genericQueryToAnExternalApi("https://api.binance.us/api/v3/ticker/price?symbol=" + cryptoCoinName);
             ResponseBody responseBody = response.body();
 
@@ -89,11 +82,6 @@ public class CryptoCoinServiceImpl implements CryptoCoinService {
             }
 
             throw new ExternalAPIException("Could not obtain Binance resource");
-        }catch (RuntimeException e){
-            logger.error("There was an error getting quotation from binance");
-            e.printStackTrace();
-            throw new ExternalAPIException(e.getMessage());
-        }
     }
 
     @Override

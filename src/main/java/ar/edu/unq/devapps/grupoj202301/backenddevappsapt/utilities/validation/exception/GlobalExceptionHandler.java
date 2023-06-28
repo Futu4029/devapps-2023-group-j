@@ -53,4 +53,10 @@ public class GlobalExceptionHandler {
         String message = constraintViolations.get(0).getMessageTemplate();
         return ResponseEntity.badRequest().body("Field " + field + " has an error: " + message);
     }
+
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Object> handleRuntimeException(RuntimeException ex) {
+        return ResponseEntity.badRequest().body("ERROR: Failed Operation");
+    }
 }

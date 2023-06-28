@@ -77,7 +77,6 @@ public class IntentionPurchaseSaleServiceImpl implements IntentionPurchaseSaleSe
 
      @Override
      public String cancel(String intentionID) {
-         try{
              String email = SecurityUtils.getLoggedInUser().getUsername();
              IntentionPurchaseSale intentionPurchaseSale = intentionPurchaseSalePersistence.findById(intentionID).get();
              User user = userService.findElementById(email).get();
@@ -97,20 +96,15 @@ public class IntentionPurchaseSaleServiceImpl implements IntentionPurchaseSaleSe
                  updateElement(intentionPurchaseSale);
                  logger.info("Intention with ID: {}" + " has been canceled",
                          intentionPurchaseSale.getId());
-             }else  {
+             } else  {
                  throw new UserException("Error: Intent is not active.");
              }
-         }catch (RuntimeException e){
-             logger.error("There was an error cancelling the intention");
-             e.printStackTrace();
-             throw new UserException(e.getMessage());
-         }
+
          return "The operation was successfully canceled. You have lost 20 points.";
      }
 
      @Override
      public String proceed(String intentionID) {
-         try{
              String email = SecurityUtils.getLoggedInUser().getUsername();
              IntentionPurchaseSale intentionPurchaseSale = intentionPurchaseSalePersistence.findById(intentionID).get();
              User user = userService.findElementById(email).get();
@@ -133,18 +127,13 @@ public class IntentionPurchaseSaleServiceImpl implements IntentionPurchaseSaleSe
              logger.info("Intention with ID: {}" + " has been updated. New status: {}",
                      intentionPurchaseSale.getId(),
                      intentionPurchaseSale.getStatusType().name());
-         }catch (RuntimeException e){
-             logger.error("There was an error proceeding with the intention");
-             e.printStackTrace();
-             throw new UserException(e.getMessage());
-         }
+
          return "Congratulations, the interaction with the intention was successful. " +
                  "Wait for the other user to confirm.";
      }
 
      @Override
      public String confirm(String intentionID) throws IOException {
-         try {
              String email = SecurityUtils.getLoggedInUser().getUsername();
              IntentionPurchaseSale intentionPurchaseSale = intentionPurchaseSalePersistence.findById(intentionID).get();
              this.checkPriceDifference(intentionPurchaseSale);
@@ -176,11 +165,7 @@ public class IntentionPurchaseSaleServiceImpl implements IntentionPurchaseSaleSe
              } else {
                  throw new UserException("Error: The entered user is not the owner of the intention.");
              }
-         }catch (RuntimeException e){
-             logger.error("There was an error confirming intention");
-             e.printStackTrace();
-             throw new UserException(e.getMessage());
-         }
+
             return "Congratulations, the intent was completed successfully.";
      }
 
@@ -195,7 +180,6 @@ public class IntentionPurchaseSaleServiceImpl implements IntentionPurchaseSaleSe
 
      @Override
     public IntentionPurchaseSaleUserInfo getActivesTransactions(String email) throws IOException {
-        try {
             User user = userService.findElementById(email).get();
             List<IntentionPurchaseSaleSummarized> intentionPurchaseSaleSummarizedList = new ArrayList<>();
             List<IntentionPurchaseSale> intentionPurchaseSaleList = intentionPurchaseSalePersistence.getActivesTransactions(email, StatusType.ACTIVE);
@@ -220,17 +204,12 @@ public class IntentionPurchaseSaleServiceImpl implements IntentionPurchaseSaleSe
                 IntentionPurchaseSaleSummarized intentionPurchaseSaleSummarized = new IntentionPurchaseSaleSummarized(null, cryptoCoinName, amountOfCryptoCoin, quotationByIntentionType, pesosAmountByIntentionType, intentionType);
                 intentionPurchaseSaleSummarizedList.add(intentionPurchaseSaleSummarized);
             }
+
             return new IntentionPurchaseSaleUserInfo(user.getName(), user.getSurname(), user.getEmail(), user.getPointsObtained(), user.getOperationsPerformed(), intentionPurchaseSaleSummarizedList );
-        } catch (RuntimeException e){
-            logger.error("There was an error getting actives intentions");
-            e.printStackTrace();
-            throw new RuntimeException(e.getMessage());
-        }
     }
 
      @Override
      public IntentionPurchaseSaleVolumeInfo volumeOperatedBetweenDates(LocalDateTime startDate, LocalDateTime endDate) throws IOException {
-         try{
              String email = SecurityUtils.getLoggedInUser().getUsername();
              List<IntentionPurchaseSale> intentionPurchaseSaleList = intentionPurchaseSalePersistence.findOperationBetweenDates(email, startDate, endDate, StatusType.FINISHED);
              List<IntentionPurchaseSale> intentionPurchaseSaleResultList = new ArrayList<>();
@@ -263,11 +242,6 @@ public class IntentionPurchaseSaleServiceImpl implements IntentionPurchaseSaleSe
                  intentionPurchaseSaleResultList.add(intentionPurchaseSale);
              }
              return new IntentionPurchaseSaleVolumeInfo(totalDollarAmount, totalPesosAmount, intentionPurchaseSaleResultList);
-         }catch (RuntimeException e){
-             logger.error("There was an error getting volume operated between dates");
-             e.printStackTrace();
-             throw new RuntimeException(e.getMessage());
-         }
      }
 
      public void checkPriceDifference(IntentionPurchaseSale intentionPurchaseSale) throws IOException {

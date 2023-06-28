@@ -31,6 +31,18 @@ public class Aspects {
     @Pointcut("execution(* ar.edu.unq.devapps.grupoj202301.backenddevappsapt.webservice.*.*(..))")
     public void webServiceMethod() {}
 
+    @Pointcut("execution(* ar.edu.unq.devapps.grupoj202301.backenddevappsapt.utilities.validation.exception.GlobalExceptionHandler.*Exception*(..))")
+    public void globalException() {}
+
+    @Before("globalException()")
+    public void globalException(JoinPoint joinPoint) {
+        Exception exception = (Exception) Arrays.stream(joinPoint.getArgs()).findAny().get();
+        String method = exception.getStackTrace()[0].getMethodName().replace("before", "");
+        String message = exception.getMessage();
+        String name = exception.getClass().getName();
+        logger.error("Exception triggered By: " + method.substring(0, 1).toLowerCase() + method.substring(1) + " More info below: ", exception);
+    }
+
     @Before("registerElementPointcut()")
     public void beforeRegisterElement(JoinPoint joinPoint) {
         GenericService<Object> service = (GenericService<Object>) joinPoint.getTarget();
