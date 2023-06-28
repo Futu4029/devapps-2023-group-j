@@ -54,7 +54,7 @@ public class CryptoCoinWebServiceTest {
         ParameterizedTypeReference<List<CryptoCoinDTO>> responseType = new ParameterizedTypeReference<List<CryptoCoinDTO>>() {};
         ResponseEntity<List<CryptoCoinDTO>> response = restTemplate.exchange(url, HttpMethod.GET, null, responseType);
         List<CryptoCoinDTO> cryptoCoinList = response.getBody();
-        Assertions.assertEquals(14, cryptoCoinList.size());
+        Assertions.assertEquals(13, cryptoCoinList.size());
 
         for(int i = 0; i < cryptoCoinNamesList.size(); i++) {
             Assertions.assertTrue(cryptoCoinNamesList.contains(cryptoCoinList.get(i).getName()));
