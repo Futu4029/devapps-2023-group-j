@@ -36,11 +36,16 @@ public class Aspects {
 
     @Before("globalException()")
     public void globalException(JoinPoint joinPoint) {
-        Exception exception = (Exception) Arrays.stream(joinPoint.getArgs()).findAny().get();
-        String method = exception.getStackTrace()[0].getMethodName().replace("before", "");
-        String message = exception.getMessage();
-        String name = exception.getClass().getName();
-        logger.error("Exception triggered By: " + method.substring(0, 1).toLowerCase() + method.substring(1) + " More info below: ", exception);
+        Optional<Object> result = Arrays.stream(joinPoint.getArgs()).findAny();
+        if(result.isPresent()) {
+            Exception exception = (Exception) result.get();
+            String method = exception.getStackTrace()[0].getMethodName().replace("before", "");
+            String message = exception.getMessage();
+            String name = exception.getClass().getName();
+            logger.error("Exception triggered By: " + method.substring(0, 1).toLowerCase() + method.substring(1) + " More info below: ", exception);
+        } else {
+            logger.error("The exception was unreachable");
+        }
     }
 
     @Before("registerElementPointcut()")

@@ -177,7 +177,7 @@
 				<configuration>
 					<excludes>
 						<exclude>**/Generated*.class</exclude>
-						<exclude>**/initializer/**.class</exclude>
+						<exclude>**/*Initializer*.class</exclude>
 					</excludes>
 				</configuration>
 				<executions>
