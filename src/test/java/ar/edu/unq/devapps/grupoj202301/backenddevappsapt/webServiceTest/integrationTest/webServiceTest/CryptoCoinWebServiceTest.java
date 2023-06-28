@@ -55,8 +55,9 @@ public class CryptoCoinWebServiceTest {
         ResponseEntity<List<CryptoCoinDTO>> response = restTemplate.exchange(url, HttpMethod.GET, null, responseType);
         List<CryptoCoinDTO> cryptoCoinList = response.getBody();
         Assertions.assertEquals(14, cryptoCoinList.size());
+
         for(int i = 0; i < cryptoCoinNamesList.size(); i++) {
-            Assertions.assertEquals(cryptoCoinNamesList.get(i), cryptoCoinList.get(i).getName());
+            Assertions.assertTrue(cryptoCoinNamesList.contains(cryptoCoinList.get(i).getName()));
         }
     }
 

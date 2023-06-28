@@ -19,4 +19,7 @@ public interface CryptoCoinPersistence extends JpaRepository<CryptoCoin, String>
     @Query("SELECT c FROM CryptoCoin c JOIN FETCH c.quotationByDates q " +
             "WHERE q.date = (SELECT MAX(qd.date) FROM CryptoCoin cc JOIN cc.quotationByDates qd WHERE cc = c)")
     List<CryptoCoin> getCryptoCoinsQuotations();
+
+    @Query("SELECT c.name FROM CryptoCoin c")
+    List<String> getAllCryptoCoinNames();
 }

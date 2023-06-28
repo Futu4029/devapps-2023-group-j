@@ -19,13 +19,11 @@ public class CryptoCoinWebService {
     CryptoCoinService cryptoCoinService;
 
     @GetMapping("/getTheLast24HoursOfQuotation/{cryptoCoinName}")
-    @ResponseBody
     public ResponseEntity<CryptoCoin> getTheLast24HoursOfQuotation(@PathVariable("cryptoCoinName") String cryptoCoinName){
         return ResponseEntity.ok(cryptoCoinService.findCryptoCoinWithQuotationByDatesWithin24Hours(cryptoCoinName));
     }
 
     @GetMapping("/getCryptoCoinsQuotations")
-    @ResponseBody
     public ResponseEntity<List<CryptoCoinDTO>> getCryptoCoinsQuotations(){
         return ResponseEntity.ok(cryptoCoinService.getCryptoCoinsQuotations());
     }

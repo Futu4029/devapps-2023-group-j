@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
 @Table(name="crypto_coin")
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class CryptoCoin implements GenericSystemElement {
+public class CryptoCoin implements GenericSystemElement  {
 
     @Id
     @Column(nullable = false, unique = true)
