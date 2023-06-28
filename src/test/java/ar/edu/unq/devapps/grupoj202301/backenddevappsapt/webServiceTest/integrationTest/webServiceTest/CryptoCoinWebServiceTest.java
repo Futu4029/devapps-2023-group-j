@@ -37,7 +37,7 @@ public class CryptoCoinWebServiceTest {
     @BeforeEach
     void setUp() {
         cryptoCoinNamesList = List.of("AUDIOUSDT","ALICEUSDT", "MATICUSDT", "AXSUSDT", "AAVEUSDT", "ATOMUSDT",
-                "NEOUSDT", "DOTUSDT", "ETHUSDT", "CAKEUSDT", "BTCUSDT", "BNBUSDT", "ADAUSDT", "TRXUSDT");
+                "NEOUSDT", "DOTUSDT", "ETHUSDT", "BTCUSDT", "BNBUSDT", "ADAUSDT", "TRXUSDT");
     }
 
     @Test
