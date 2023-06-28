@@ -4,13 +4,13 @@ import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.model.GenericSystemElem
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.GenericService;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.utilities.validation.exception.ElementAlreadyRegisteredException;
 import ar.edu.unq.devapps.grupoj202301.backenddevappsapt.utilities.validation.exception.ElementNotRegisteredException;
-import org.apache.commons.lang3.time.StopWatch;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
@@ -21,7 +21,6 @@ import java.util.Optional;
 @SuppressWarnings("unchecked")
 public class Aspects {
     private static final Logger logger = LoggerFactory.getLogger(Aspects.class);
-    private StopWatch stopWatch;
 
     @Pointcut("execution(* ar.edu.unq.devapps.grupoj202301.backenddevappsapt.service.*.registerElement(..))")
     public void registerElementPointcut() {}

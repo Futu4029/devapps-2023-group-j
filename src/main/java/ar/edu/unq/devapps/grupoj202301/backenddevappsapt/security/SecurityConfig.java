@@ -55,7 +55,8 @@ public class SecurityConfig {
         http.headers().frameOptions().disable();
         http
                 .csrf()
-                .disable()
+                .ignoringRequestMatchers("/**")
+                .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and()

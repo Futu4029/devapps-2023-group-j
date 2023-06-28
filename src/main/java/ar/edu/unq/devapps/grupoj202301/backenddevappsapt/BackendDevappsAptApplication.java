@@ -9,7 +9,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-@OpenAPIDefinition(info = @Info(title = "Crypto API", version = "1.0", description = "First approach"))
+@OpenAPIDefinition(info = @Info(title = "CryptoTrading API", version = "3.0", description = "Your application for trading"))
 @EnableAspectJAutoProxy
 @EnableScheduling
 @ComponentScan("ar.edu.unq.devapps.grupoj202301.backenddevappsapt")
