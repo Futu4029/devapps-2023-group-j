@@ -141,7 +141,8 @@ public class CryptoCoinServiceImpl implements CryptoCoinService {
 
     private Response genericQueryToAnExternalApi(String url) throws IOException {
         OkHttpClient client = new OkHttpClient.Builder()
-                .readTimeout(120, TimeUnit.SECONDS)
+                .callTimeout(5, TimeUnit.MINUTES)
+                .readTimeout(10, TimeUnit.SECONDS)
                 .build();
         Request request = new Request.Builder().url(url).build();
         return client.newCall(request).execute();
